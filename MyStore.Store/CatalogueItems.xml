@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Items>
+	<Item>
+		<Name>"Bob"</Name>
+		<Cost>2</Cost>
+	</Item>
+	<Item>
+		<Name>"Joe""</Name>
+		<Cost>23</Cost>
+	</Item>
+</Items>
