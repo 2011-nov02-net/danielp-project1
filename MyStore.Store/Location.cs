@@ -6,6 +6,7 @@ namespace MyStore.Store
     {
         String where;
         //Invintory
+        Invintory invintory;
 
         //order history
         OrderHistory orderHistory;

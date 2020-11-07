@@ -4,10 +4,8 @@ using System.Text;
 
 namespace MyStore.Store
 {
-    //TODO: singleton 
-    class StoreCatalogue
+    //todo: singleton
+    class StoreLocations
     {
-        Dictionary<String, Item> AllItems;
-
     }
 }
