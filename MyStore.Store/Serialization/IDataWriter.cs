@@ -7,7 +7,11 @@ namespace MyStore.Store.Serialization
     /// <summary>
     /// Classes responsible for saving data
     /// </summary>
-    interface IDataWriter
+    public interface IDataWriter
     {
+
+        public void WriteAllData();
+
+
     }
 }

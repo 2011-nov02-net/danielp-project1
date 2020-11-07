@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace MyStore.Store.Serialization
@@ -9,5 +10,10 @@ namespace MyStore.Store.Serialization
     /// </summary>
     interface IDataReader
     {
+        public void ReadAllData(String dataDir);
+
+        public void ReadOnlyItems(String dataDir);
+        public void ReadOnlyStores(String dataDir);
+        public void ReadOnlyCustomers(String dataDir);
     }
 }
