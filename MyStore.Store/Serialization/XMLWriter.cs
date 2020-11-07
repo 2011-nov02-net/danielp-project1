@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MyStore.Store.Serialization
 {
@@ -10,21 +11,30 @@ namespace MyStore.Store.Serialization
 
         public void WriteAllData()
         {
+            
+            Task t1 = WriteItems();
+            Task t2 = WriteCustomers();
+            Task t3 = WriteLocations();
+
+            t1.Wait();
+            t2.Wait();
+            t3.Wait();
+
             throw new NotImplementedException();
         }
 
 
-        private async void writeItems()
+        private async Task WriteItems()
         {
             throw new NotImplementedException();
         }
 
-        private async void writeCustomers()
+        private async Task WriteCustomers()
         {
             throw new NotImplementedException();
         }
 
-        private async void writeLocations()
+        private async Task WriteLocations()
         {
             throw new NotImplementedException();
     }
