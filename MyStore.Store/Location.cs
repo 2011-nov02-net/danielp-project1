@@ -1,4 +1,5 @@
 ﻿using System;
+using static MyStore.Store.StoreCatalogue;
 
 namespace MyStore.Store
 {

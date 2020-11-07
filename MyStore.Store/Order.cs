@@ -18,6 +18,6 @@ namespace MyStore.Store
 
         //items and amount, optionally any price modifyer too for sales
         //must reject unreasonable number of items.
-        ICollection<Item> items;
+        ICollection<ItemCount> items;
     }
 }
