@@ -8,6 +8,7 @@ namespace MyStore.Store
         //Invintory
 
         //order history
+        OrderHistory orderHistory;
 
         //order function
         //must reject if not enough of an item in stock.

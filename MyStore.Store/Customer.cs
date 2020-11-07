@@ -4,6 +4,7 @@
     {
         // todo TODO: TODO stuff
         //order history
+        OrderHistory orderHistory;
 
         public struct Name
         {
