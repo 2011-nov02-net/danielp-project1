@@ -6,7 +6,7 @@ namespace MyStore.Store
 {
     class OrderHistory
     {
-        //TODO: replace object with whatever winds up encapsolating an item and a quantity
-        List<Object> orderhistory;
+        //order history for a thing
+        List<Order> orderhistory;
     }
 }
