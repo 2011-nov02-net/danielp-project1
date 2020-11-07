@@ -14,6 +14,7 @@
 
         readonly Name CustomerName;
 
+        //NOTE: optional req
         #nullable enable
         Location? DefaultStore;
     }
