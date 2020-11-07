@@ -3,8 +3,10 @@
 	<Store>
 		<StoreStock>
 			<StoreName>
+				<!--Location?-->
 				"Store1"
 			</StoreName>
+			<!--Store Invintory-->
 			<Item>
 				<Name>item1</Name>
 				<Amount>5</Amount>
