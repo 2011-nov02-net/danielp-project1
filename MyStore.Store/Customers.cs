@@ -12,6 +12,26 @@ namespace MyStore.Store
     /// </remarks>
     class Customers
     {
-        //TODO: singleton
+        private static Customers _instance;
+
+        private List<Customer> AllCustomers;
+
+        public static Customers Instance
+        {
+            get
+            {
+                if( _instance is null)
+                {
+                    _instance = new Customers();
+                }
+
+                return _instance;
+            }
+        }
+
+        private Customers()
+        {
+            this.AllCustomers = new List<Customer>();
+        }
     }
 }

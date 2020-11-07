@@ -4,14 +4,14 @@ using System.Text;
 
 namespace MyStore.Store
 {
-    //todo: singleton
+    //singleton
     class Locations
     {
         List<Location> stores;
 
-        private Locations _instance;
+        private static Locations _instance;
 
-        public Locations Instance
+        public static Locations Instance
         {
             get
             {
