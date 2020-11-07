@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Orders>
+	<!--Order 1-->
+	<Order>
+		<Location>
+			store1
+		</Location>
+		<Customer>
+			person1
+		</Customer>
+		<Contents>
+			<Item>
+				<ItemName>
+					thing1
+				</ItemName>
+				<Quantity>
+					4
+				</Quantity>
+			</Item>
+			<Item>
+				<ItemName>
+					thing2
+				</ItemName>
+				<Quantity>
+					1
+				</Quantity>
+			</Item>
+		</Contents>
+	</Order>
+	
+	
+	<!--Order 2-->
+	<Order>
+		<Location>
+			store1
+		</Location>
+		<Customer>
+			person1
+		</Customer>
+		<Contents>
+			<Item>
+				<ItemName>
+					thing1
+				</ItemName>
+				<Quantity>
+					4
+				</Quantity>
+			</Item>
+		</Contents>
+	</Order>
+</Orders>

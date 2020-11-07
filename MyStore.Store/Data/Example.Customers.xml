@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Customers>
+	<Customer>
+		<Name>
+			<First>
+				bob
+			</First>
+			<Middle>
+				m
+			</Middle>
+			<Last>
+				name
+			</Last>
+		</Name>
+		<!-- Optional -->
+		<FavStore>
+			store1
+		</FavStore>
+	</Customer>
+</Customers>
