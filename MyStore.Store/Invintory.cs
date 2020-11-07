@@ -13,6 +13,9 @@ namespace MyStore.Store
     /// </remarks>
     class Invintory
     {
+        private List<ItemCount> Stocks;
+
+
         
     }
 }
