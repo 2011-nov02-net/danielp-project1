@@ -2,7 +2,6 @@
 {
     public class Customer
     {
-        // todo TODO: TODO stuff
         //order history
         OrderHistory orderHistory;
 
