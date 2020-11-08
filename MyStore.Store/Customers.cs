@@ -33,5 +33,19 @@ namespace MyStore.Store
         {
             this.AllCustomers = new List<Customer>();
         }
+
+        //Required Functionality
+        //TODO: add new customers
+        public void AddCustomer(Customer c)
+        {
+            throw new NotImplementedException();
+        }
+
+        //required functionality
+        //TODO: get customer by name
+        public List<Customer> GetCustomer(Name customerName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
