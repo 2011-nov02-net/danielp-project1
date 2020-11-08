@@ -12,8 +12,8 @@ namespace MyStore.Store
 
         public ItemCount(int count, string itemName)
         {
-            ThisItem = StoreCatalogue.Instance.GetItem(itemName);
             Count = count;
+            ThisItem = StoreCatalogue.Instance.GetItem(itemName);         
         }
     }
 }
