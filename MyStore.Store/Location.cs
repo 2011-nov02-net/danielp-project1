@@ -14,7 +14,7 @@ namespace MyStore.Store
 
         //order function
         //must reject if not enough of an item in stock.
-        public void Order(Item item, Customer forCustomer)
+        public void PlaceOrder(Item item, Customer forCustomer)
         {
             throw new NotImplementedException();
         }
