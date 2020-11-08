@@ -11,11 +11,20 @@ namespace MyStore.Store.Serialization
 
         public void ReadAllData(string dataDir)
         {
-            throw new NotImplementedException();
+            //items -> stores -> customers
+            //stores need items for invintory
+            //customers need stores for default locations.
+            ReadOnlyItems(dataDir);
+            ReadOnlyStores(dataDir);
+            ReadOnlyCustomers(dataDir);
+
         }
 
         public void ReadOnlyItems(string dataDir)
         {
+            //open item file
+
+            //register each item one by one
             throw new NotImplementedException();
         }
 
