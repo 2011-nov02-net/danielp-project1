@@ -33,6 +33,12 @@ namespace MyStore.Store
             AllItems = new Dictionary<string, Item>();
         }
 
+
+        /// <summary>
+        /// Gets a reference to an existing item in the catalogue.
+        /// </summary>
+        /// <param name="itemname">The name of the item</param>
+        /// <returns>The item with that name.</returns>
         public Item GetItem(string itemname)
         {
             //check if it's in dictionary
@@ -53,6 +59,8 @@ namespace MyStore.Store
         /// <param name="itemPrice">The price of the item</param>
         public void RegisterItem(string itemName, float itemPrice)
         {
+            //TODO: prevent multiple items with the same name from being added. 
+            //possibly create a exception for that.
             throw new NotImplementedException();
 
         }
@@ -69,6 +77,9 @@ namespace MyStore.Store
         public class Item
         {
             private static int _NextId = 0;
+            /// <summary>
+            /// Used as a hashcode and unique identifier.
+            /// </summary>
             private int ItemId;
             //TODO: disallow negative costs
             public float cost { get; private set; }
