@@ -42,6 +42,19 @@ namespace MyStore.Store
             //if not, create, add and return
 
             throw new NotImplementedException();
+
+            throw new ItemNotFoundException();
+        }
+
+        /// <summary>
+        /// Addes an item to the store's catalohue of items.
+        /// </summary>
+        /// <param name="itemName">The human readable name of an item</param>
+        /// <param name="itemPrice">The price of the item</param>
+        public void RegisterItem(string itemName, float itemPrice)
+        {
+            throw new NotImplementedException();
+
         }
 
 
@@ -55,8 +68,11 @@ namespace MyStore.Store
         /// </remarks>
         public class Item
         {
-            float cost;
-            string name;
+            private static int _NextId = 0;
+            private int ItemId;
+            //TODO: disallow negative costs
+            public float cost { get; private set; }
+            public string name { get; private set; }
 
 
             //COULD ALSO NOT NEED THIS IF WE HAVE ONE INSTANCE OF EACH ITEM 
@@ -68,22 +84,28 @@ namespace MyStore.Store
             // -> should be based on immuteable fields of the object
             public override int GetHashCode()
             {
-                return base.GetHashCode();
+                return ItemId;
             }
 
             public override bool Equals(object obj)
             {
                 if (obj is Item)
                 {
+                    Item other = (Item)obj;
                     //check if names are equal
+                    this.ItemId = other.ItemId;
                 }
                 return base.Equals(obj);
             }
 
 
-            protected Item(string itemname, double itemprice)
+            protected Item(string itemname, float itemprice)
             {
+                this.name = itemname;
+                this.cost = itemprice;
 
+                this.ItemId = _NextId;
+                _NextId++;
             }
         }
         // - - - End Item Class - - - //
