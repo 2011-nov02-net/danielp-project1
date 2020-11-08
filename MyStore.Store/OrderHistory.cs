@@ -8,5 +8,10 @@ namespace MyStore.Store
     {
         //order history for a thing
         List<Order> orderhistory;
+
+        public void AddOrder(IOrder o)
+        {
+
+        }
     }
 }

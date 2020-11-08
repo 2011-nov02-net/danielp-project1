@@ -5,19 +5,36 @@ namespace MyStore.Store
 {
     public class Location
     {
-        String where;
+        public String Where { get; }
         //Invintory
-        Invintory invintory;
+        private Invintory LocationInvintory;
 
         //order history
-        OrderHistory orderHistory;
+        private OrderHistory LocationOrderHistory;
 
         //order function
         //must reject if not enough of an item in stock.
-        public void PlaceOrder(Item item, Customer forCustomer)
+        //TODO: place orders, required functionality
+        public void PlaceOrder(IItem item, Customer forCustomer)
         {
             throw new NotImplementedException();
         }
 
+
+        public Location(string where)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddInvintory(string itemName, int amount)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public int CheckStock(string itemName, int amount)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
