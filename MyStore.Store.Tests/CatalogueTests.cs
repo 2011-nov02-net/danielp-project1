@@ -30,7 +30,7 @@ namespace MyStore.Store.Tests
         public void RegisterInvalidItem()
         {
             //arrange
-            string itemname = "testitem2";
+            string itemname = "TestItem2";
             StoreCatalogue.Instance.RegisterItem(itemname, 0);
 
             //act
