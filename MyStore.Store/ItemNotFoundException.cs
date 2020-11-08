@@ -7,7 +7,7 @@ namespace MyStore.Store
     /// <summary>
     /// An Item is not registered with the Catalogue
     /// </summary>
-    class ItemNotFoundException:ArgumentException
+    public class ItemNotFoundException:ArgumentException
     {
 
     }
