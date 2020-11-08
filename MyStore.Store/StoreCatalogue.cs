@@ -67,7 +67,7 @@ namespace MyStore.Store
         /// <returns>The newly created item.</returns>
         public IItem RegisterItem(string itemName, float itemPrice)
         {
-            //TODO: prevent multiple items with the same name from being added.
+            // prevents multiple items with the same name from being added.
             if (!AllItems.ContainsKey(itemName))
             {
                 Item newitem = new Item(itemName, itemPrice);
@@ -85,10 +85,10 @@ namespace MyStore.Store
         #region Item
         // - - - Item Class - - - //
         /// <summary>
-        /// An item with a name and cost
+        /// An item with a name and cost >= 0.
         /// </summary>
         /// <remarks>
-        /// This Class is only ment to be instantiated by StoreCatalogue 
+        /// This Class is only ment to be instantiated by StoreCatalogue. 
         /// </remarks>
         private class Item : IItem
         {
@@ -97,15 +97,26 @@ namespace MyStore.Store
             /// Used as a hashcode and unique identifier.
             /// </summary>
             private int ItemId;
-            //TODO: disallow negative costs
-            public float cost { get; private set; }
-            public string name { get; private set; }
-
-
-            //COULD ALSO NOT NEED THIS IF WE HAVE ONE INSTANCE OF EACH ITEM 
-            //doing these overrides means we can have multiple objects in memory w/ same name
-            //not doing this means we would probably 
-            //https://ericlippert.com/2011/02/28/guidelines-and-rules-for-gethashcode/
+            // disallow negative costs
+            public float cost 
+            {
+                get
+                {
+                    return cost;
+                } 
+                private set
+                {
+                    if(cost >= 0)
+                    {
+                        this.cost = value;
+                    }
+                    else
+                    {
+                        throw new ArgumentOutOfRangeException("Error: Cannot have negative item prices.");
+                    }
+                }                   
+            }
+            public string name { get; }
 
             //should not be different if the object is the same
             // -> should be based on immuteable fields of the object
