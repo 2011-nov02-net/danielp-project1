@@ -8,7 +8,7 @@ namespace MyStore.Store
     public struct ItemCount
     {
         public int Count { get; }
-        public StoreCatalogue.Item ThisItem { get; }
+        public IItem ThisItem { get; }
 
         public ItemCount(int count, string itemName)
         {

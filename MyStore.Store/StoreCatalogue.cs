@@ -12,8 +12,11 @@ namespace MyStore.Store
     /// </remarks>
     public class StoreCatalogue
     {
+        #region Store Catalogue
         private Dictionary<String, Item> AllItems;
 
+
+        #region Singleton code and Constructor
         private static StoreCatalogue _instance;
         public static StoreCatalogue Instance
         {
@@ -32,6 +35,7 @@ namespace MyStore.Store
         {
             AllItems = new Dictionary<string, Item>();
         }
+        #endregion
 
 
         /// <summary>
@@ -39,17 +43,20 @@ namespace MyStore.Store
         /// </summary>
         /// <param name="itemname">The name of the item</param>
         /// <returns>The item with that name.</returns>
-        public Item GetItem(string itemname)
+        public IItem GetItem(string itemname)
         {
+            Item desiredItem;
+
             //check if it's in dictionary
-
-            //if so, return 
-
-            //if not, create, add and return
-
-            throw new NotImplementedException();
-
-            throw new ItemNotFoundException();
+            if (AllItems.TryGetValue(itemname, out desiredItem))
+            {
+                //if so, return
+                return desiredItem;
+            } else
+            {
+                //else throw exception 
+                throw new ItemNotFoundException();
+            }       
         }
 
         /// <summary>
@@ -57,24 +64,33 @@ namespace MyStore.Store
         /// </summary>
         /// <param name="itemName">The human readable name of an item</param>
         /// <param name="itemPrice">The price of the item</param>
-        public void RegisterItem(string itemName, float itemPrice)
+        /// <returns>The newly created item.</returns>
+        public IItem RegisterItem(string itemName, float itemPrice)
         {
-            //TODO: prevent multiple items with the same name from being added. 
-            //possibly create a exception for that.
-            throw new NotImplementedException();
-
+            //TODO: prevent multiple items with the same name from being added.
+            if (!AllItems.ContainsKey(itemName))
+            {
+                Item newitem = new Item(itemName, itemPrice);
+                AllItems.Add(itemName, newitem);
+                return newitem;
+            } else
+            {
+                //possibly create a exception for that.
+                throw new NotImplementedException();
+            }
         }
 
+        #endregion
 
-
+        #region Item
         // - - - Item Class - - - //
         /// <summary>
         /// An item with a name and cost
         /// </summary>
         /// <remarks>
-        /// This is a strange class, that's kinda a psudo singleton. 
+        /// This Class is only ment to be instantiated by StoreCatalogue 
         /// </remarks>
-        public class Item
+        private class Item : IItem
         {
             private static int _NextId = 0;
             /// <summary>
@@ -110,7 +126,7 @@ namespace MyStore.Store
             }
 
 
-            protected Item(string itemname, float itemprice)
+            protected internal Item(string itemname, float itemprice)
             {
                 this.name = itemname;
                 this.cost = itemprice;
@@ -120,5 +136,6 @@ namespace MyStore.Store
             }
         }
         // - - - End Item Class - - - //
+        #endregion
     }
 }
