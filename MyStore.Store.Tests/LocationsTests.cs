@@ -23,6 +23,19 @@ namespace MyStore.Store.Tests
             Assert.Equal(newlocname, newloc.Where);
         }
 
+        [Fact]
+        public void CanNotRegisterSameLocationTwice()
+        {
+            //Arrange
+            string newlocname = "TestLocation0.5";
+            Assert.True(LocationDoesntExistYet(newlocname));
+            Locations.Instance.RegisterLocation(newlocname);
+
+            //act
+            //assert
+            Assert.ThrowsAny<ArgumentException>(()=> Locations.Instance.RegisterLocation(newlocname));
+        }
+
 
         [Fact]
         public void GetRealLocation()
