@@ -7,7 +7,7 @@ namespace MyStore.Store
     class OrderHistory
     {
         //order history for a thing
-        List<Order> orderhistory;
+        List<IOrder> orderhistory;
 
         public void AddOrder(IOrder o)
         {

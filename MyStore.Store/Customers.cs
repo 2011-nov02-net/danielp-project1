@@ -36,6 +36,7 @@ namespace MyStore.Store
         }
 
         //Required Functionality
+        //question: what do if shared name?
         //TODO: add new customers
         public Customer RegisterCustomer(Customer c)
         {

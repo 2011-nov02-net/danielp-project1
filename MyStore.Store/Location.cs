@@ -14,30 +14,29 @@ namespace MyStore.Store
         private OrderHistory LocationOrderHistory;
 
 
-
-
-
-        //order function
-        //must reject if not enough of an item in stock.
-        //TODO: place orders, required functionality
-        public void PlaceOrder(IItem item, Customer forCustomer)
-        {
-            throw new NotImplementedException();
-        }
-
-
         internal Location(string where)
         {
             this.Where = where;
         }
 
-        public void AddInvintory(string itemName, int amount)
+
+        //order function
+        //must reject if not enough of an item in stock.
+        //possibly modify remaining stock
+        //TODO: place orders, required functionality
+        public void PlaceOrder(IItem item, Customer forCustomer)
+        {
+            throw new NotImplementedException();
+        }
+    
+
+        public void AddInventory(string itemName, int amount)
         {
             throw new NotImplementedException();
         }
 
 
-        public int CheckStock(string itemName, int amount)
+        public bool CheckStock(string itemName, int amount)
         {
             throw new NotImplementedException();
         }

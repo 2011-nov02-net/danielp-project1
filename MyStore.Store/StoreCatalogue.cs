@@ -15,7 +15,6 @@ namespace MyStore.Store
         #region Store Catalogue
         private Dictionary<String, Item> AllItems;
 
-
         #region Singleton code and Constructor
         private static StoreCatalogue _instance;
         public static StoreCatalogue Instance
@@ -76,7 +75,7 @@ namespace MyStore.Store
             } else
             {
                 //possibly create a exception for that.
-                throw new NotImplementedException();
+                throw new ArgumentException();
             }
         }
 

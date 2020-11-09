@@ -8,5 +8,7 @@ namespace MyStore.Store
     {
         public float cost { get; }
         public string name { get;  }
+
+        //private string UPCCode
     }
 }

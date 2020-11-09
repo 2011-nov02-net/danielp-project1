@@ -27,13 +27,11 @@ namespace MyStore.Store
 
         public int Compare(Name x, Name y)
         {
-
             if(x.First == y.First)
             {
                 //both missing middle initial
                 if (x.MiddleInitial is null && y.MiddleInitial is null)
-                {
-                    
+                {           
                 } else
                 {
                     //one missing middle initial
@@ -61,7 +59,6 @@ namespace MyStore.Store
                         }
                     }
                 }
-
                 return x.Last.CompareTo(y.Last);
             } else
             {

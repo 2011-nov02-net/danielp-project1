@@ -3,7 +3,7 @@
     public class Customer
     {
         //order history
-        OrderHistory orderHistory;
+        OrderHistory orderHistory { get; }
 
         public readonly Name CustomerName;
 
