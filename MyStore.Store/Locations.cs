@@ -14,7 +14,7 @@ namespace MyStore.Store
             get
             {
                 return _stores.Values;
-            } 
+            }
         }
 
         private static Locations _instance;
@@ -40,6 +40,7 @@ namespace MyStore.Store
         private Locations()
         {
             _stores = new Dictionary<string, Location>();
+            _instance = this;
         }
 
 
@@ -101,7 +102,14 @@ namespace MyStore.Store
         /// <returns>The location from the list of locations with the given key.</returns>
         public Location GetLocation(string where)
         {
-            throw new Exception();
+            Location loc;
+            if( _stores.TryGetValue(where, out loc))
+            {
+                return loc;
+            } else
+            {
+                throw new ArgumentException("Error: location not found.");
+            }          
         }
     }
 }
