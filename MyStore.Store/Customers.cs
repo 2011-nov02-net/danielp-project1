@@ -68,7 +68,7 @@ namespace MyStore.Store
         /// <summary>
         /// Uses Linq to get all customers and sort by name.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> A list of customers sorted by their names.</returns>
         public List<Customer>  GetAllCustomersSortedByName()
         {
             return (List<Customer>)AllCustomers.OrderBy(customer => customer.CustomerName);
