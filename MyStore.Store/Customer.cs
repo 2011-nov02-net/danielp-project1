@@ -5,13 +5,13 @@
         //order history
         OrderHistory orderHistory;
 
-        readonly Name CustomerName;
+        public readonly Name CustomerName;
 
         //NOTE: optional req
         #nullable enable
         Location? DefaultStore = null;
 
-        public Customer(Name name, Location? DefaultStore = null)
+        internal Customer(Name name, Location? DefaultStore = null)
         {
             CustomerName = name;
             this.DefaultStore = DefaultStore;

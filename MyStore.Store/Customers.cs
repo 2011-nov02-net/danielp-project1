@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MyStore.Store
@@ -36,16 +37,41 @@ namespace MyStore.Store
 
         //Required Functionality
         //TODO: add new customers
-        public void AddCustomer(Customer c)
+        public Customer RegisterCustomer(Customer c)
         {
             throw new NotImplementedException();
         }
 
+
+        public Customer RegisterCustomer(Name name, Location DefaultStore = null)
+        {
+            return RegisterCustomer(new Customer(name, DefaultStore));
+        }
+
         //required functionality
         //TODO: get customer by name
-        public List<Customer> GetCustomer(Name customerName)
+        public Customer GetCustomer(Name customerName)
         {
-            throw new NotImplementedException();
+            Customer desired = null;
+            foreach(Customer c in AllCustomers)
+            {
+                if (c.CustomerName.Equals(customerName))
+                {
+                    desired = c;
+                    break;
+                }
+            }
+
+            return desired ?? throw new ArgumentException();
+        }
+
+        /// <summary>
+        /// Uses Linq to get all customers and sort by name.
+        /// </summary>
+        /// <returns></returns>
+        public List<Customer>  GetAllCustomersSortedByName()
+        {
+            return (List<Customer>)AllCustomers.OrderBy(customer => customer.CustomerName);
         }
     }
 }
