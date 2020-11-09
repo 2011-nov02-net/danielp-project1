@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static MyStore.Store.StoreCatalogue;
 
 namespace MyStore.Store
@@ -7,10 +8,14 @@ namespace MyStore.Store
     {
         public String Where { get; }
         //Invintory
-        private Invintory LocationInvintory;
+        private Dictionary<string, ItemCount> Stocks;
 
         //order history
         private OrderHistory LocationOrderHistory;
+
+
+
+
 
         //order function
         //must reject if not enough of an item in stock.
@@ -21,9 +26,9 @@ namespace MyStore.Store
         }
 
 
-        public Location(string where)
+        internal Location(string where)
         {
-            throw new NotImplementedException();
+            this.Where = where;
         }
 
         public void AddInvintory(string itemName, int amount)
@@ -35,6 +40,19 @@ namespace MyStore.Store
         public int CheckStock(string itemName, int amount)
         {
             throw new NotImplementedException();
+        }
+
+
+        public int CheckStock(string itemName)
+        {
+            ItemCount count;
+            if (Stocks.TryGetValue(itemName, out count))
+            {
+                int basestock = count.Count;
+
+                return basestock;
+            }
+            return 0;
         }
     }
 }
