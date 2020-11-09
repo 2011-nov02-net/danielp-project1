@@ -49,7 +49,7 @@ namespace MyStore.Store
         }
 
         //required functionality
-        //TODO: get customer by name
+        //get customer by name
         public Customer GetCustomer(Name customerName)
         {
             Customer desired = null;
