@@ -25,11 +25,27 @@ namespace MyStore.Store
         //must reject if not enough of an item in stock.
         //possibly modify remaining stock
         //TODO: place orders, required functionality
-        public void PlaceOrder(IItem item, Customer forCustomer)
+        public Order CreateNewOrder(IItem item, int amount, Customer forCustomer)
         {
-            throw new NotImplementedException();
+            List<ItemCount> items = new List<ItemCount>();
+            items.Add(new ItemCount(amount, item.name));
+            Order neworder = new Order(this, forCustomer, items);
+            return neworder;
         }
-    
+
+
+        public Order PlaceOrder(String itemName, int amount, Customer forCustomer)
+        {
+            if (StoreCatalogue.Instance.ItemExists(itemName))
+            {
+                return CreateNewOrder(StoreCatalogue.Instance.GetItem(itemName), amount, forCustomer);
+
+            } else
+            {
+                throw new ItemNotFoundException("Failed to find item, " + itemName);
+            }
+        }
+
 
         /// <summary>
         /// Add an amount of an item to the Location's invintory.
