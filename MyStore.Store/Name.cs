@@ -17,7 +17,7 @@ namespace MyStore.Store
             MiddleInitial = null;
         }
 
-        public Name(string first, string last, char middle)
+        public Name(string first, string last, char? middle = null)
         {
             First = first;
             Last = last;
