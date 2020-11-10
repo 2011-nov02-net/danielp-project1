@@ -15,7 +15,10 @@ namespace MyStore.Store
          */
         public Location OrderLoc { get; }
         public Customer Customer { get; }
-        public DateTime Time { get; }
+        /// <summary>
+        /// The time the order was placed.
+        /// </summary>
+        public DateTime Time { get; private set; }
 
         //items and amount, optionally any price modifyer too for sales
         //must reject unreasonable number of items.
@@ -35,19 +38,9 @@ namespace MyStore.Store
                     throw new NullReferenceException("This order has no store yet.");
                 }
 
-                //CHECK LOCATION STOCKS
-                bool EnoughStock = true;
-
-                //Required Functionality
-                //TODO: stop unreasonabley large orders.
-                foreach (ItemCount ic in value)
+                if (EnoughStockForAllItems())
                 {
-                    EnoughStock = EnoughStock && OrderLoc.CheckIfEnoughStock(ic.ThisItem.name, ic.Count);
-                }
-
-                if (EnoughStock)
-                {
-                    Items = value.ToList<ItemCount>().AsReadOnly();
+                    Items = value.ToList<ItemCount>();
                     
                 }
                 else
@@ -147,9 +140,51 @@ namespace MyStore.Store
         //also must then change the stocks to reflect the change in stock.
         //POSSIBLE THING TO ADD, Event call somewhere to notify other orders that 
         //stock has changed.
+        /// <summary>
+        /// MUST be called to place the order and add it to the customer and location's 
+        /// order history, and update the location's stocks.
+        /// </summary>
         public void FinallizeOrder()
         {
-            throw new NotImplementedException();
+            this.Time = DateTime.UtcNow;
+
+
+            if (EnoughStockForAllItems())
+            {
+                //consider surrounding in a try catch, 
+                //or something incase this fails.
+                //Or, make a mutex for when we change stocks on the Location.
+                foreach(ItemCount ic in Items)
+                {
+                    OrderLoc.RemovePurchasedStock(ic);
+                }
+
+                Customer.OrderHistory.AddOrder(this);
+                OrderLoc.LocationOrderHistory.AddOrder(this);
+            } else
+            {
+                throw new NotEnoughStockException("Error: No longer enough stock for these items.");
+            }
+        }
+
+
+        /// <summary>
+        /// Check if theres enough stock at the location for all items in the order.
+        /// </summary>
+        /// <returns></returns>
+        private bool EnoughStockForAllItems()
+        {
+            //CHECK LOCATION STOCKS
+            bool EnoughStock = true;
+
+            //Required Functionality
+            //TODO: stop unreasonabley large orders.
+            foreach (ItemCount ic in Items)
+            {
+                EnoughStock = EnoughStock && OrderLoc.CheckIfEnoughStock(ic.ThisItem.name, ic.Count);
+            }
+
+            return EnoughStock;
         }
     }
 }
