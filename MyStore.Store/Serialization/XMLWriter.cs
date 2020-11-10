@@ -11,12 +11,14 @@ namespace MyStore.Store.Serialization
 {
     public class XMLWriter:IDataWriter
     {
-        private const String DataDir = "../../../Data/";
+        //"../../../Data/";
+        //up one, into Mystore.store
+        private const String DataDir = "../../../../MyStore.Store/Data/";
         private const String ItemsFile = "CatalogueItems.xml";
         private const String CustomersFile = "Customers.xml";
         private const String LocationsFile = "Stores.xml";
         private XmlWriterSettings settings = new XmlWriterSettings();
-
+            
         public XMLWriter()
         {
             //https://docs.microsoft.com/en-us/dotnet/api/system.xml.xmlwritersettings?view=netcore-3.1 
@@ -37,6 +39,15 @@ namespace MyStore.Store.Serialization
         {
             Type itemtype = typeof(StoreCatalogue);
 
+            try
+            {
+                File.Create((DataDir + ItemsFile));
+            } catch(DirectoryNotFoundException)
+            {
+                Console.Error.WriteLine("failed to find directory.");
+            }
+            
+
             using (XmlWriter writer = XmlWriter.Create(DataDir + ItemsFile, settings))
             {
                 XmlSerializer serializer = new XmlSerializer(itemtype);
@@ -50,7 +61,17 @@ namespace MyStore.Store.Serialization
         {
             Type locationsType = typeof(Customers);
 
-            using (XmlWriter writer = XmlWriter.Create(DataDir + ItemsFile, settings))
+            try
+            {
+                File.Create((DataDir + CustomersFile));
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.Error.WriteLine("failed to find directory.");
+            }
+            
+
+            using (XmlWriter writer = XmlWriter.Create(DataDir + CustomersFile, settings))
             {
                 XmlSerializer serializer = new XmlSerializer(locationsType);
                 serializer.Serialize(writer, Customers.Instance);
@@ -62,7 +83,16 @@ namespace MyStore.Store.Serialization
         {
             Type locationsType = typeof(Locations);
 
-            using (XmlWriter writer = XmlWriter.Create(DataDir + ItemsFile, settings))
+            try
+            {
+                File.Create((DataDir + LocationsFile));
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.Error.WriteLine("failed to find directory.");
+            }
+
+            using (XmlWriter writer = XmlWriter.Create(DataDir + LocationsFile, settings))
             {
                 XmlSerializer serializer = new XmlSerializer(locationsType);
                 serializer.Serialize(writer, Locations.Instance);
