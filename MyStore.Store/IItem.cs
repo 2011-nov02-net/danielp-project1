@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MyStore.Store
 {
-    public interface IItem
+    public interface IItem : ISerializable
     {
         public float cost { get; }
         public string name { get;  }

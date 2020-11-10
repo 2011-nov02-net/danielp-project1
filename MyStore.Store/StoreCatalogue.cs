@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MyStore.Store
@@ -10,7 +11,7 @@ namespace MyStore.Store
     /// <remarks> 
     /// This is a singleton class, intended to be the only one able to instantiate item.
     /// </remarks>
-    public class StoreCatalogue
+    public class StoreCatalogue : ISerializable
     {
         #region Store Catalogue
         private Dictionary<String, Item> AllItems;
@@ -98,6 +99,11 @@ namespace MyStore.Store
             return AllItems.Values;
         }
 
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            ((ISerializable)AllItems).GetObjectData(info, context);
+        }
+
         #endregion
 
         #region Item
@@ -154,6 +160,14 @@ namespace MyStore.Store
                 return base.Equals(obj);
             }
 
+            public void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                if (info == null)
+                    throw new System.ArgumentNullException("info");
+
+                info.AddValue("Name", name);
+                info.AddValue("Cost", cost);
+            }
 
             protected internal Item(string itemname, float itemprice)
             {
