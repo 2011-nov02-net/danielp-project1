@@ -5,13 +5,26 @@ using static MyStore.Store.StoreCatalogue;
 
 namespace MyStore.Store
 {
+    /// <summary>
+    /// Represents a store location.
+    /// </summary>
     public class Location
     {
+        /// <summary>
+        /// Where the store is located. Can also be though of it's name. This is the
+        /// primary key when referencing stores.
+        /// </summary>
         public String Where { get; }
         //Invintory
+        /// <summary>
+        /// The amount of various items in stock currently.
+        /// </summary>
         private Dictionary<string, ItemCount> Stocks;
 
         //order history
+        /// <summary>
+        /// The list of orders so far.
+        /// </summary>
         public OrderHistory LocationOrderHistory { get; }
 
 
@@ -33,7 +46,13 @@ namespace MyStore.Store
             return neworder;
         }
 
-
+        /// <summary>
+        /// Creates a new order to be edited until done. 
+        /// </summary>
+        /// <param name="itemName">The human readable name of the first item in the order.</param>
+        /// <param name="amount">Amount of the first item in the order.</param>
+        /// <param name="forCustomer">Customer placing the order.</param>
+        /// <returns>The order object that can be edited until finalized.</returns>
         public Order CreateNewOrder(String itemName, int amount, Customer forCustomer)
         {
             if (StoreCatalogue.Instance.ItemExists(itemName))
@@ -107,7 +126,14 @@ namespace MyStore.Store
             }           
         }
 
-
+        /// <summary>
+        /// Checks to see how much of an item is currently in stock at this location.
+        /// </summary>
+        /// <remarks>
+        /// Note, this doesn't check if the item has been registered with the store catalogue.
+        /// </remarks>
+        /// <param name="itemName">The Human readable name of the item.</param>
+        /// <returns>The amount of Item currently in stock, or zero if that item isn't in stock.</returns>
         public int CheckStock(string itemName)
         {
             ItemCount count;
