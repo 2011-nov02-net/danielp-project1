@@ -20,16 +20,15 @@ namespace MyStore.Store
         /// </summary>
         public DateTime Time { get; private set; }
 
+        private List<ItemCount> _items;
+
         //items and amount, optionally any price modifyer too for sales
         //must reject unreasonable number of items.
         public ICollection<ItemCount> Items 
         {
             get
             {
-                //todo: make this into a read only collection when sent back.
-                //might have to add an explicit backing property so that the class
-                //can edit but the world can't.
-                return Items;
+                return _items.AsReadOnly();
             } 
             private set
             {
@@ -40,7 +39,7 @@ namespace MyStore.Store
 
                 if (EnoughStockForAllItems())
                 {
-                    Items = value.ToList<ItemCount>();
+                    _items = value.ToList<ItemCount>();
                     
                 }
                 else
@@ -65,8 +64,8 @@ namespace MyStore.Store
             Time = DateTime.UtcNow;
             Customer = c;
             OrderLoc = l;
-            this.Items = items;
-        }
+            _items = items.ToList<ItemCount>();
+        }   
 
         /// <summary>
         /// Creates a new order for one item.
@@ -79,8 +78,8 @@ namespace MyStore.Store
             Time = DateTime.UtcNow;
             Customer = c;
             OrderLoc = l;
-            List<ItemCount> items = new List<ItemCount>();
-            items.Add(item);
+            List<ItemCount> _items = new List<ItemCount>();
+            _items.Add(item);
         }
 
         //must check stocks, and if item is already in order.
@@ -108,7 +107,7 @@ namespace MyStore.Store
                         && OrderLoc.CheckIfEnoughStock(itemname, amount + oldcount.Count))
                     {
                         //avoid duplicate entries for the item in the list of items.
-                        Items.Remove(oldcount);
+                        _items.Remove(oldcount);
                         amount += oldcount.Count;
                     } else
                     {
@@ -129,7 +128,7 @@ namespace MyStore.Store
             if(amount > 0)
             {
                 newcount = new ItemCount(amount, itemname);
-                Items.Add(newcount);
+                _items.Add(newcount);
             }
         }
 
