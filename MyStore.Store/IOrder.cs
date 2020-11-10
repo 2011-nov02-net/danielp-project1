@@ -27,6 +27,7 @@ namespace MyStore.Store
         //must reject unreasonable number of items.
         public ICollection<ItemCount> Items { get; }
 
+        //TODO: consider removing from interface, making internal on historic order.
         /// <summary>
         /// Adds another item to the order.
         /// </summary>
