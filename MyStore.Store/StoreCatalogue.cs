@@ -59,6 +59,16 @@ namespace MyStore.Store
         }
 
         /// <summary>
+        /// Test if an item exists.
+        /// </summary>
+        /// <param name="itemname">The item's name</param>
+        /// <returns>True if the item has been registered with the item catalogue.</returns>
+        public bool ItemExists(string itemname)
+        {
+            return AllItems.ContainsKey(itemname); 
+        }
+
+        /// <summary>
         /// Addes an item to the store's catalohue of items.
         /// </summary>
         /// <param name="itemName">The human readable name of an item</param>

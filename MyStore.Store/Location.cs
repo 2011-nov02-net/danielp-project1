@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using static MyStore.Store.StoreCatalogue;
 
 namespace MyStore.Store
@@ -30,15 +31,59 @@ namespace MyStore.Store
         }
     
 
-        public void AddInventory(string itemName, int amount)
+        /// <summary>
+        /// Add an amount of an item to the Location's invintory.
+        /// </summary>
+        /// <param name="itemName">The human readable name of the item.</param>
+        /// <param name="amount">Amount of the item to add.</param>
+        /// <returns>The new Stock Level.</returns>
+        public int  AddInventory(string itemName, int amount)
         {
-            throw new NotImplementedException();
+            ItemCount itemStocks;
+            if(Stocks.TryGetValue(itemName, out itemStocks))
+            {
+                int newAmount = amount + itemStocks.Count;
+                Stocks[itemName] = new ItemCount(newAmount, itemName);
+                return newAmount;
+            } else if(StoreCatalogue.Instance.ItemExists(itemName)){
+                itemStocks = new ItemCount(amount, itemName);
+                return amount;
+            } else
+            {
+                //To be fair, this would already be thrown by the constructor for ItemCount
+                throw new ItemNotFoundException("That item doesn't exist yet.");
+            }
         }
 
-
-        public bool CheckStock(string itemName, int amount)
+        /// <summary>
+        /// Check if there is enough stock left to subtract the amount from the remaining.
+        /// </summary>
+        /// <remarks>
+        /// If a negative value is passed in, math.abs will be ran on it to compare to the current
+        /// level of stocks.
+        /// </remarks>
+        /// <param name="itemName">The human readable name of the item.</param>
+        /// <param name="amount">Amount to be subtracted</param>
+        /// <returns></returns>
+        public bool CheckIfEnoughStock(string itemName, int amount)
         {
-            throw new NotImplementedException();
+            if(amount < 0)
+            {
+                amount = Math.Abs(amount);
+                Debug.WriteLine("Warning, tried to subtract a negative amount, this has been corrected.");
+            }
+
+            ItemCount count;
+            if (Stocks.TryGetValue(itemName, out count))
+            {
+                return count.Count >= amount;
+            } else if(amount == 0)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }           
         }
 
 
@@ -47,9 +92,7 @@ namespace MyStore.Store
             ItemCount count;
             if (Stocks.TryGetValue(itemName, out count))
             {
-                int basestock = count.Count;
-
-                return basestock;
+                return count.Count;
             }
             return 0;
         }
