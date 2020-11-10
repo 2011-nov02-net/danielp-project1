@@ -59,7 +59,6 @@ namespace MyStore.Store
             Location newlocation;
             if (_stores.ContainsKey(locatedAt))
             {
-                //TODO: consider changing exception
                 throw new ArgumentException("Location Already Registered");
             }
             else
