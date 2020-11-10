@@ -5,8 +5,6 @@ using System.Text;
 
 namespace MyStore.Store
 {
-    //TODO: conisder make this a class
-    //then wouldn't have to create a new one to change the amount.
     public struct ItemCount
     {
         public int Count { get; }
