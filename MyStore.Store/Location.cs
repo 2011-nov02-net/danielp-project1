@@ -12,7 +12,7 @@ namespace MyStore.Store
         private Dictionary<string, ItemCount> Stocks;
 
         //order history
-        private OrderHistory LocationOrderHistory;
+        public OrderHistory LocationOrderHistory { get; }
 
 
         internal Location(string where)
