@@ -34,7 +34,7 @@ namespace MyStore.Store
         }
 
 
-        public Order PlaceOrder(String itemName, int amount, Customer forCustomer)
+        public Order CreateNewOrder(String itemName, int amount, Customer forCustomer)
         {
             if (StoreCatalogue.Instance.ItemExists(itemName))
             {
