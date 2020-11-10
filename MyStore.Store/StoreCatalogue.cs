@@ -89,6 +89,15 @@ namespace MyStore.Store
             }
         }
 
+        /// <summary>
+        /// Get a read only list of every item.
+        /// </summary>
+        /// <returns>A read only list of all items.</returns>
+        public IReadOnlyCollection<IItem> GetAllItems()
+        {
+            return AllItems.Values;
+        }
+
         #endregion
 
         #region Item
