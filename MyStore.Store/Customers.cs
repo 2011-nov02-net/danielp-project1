@@ -37,16 +37,24 @@ namespace MyStore.Store
 
         //Required Functionality
         //question: what do if shared name?
-        //TODO: add new customers
         public Customer RegisterCustomer(Customer c)
         {
-            throw new NotImplementedException();
+            if (!AllCustomers.Contains(c))
+            {
+                AllCustomers.Add(c);
+            } 
+            return c;
         }
 
 
         public Customer RegisterCustomer(Name name, Location DefaultStore = null)
         {
             return RegisterCustomer(new Customer(name, DefaultStore));
+        }
+
+        public Customer RegisterCustomer(string first, string last, char? middle = null, Location DefaultStore = null)
+        {
+            return RegisterCustomer(new Name(first, last, middle), DefaultStore);
         }
 
         //required functionality
