@@ -14,7 +14,7 @@ namespace MyStore.Store
 
         public ICollection<ItemCount> Items => throw new NotImplementedException();
 
-        public void AddItemToOrder(string itemname, int amount)
+        public void EditOrderAmounts(string itemname, int amount)
         {
             throw new NotImplementedException();
         }

@@ -32,7 +32,7 @@ namespace MyStore.Store
         /// </summary>
         /// <param name="itemname">Human readable name of the item/</param>
         /// <param name="amount">The amount to buy.</param>
-        public void AddItemToOrder(string itemname, int amount);
+        public void EditOrderAmounts(string itemname, int amount);
 
         /// <summary>
         /// Finalizes the order and adds it to the customer and location's order history.
