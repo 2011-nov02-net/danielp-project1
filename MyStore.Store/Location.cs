@@ -55,6 +55,11 @@ namespace MyStore.Store
         /// <returns>The new Stock Level.</returns>
         public int  AddInventory(string itemName, int amount)
         {
+            if(amount < 0)
+            {
+                throw new ArgumentOutOfRangeException("Must add a positive amount of stock.");
+            }
+
             ItemCount itemStocks;
             if(Stocks.TryGetValue(itemName, out itemStocks))
             {
@@ -111,6 +116,30 @@ namespace MyStore.Store
                 return count.Count;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Remvoes the items from the stock.
+        /// </summary>
+        /// <remarks>
+        /// Assumes the quantity is positive, and is intended to be subtracted.
+        /// </remarks>
+        /// <param name="ic">The Item-Count pair to be removed.</param>
+        internal void RemovePurchasedStock(ItemCount ic)
+        {
+            if(this.CheckIfEnoughStock(ic.ThisItem.name, ic.Count))
+            {
+                ItemCount itemStocks;
+                if (Stocks.TryGetValue(ic.ThisItem.name, out itemStocks))
+                {
+                    int newAmount = itemStocks.Count - ic.Count;
+                    Stocks[ic.ThisItem.name] = new ItemCount(newAmount, ic.ThisItem.name);
+                }
+                else
+                {
+                    throw new ItemNotFoundException($"Error: failed to find {ic.ThisItem.name} in the location's stocks");
+                }               
+            }
         }
     }
 }
