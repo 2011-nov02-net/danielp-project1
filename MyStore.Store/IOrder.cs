@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MyStore.Store
@@ -8,7 +9,7 @@ namespace MyStore.Store
     /// An interface for any object representing an order to implement.
     /// </summary>
     /// <seealso cref="Order"/>
-    public interface IOrder
+    public interface IOrder : ISerializable
     {
         /// <summary>
         /// The store at which an order was placed at.

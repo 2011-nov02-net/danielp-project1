@@ -1,6 +1,8 @@
-﻿namespace MyStore.Store
+﻿using System.Runtime.Serialization;
+
+namespace MyStore.Store
 {
-    public class Customer
+    public class Customer : ISerializable
     {
         //order history
         public OrderHistory OrderHistory { get; }
@@ -15,6 +17,16 @@
         {
             CustomerName = name;
             this.DefaultStore = DefaultStore;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", CustomerName);
+
+            if(DefaultStore != null)
+            {
+                info.AddValue("DefaultStore", DefaultStore);
+            }
         }
     }
 }

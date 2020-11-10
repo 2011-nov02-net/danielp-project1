@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MyStore.Store
 {
-    public class Order: IOrder
+    public class Order: IOrder 
     {
         /*
          * what should happen if a customer decides to change the order location?
@@ -184,6 +185,14 @@ namespace MyStore.Store
             }
 
             return EnoughStock;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("OrderLoc", OrderLoc.Where);
+            info.AddValue("Customer", Customer.CustomerName, typeof(Name));
+            info.AddValue("When", Time);
+            info.AddValue("Items", this._items);
         }
     }
 }

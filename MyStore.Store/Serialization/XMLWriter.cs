@@ -13,6 +13,17 @@ namespace MyStore.Store.Serialization
     {
         private const String DataDir = "../../../Data/";
         private const String ItemsFile = "CatalogueItems.xml";
+        private const String CustomersFile = "Customers.xml";
+        private const String LocationsFile = "Stores.xml";
+        private XmlWriterSettings settings = new XmlWriterSettings();
+
+        public XMLWriter()
+        {
+            //https://docs.microsoft.com/en-us/dotnet/api/system.xml.xmlwritersettings?view=netcore-3.1 
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.NewLineOnAttributes = true;
+        }
 
         public void WriteAllData()
         {            
@@ -26,12 +37,6 @@ namespace MyStore.Store.Serialization
         {
             Type itemtype = typeof(StoreCatalogue);
 
-            //https://docs.microsoft.com/en-us/dotnet/api/system.xml.xmlwritersettings?view=netcore-3.1 
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.NewLineOnAttributes = true;
-
-
             using (XmlWriter writer = XmlWriter.Create(DataDir + ItemsFile, settings))
             {
                 XmlSerializer serializer = new XmlSerializer(itemtype);
@@ -40,14 +45,28 @@ namespace MyStore.Store.Serialization
             
         }
 
+
         private void WriteCustomers()
         {
-            throw new NotImplementedException();
+            Type locationsType = typeof(Customers);
+
+            using (XmlWriter writer = XmlWriter.Create(DataDir + ItemsFile, settings))
+            {
+                XmlSerializer serializer = new XmlSerializer(locationsType);
+                serializer.Serialize(writer, Customers.Instance);
+            }
         }
 
+        //Locations are going to be responsible for storing the order histories
         private void WriteLocations()
         {
-            throw new NotImplementedException();
+            Type locationsType = typeof(Locations);
+
+            using (XmlWriter writer = XmlWriter.Create(DataDir + ItemsFile, settings))
+            {
+                XmlSerializer serializer = new XmlSerializer(locationsType);
+                serializer.Serialize(writer, Locations.Instance);
+            }
         }
 
 

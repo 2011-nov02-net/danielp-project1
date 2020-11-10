@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MyStore.Store
@@ -33,6 +34,14 @@ namespace MyStore.Store
         {
             Customer.OrderHistory.AddOrder(this);
             OrderLoc.LocationOrderHistory.AddOrder(this);
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("OrderLoc", OrderLoc.Where);
+            info.AddValue("Customer", Customer.CustomerName, typeof(Name));
+            info.AddValue("When", Time);
+            info.AddValue("Items", Items);
         }
     }
 }

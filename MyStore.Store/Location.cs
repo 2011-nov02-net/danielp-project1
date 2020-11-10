@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 using static MyStore.Store.StoreCatalogue;
 
 namespace MyStore.Store
@@ -8,7 +9,7 @@ namespace MyStore.Store
     /// <summary>
     /// Represents a store location.
     /// </summary>
-    public class Location
+    public class Location : ISerializable
     {
         /// <summary>
         /// Where the store is located. Can also be though of it's name. This is the
@@ -178,6 +179,17 @@ namespace MyStore.Store
                     throw new ItemNotFoundException($"Error: failed to find {ic.ThisItem.name} in the location's stocks");
                 }               
             }
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new System.ArgumentNullException("info");
+
+
+            info.AddValue("Where", this.Where);
+            info.AddValue("Stocks", Stocks);
+            info.AddValue("OrderHistory", LocationOrderHistory);
         }
     }
 }
