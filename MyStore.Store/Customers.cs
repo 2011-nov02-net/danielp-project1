@@ -11,7 +11,7 @@ namespace MyStore.Store
     /// <remarks>
     /// This is a Singleton.
     /// </remarks>
-    class Customers
+    public class Customers
     {
         private static Customers _instance;
 
