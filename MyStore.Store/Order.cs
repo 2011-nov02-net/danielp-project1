@@ -19,31 +19,71 @@ namespace MyStore.Store
 
         //items and amount, optionally any price modifyer too for sales
         //must reject unreasonable number of items.
-        public ICollection<ItemCount> Items { get; }
+        public ICollection<ItemCount> Items 
+        {
+            get
+            {
+                //todo: make this into a read only collection when sent back.
+                return Items;
+            } 
+            private set
+            {
+                if(OrderLoc is null)
+                {
+                    throw new NullReferenceException("This order has no store yet.");
+                }
+
+                //CHECK LOCATION STOCKS
+                bool EnoughStock = true;
+
+                foreach (ItemCount ic in value)
+                {
+                    EnoughStock = EnoughStock && OrderLoc.CheckIfEnoughStock(ic.ThisItem.name, ic.Count);
+                }
+
+                if (EnoughStock)
+                {
+                    Items = value.ToList<ItemCount>().AsReadOnly();
+                    
+                }
+                else
+                {
+                    throw new NotEnoughStockException($"Not Enough stock at {l.Where}");
+                }
+            }
+        }
 
 
+        /// <summary>
+        /// Create a new order of multiple items.
+        /// </summary>
+        /// <remarks>
+        /// Can throw a NotEnoughItemsException if the store does not have enough of the items.
+        /// </remarks>
+        /// <param name="l">The Location the order is being placed at.</param>
+        /// <param name="c">The customer placing the order.</param>
+        /// <param name="items">A collection of item counts to be ordered.</param>
         public Order(Location l, Customer c, ICollection<ItemCount> items)
         {
             Time = DateTime.UtcNow;
             Customer = c;
+            OrderLoc = l;
+            this.Items = items;
+        }
 
-            //CHECK LOCATION STOCKS
-            bool EnoughStock = true;
-            foreach( ItemCount ic in items)
-            {
-                EnoughStock = EnoughStock && l.CheckIfEnoughStock(ic.ThisItem.name, ic.Count);
-            }
-
-            if (EnoughStock)
-            {
-                Items = items.ToList<ItemCount>().AsReadOnly();
-                OrderLoc = l;
-            } else
-            {
-                //TODO: consider making this a new exception.
-                throw new NotEnoughStockException($"Not Enough stock at {l.Where}");
-            }
-
+        /// <summary>
+        /// Creates a new order for one item.
+        /// </summary>
+        /// <param name="l">The Location the order is being placed at.</param>
+        /// <param name="c">The customer placing the order.</param>
+        /// <param name="item">The item and amount being ordered.</param>
+        public Order(Location l, Customer c, ItemCount item)
+        {
+            Time = DateTime.UtcNow;
+            Customer = c;
+            OrderLoc = l;
+            List<ItemCount> items = new List<ItemCount>();
+            items.Add(item);
         }
 
         //must check stocks, and if item is already in order.
