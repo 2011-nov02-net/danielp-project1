@@ -37,7 +37,19 @@ namespace MyStore.Store
         //order function
         //must reject if not enough of an item in stock.
         //possibly modify remaining stock
-        //TODO: place orders, required functionality
+        //place orders, required functionality
+        /// <summary>
+        /// Part of allowing people to place orders. All orders must be finallized to
+        /// Actually place them.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: while amount of items can be changed, customer and location cannot currently be
+        /// changed. Instead a new order would have to be created.
+        /// </remarks>
+        /// <param name="item">The Item object being bought.</param>
+        /// <param name="amount">The amount of the item to be ordered. Can be changed later.</param>
+        /// <param name="forCustomer">Customer placing the order.</param>
+        /// <returns></returns>
         public Order CreateNewOrder(IItem item, int amount, Customer forCustomer)
         {
             List<ItemCount> items = new List<ItemCount>();
