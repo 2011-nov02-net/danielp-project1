@@ -32,7 +32,7 @@ namespace MyStore.Store
         //WILL add to order histories.
         public void FinallizeOrder()
         {
-            Customer.OrderHistory.AddOrder(this);
+            Customer.CustomerOrderHistory.AddOrder(this);
             OrderLoc.LocationOrderHistory.AddOrder(this);
         }
 

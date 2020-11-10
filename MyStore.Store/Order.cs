@@ -45,7 +45,7 @@ namespace MyStore.Store
                 }
                 else
                 {
-                    throw new NotEnoughStockException($"Not Enough stock at {l.Where}");
+                    throw new NotEnoughStockException($"Not Enough stock at {OrderLoc.Where}");
                 }
             }
         }
@@ -159,7 +159,7 @@ namespace MyStore.Store
                     OrderLoc.RemovePurchasedStock(ic);
                 }
 
-                Customer.OrderHistory.AddOrder(this);
+                Customer.CustomerOrderHistory.AddOrder(this);
                 OrderLoc.LocationOrderHistory.AddOrder(this);
             } else
             {

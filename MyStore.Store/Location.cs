@@ -32,6 +32,8 @@ namespace MyStore.Store
         internal Location(string where)
         {
             this.Where = where;
+            Stocks = new Dictionary<string, ItemCount>();
+            LocationOrderHistory = new OrderHistory();
         }
 
 
@@ -99,7 +101,7 @@ namespace MyStore.Store
                 Stocks[itemName] = new ItemCount(newAmount, itemName);
                 return newAmount;
             } else if(StoreCatalogue.Instance.ItemExists(itemName)){
-                itemStocks = new ItemCount(amount, itemName);
+                Stocks[itemName] = new ItemCount(amount, itemName);
                 return amount;
             } else
             {

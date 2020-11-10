@@ -5,7 +5,7 @@ namespace MyStore.Store
     public class Customer : ISerializable
     {
         //order history
-        public OrderHistory OrderHistory { get; }
+        public OrderHistory CustomerOrderHistory { get; }
 
         public readonly Name CustomerName;
 
@@ -17,6 +17,7 @@ namespace MyStore.Store
         {
             CustomerName = name;
             this.DefaultStore = DefaultStore;
+            CustomerOrderHistory = new OrderHistory();
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

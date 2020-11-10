@@ -124,17 +124,19 @@ namespace MyStore.Store
             /// </summary>
             private int ItemId;
             // disallow negative costs
+
+            private float _cost;
             public float cost 
             {
                 get
                 {
-                    return cost;
+                    return _cost;
                 } 
                 private set
                 {
                     if(cost >= 0)
                     {
-                        this.cost = value;
+                        this._cost = value;
                     }
                     else
                     {
