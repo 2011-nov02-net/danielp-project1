@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 #The connection string
-MyStore.DataModel\ConnectionString.txt
+MyStore.DataModel/ConnectionString.txt
