@@ -1,11 +1,18 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace MyStore.Store
 {
     public class Customer : ISerializable
     {
         //order history
-        public OrderHistory CustomerOrderHistory { get; }
+        public IEnumerable<IOrder> CustomerOrderHistory 
+        {
+            get
+            {
+                return Orders.Instance.GetOrdersByCustomer(this);
+            } 
+        }
 
         public readonly Name CustomerName;
 
@@ -17,7 +24,6 @@ namespace MyStore.Store
         {
             CustomerName = name;
             this.DefaultStore = DefaultStore;
-            CustomerOrderHistory = new OrderHistory();
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

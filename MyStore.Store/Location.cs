@@ -26,14 +26,19 @@ namespace MyStore.Store
         /// <summary>
         /// The list of orders so far.
         /// </summary>
-        public OrderHistory LocationOrderHistory { get; }
+        public IEnumerable<IOrder> LocationOrderHistory 
+        {
+            get
+            {
+                return Orders.Instance.GetOrdersByLocation(this);
+            }
+        }
 
 
         internal Location(string where)
         {
             this.Where = where;
             Stocks = new Dictionary<string, ItemCount>();
-            LocationOrderHistory = new OrderHistory();
         }
 
 
