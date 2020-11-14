@@ -134,6 +134,12 @@ namespace MyStore.Store
         }
 
 
+        public void DeleteOrder()
+        {
+            //TODO: reset stocks, delete from Orders.instance
+        }
+
+
 
         //must double check stocks
         //then must add to the order histories of customer and location.
@@ -159,8 +165,6 @@ namespace MyStore.Store
                     OrderLoc.RemovePurchasedStock(ic);
                 }
 
-                Customer.CustomerOrderHistory.AddOrder(this);
-                OrderLoc.LocationOrderHistory.AddOrder(this);
             } else
             {
                 throw new NotEnoughStockException("Error: No longer enough stock for these items.");

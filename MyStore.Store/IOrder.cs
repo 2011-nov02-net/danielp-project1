@@ -28,18 +28,11 @@ namespace MyStore.Store
         //must reject unreasonable number of items.
         public ICollection<ItemCount> Items { get; }
 
-        //TODO: consider removing from interface, making internal on historic order.
-        /// <summary>
-        /// Adds another item to the order.
-        /// </summary>
-        /// <param name="itemname">Human readable name of the item/</param>
-        /// <param name="amount">The amount to buy.</param>
-        public void EditOrderAmounts(string itemname, int amount);
 
         /// <summary>
         /// Finalizes the order and adds it to the customer and location's order history.
         /// MAY also adjust the stocks of the store.
         /// </summary>
-        public void FinallizeOrder();
+        //public void FinallizeOrder();
     }
 }
