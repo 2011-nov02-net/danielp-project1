@@ -92,6 +92,8 @@ CREATE TABLE Store.Orders (
 		NOT NULL,
 	OrderTotal MONEY
 		NOT NULL,
+	OrderTime TIME
+		NULL,
 	CONSTRAINT order_PK PRIMARY KEY (Id),
 	CONSTRAINT StoreOrders_FK FOREIGN KEY (StoreLocation) REFERENCES Store.[Location] (LocationName),
 	CONSTRAINT CustomerOrders_FK FOREIGN KEY (CustomerID) REFERENCES Store.Customers (Id)
