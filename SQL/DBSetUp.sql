@@ -1,8 +1,6 @@
 ﻿
 --https://github.com/2011-nov02-net/trainer-code/wiki/Project-0-requirements
 -- create tables
-
-
 -- orders table	
 	-- customer id
 	-- customer id
@@ -33,16 +31,21 @@
 CREATE SCHEMA Store;
 GO
 
+
+DROP TABLE IF EXISTS Store.OrderItems;
+DROP TABLE IF EXISTS Store.Orders;
 DROP TABLE IF EXISTS Store.Invintory;
 DROP TABLE IF EXISTS Store.Customers;
 DROP TABLE IF EXISTS Store.[Location];
 DROP TABLE IF EXISTS Store.Items;
+
 
 CREATE TABLE Store.Items (
 	ItemName NVARCHAR(50)
 		NOT NULL,
 	ItemPrice MONEY
 		NOT NULL,
+	CONSTRAINT Pos_money_cost CHECK (ItemPrice >= 0),
 	CONSTRAINT Item_pk PRIMARY KEY (ItemName)
 );
 
@@ -60,6 +63,7 @@ CREATE TABLE Store.Invintory (
 	Quantity INT
 		NOT NULL,
 	-- constraint, quantity >= 0
+	CONSTRAINT postivequantity_Inv CHECK (Quantity >= 0),
 	CONSTRAINT Inv_CPK PRIMARY KEY (StoreLocation, ItemName),
 	CONSTRAINT InvLoc_FK FOREIGN KEY (StoreLocation) REFERENCES Store.[Location] (LocationName),
 	CONSTRAINT InvItm_FK FOREIGN KEY (ItemName) REFERENCES Store.Items (ItemName)
@@ -94,6 +98,7 @@ CREATE TABLE Store.Orders (
 		NOT NULL,
 	OrderTime DATETIME
 		NULL,
+	CONSTRAINT PositiveMoney_orders CHECK (OrderTotal >= 0),
 	CONSTRAINT order_PK PRIMARY KEY (Id),
 	CONSTRAINT StoreOrders_FK FOREIGN KEY (StoreLocation) REFERENCES Store.[Location] (LocationName),
 	CONSTRAINT CustomerOrders_FK FOREIGN KEY (CustomerID) REFERENCES Store.Customers (Id)
@@ -106,6 +111,7 @@ CREATE TABLE Store.OrderItems (
 		NOT NULL,
 	Quantity INT
 		NOT NULL,
+	CONSTRAINT PositiveQuantity_orderitem CHECK (Quantity > 0),
 	CONSTRAINT ori_PK PRIMARY KEY (OrderId, ItemID),
 	CONSTRAINT OrderItemOrder_FK FOREIGN KEY (OrderID) REFERENCES Store.Orders (Id),
 	CONSTRAINT OrderItemItem_FK FOREIGN KEY (ItemID) REFERENCES Store.Items (ItemName)
