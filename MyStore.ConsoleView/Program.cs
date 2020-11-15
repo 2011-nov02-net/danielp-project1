@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MyStore.Store;
 using MyStore.Store.Serialization;
 
@@ -8,8 +9,51 @@ namespace MyStore.ConsoleView
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Welcome to the store!");
 
+            //basically hold the current state of the program
+            IMenu CurrentMenu = new StartMenu();
+
+            while( CurrentMenu != null)
+            {
+                CurrentMenu = CurrentMenu.DisplayMenu();
+            }
+        }
+
+
+        /// <summary>
+        /// Checks if the input string from a user was valid.
+        /// </summary>
+        /// <param name="input">The user's input string. Will be trimmed and set to lowercase.</param>
+        /// <param name="validInput">The list of valid input strings.</param>
+        /// <param name="ChoiceIndex">The index of the user's choice in the validInput array, or -1 if it was not in the array.</param>
+        /// <returns></returns>
+        internal static bool ValidOption(string input, List<String> validInput, out int ChoiceIndex)
+        {
+            //normalize input
+            input = input.Trim().ToLower();
+            ChoiceIndex = -1;
+            bool WasValid = false;
+
+            for(int i = 0; i < validInput.Count && !WasValid; i++)
+            {
+                if(validInput[i] == input)
+                {
+                    ChoiceIndex = i;
+                    WasValid = true;
+                }
+            }
+
+            if (!WasValid)
+            {
+                Console.WriteLine($"\"{input}\" Was not recognized as valid input.");
+            }
+
+            return WasValid;
+        }
+
+        private void Setup()
+        {
 
             StoreCatalogue.Instance.RegisterItem("Item1", 1);
             StoreCatalogue.Instance.RegisterItem("Item2", 2);
@@ -40,10 +84,6 @@ namespace MyStore.ConsoleView
             o = Locations.Instance.GetLocation("Store2").CreateNewOrder("Item5", 1, c);
             o.EditOrderAmounts("Item2", 5);
             o.FinallizeOrder();
-
-
-            XMLWriter writer = new XMLWriter();
-            writer.WriteAllData();
         }
     }
 }
