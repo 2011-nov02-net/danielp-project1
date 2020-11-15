@@ -4,13 +4,14 @@
 
 
 -- orders table	
-	-- order id
+	-- customer id
 	-- customer id
 	-- store id
+	-- order date
 	-- order total
 -- order-items table
 	-- order id
-	-- item id
+	-- item name
 	-- quantity
 -- customers table
 	-- first name
@@ -38,8 +39,6 @@ DROP TABLE IF EXISTS Store.[Location];
 DROP TABLE IF EXISTS Store.Items;
 
 CREATE TABLE Store.Items (
-	ItemID int
-		NOT NULL IDENTITY(1,1) UNIQUE,
 	ItemName NVARCHAR(50)
 		NOT NULL,
 	ItemPrice MONEY
@@ -90,6 +89,7 @@ CREATE TABLE Store.Orders (
 		NOT NULL,
 	StoreLocation NVARCHAR(100)
 		NOT NULL,
+	--considered making total computed, but decided against so that prices can change in the future
 	OrderTotal MONEY
 		NOT NULL,
 	OrderTime TIME
