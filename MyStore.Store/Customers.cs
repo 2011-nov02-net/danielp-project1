@@ -47,8 +47,13 @@ namespace MyStore.Store
             if (!AllCustomers.Contains(c))
             {
                 AllCustomers.Add(c);
-            } 
-            return c;
+                return c;
+            }
+            else
+            {
+                throw new CustomerAlreadyExistsException("This customer already exists.");
+            }
+            
         }
 
         /// <summary>
