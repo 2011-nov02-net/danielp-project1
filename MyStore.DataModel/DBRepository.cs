@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 using MyStore.Store;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace MyStore.DataModel
 {
     class DBRepository : IDbRepository
     {
+        
+
+
+
+
         public void CreateCustomer(Store.Customer customer)
         {
             throw new NotImplementedException();
