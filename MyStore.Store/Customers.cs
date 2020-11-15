@@ -16,7 +16,8 @@ namespace MyStore.Store
     {
         private static Customers _instance;
 
-        private List<Customer> AllCustomers;
+        private 
+            HashSet<Customer> AllCustomers;
 
         public static Customers Instance
         {
@@ -33,7 +34,7 @@ namespace MyStore.Store
 
         private Customers()
         {
-            this.AllCustomers = new List<Customer>();
+            this.AllCustomers = new HashSet<Customer>();
         }
 
         //Required Functionality
