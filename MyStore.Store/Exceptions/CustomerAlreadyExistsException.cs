@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace MyStore.Store
+namespace MyStore.Store.Exceptions
 {
     [Serializable]
     public class CustomerAlreadyExistsException : Exception

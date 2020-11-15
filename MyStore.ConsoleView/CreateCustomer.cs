@@ -1,5 +1,6 @@
 ﻿using System;
 using MyStore.Store;
+using MyStore.Store.Exceptions;
 
 namespace MyStore.ConsoleView
 {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using MyStore.Store.Exceptions;
 using static MyStore.Store.StoreCatalogue;
 
 namespace MyStore.Store

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyStore.Store
+namespace MyStore.Store.Exceptions
 {
     public class NotEnoughStockException : ArgumentException
     {
