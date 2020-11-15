@@ -6,7 +6,7 @@ namespace MyStore.ConsoleView
     internal class StartMenu : IMenu
     {
         //                                                   0     1      2     3     4    5
-        private List<String> ValidInputs = new List<string>{"q", "quit", "n", "new", "f", "find" };
+        private List<string> ValidInputs = new List<string>{"q", "quit", "n", "new", "f", "find" };
 
 
         public IMenu DisplayMenu()
