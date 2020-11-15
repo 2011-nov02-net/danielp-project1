@@ -35,5 +35,10 @@ namespace MyStore.Store
                 info.AddValue("DefaultStore", DefaultStore);
             }
         }
+
+        public void SetDefaultStore(Location l)
+        {
+            this.DefaultStore = l;
+        }
     }
 }
