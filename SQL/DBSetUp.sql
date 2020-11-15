@@ -92,13 +92,12 @@ CREATE TABLE Store.Orders (
 	--considered making total computed, but decided against so that prices can change in the future
 	OrderTotal MONEY
 		NOT NULL,
-	OrderTime TIME
+	OrderTime DATETIME
 		NULL,
 	CONSTRAINT order_PK PRIMARY KEY (Id),
 	CONSTRAINT StoreOrders_FK FOREIGN KEY (StoreLocation) REFERENCES Store.[Location] (LocationName),
 	CONSTRAINT CustomerOrders_FK FOREIGN KEY (CustomerID) REFERENCES Store.Customers (Id)
 );
-
 
 CREATE TABLE Store.OrderItems (
 	OrderID INT
