@@ -1,4 +1,5 @@
-﻿using MyStore.Store;
+﻿using System;
+using MyStore.Store;
 
 namespace MyStore.ConsoleView
 {
@@ -7,24 +8,44 @@ namespace MyStore.ConsoleView
         public IMenu DisplayMenu()
         {
             Customer Current = null;
+            bool gotValidName = false;
             Name customerName;
 
-            //TODO: implement function
-            //possibly pull out into it's own function?
+
             do
             {
-                //get first name
+                customerName = GetName();
+                try
+                {
+                    Current = Customers.Instance.RegisterCustomer(Current);
+                    gotValidName = true;
 
-                //ask if want to include middle initial
-                //get middle initial
+                }
+                catch (CustomerAlreadyExistsException e)
+                {
+                    gotValidName = false;
+                    Current = null;
+                    Console.WriteLine("Names must be unique, that one isn't. Try again please.");
+                }
 
-                //get last name
-            } while (false); //confirm the name is unique (if not handled by class already).
-
-            //TODO: probably move into the above
-            Current = Customers.Instance.RegisterCustomer(Current);
+            } while (!gotValidName);
 
             return new LoggedInMenu(Current);
+        }
+
+        //TODO: implement function
+        private Name GetName()
+        {
+
+            //get first name
+
+            //ask if want to include middle initial
+            //get middle initial
+
+            //get last name
+
+
+            throw new NotImplementedException();
         }
     }
 }
