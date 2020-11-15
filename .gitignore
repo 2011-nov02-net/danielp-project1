@@ -351,3 +351,6 @@ MigrationBackup/
 
 #The connection string
 MyStore.DataModel/ConnectionString.txt
+
+#re-scaffolding command
+MyStore.DataModel/ScaffoldingCommand.txt
