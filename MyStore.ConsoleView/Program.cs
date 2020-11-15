@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using MyStore.DataModel;
 using MyStore.Store;
 using MyStore.Store.Serialization;
 
@@ -7,8 +10,20 @@ namespace MyStore.ConsoleView
 {
     class Program
     {
+
+        static internal DbContextOptions<Project0DBContext> s_dbContextOptions;
+
+
         static void Main(string[] args)
         {
+            SetupContextOptions();
+
+            if(s_dbContextOptions == null)
+            {
+                Console.WriteLine("Exiting Program . . .");
+                return;
+            }
+
             Console.WriteLine("Welcome to the store!");
 
             //basically hold the current state of the program
@@ -52,7 +67,25 @@ namespace MyStore.ConsoleView
             return WasValid;
         }
 
-        private void Setup()
+
+        private static void SetupContextOptions()
+        {
+            DbContextOptionsBuilder<Project0DBContext> optionsBuilder = new DbContextOptionsBuilder<Project0DBContext>();
+            string fileloc = "./../../../../MyStore.dataModel/ConnectionString.txt";
+            if (!File.Exists(fileloc))
+            {
+                Console.WriteLine($"Error: Expected a file called \"ConnectionString.txt\" at {fileloc} holding only the database connection string.");
+                s_dbContextOptions = null;
+                return;
+            }
+
+            string connectionStr = File.ReadAllText(fileloc);
+
+            optionsBuilder.UseSqlServer(connectionStr);
+            s_dbContextOptions = optionsBuilder.Options;
+        }
+
+        private static void Setup()
         {
 
             StoreCatalogue.Instance.RegisterItem("Item1", 1);
@@ -72,12 +105,12 @@ namespace MyStore.ConsoleView
             Locations.Instance.GetLocation("Store2").AddInventory("Item5", 60);
             Locations.Instance.GetLocation("Store2").AddInventory("Item2", 25);
 
-            Customer c = Customers.Instance.RegisterCustomer("Daniel", "last", 'm');
+            Store.Customer c = Customers.Instance.RegisterCustomer("Daniel", "last", 'm');
             Customers.Instance.RegisterCustomer("Randel", "last", 'n');
             Customers.Instance.RegisterCustomer("Daniel", "last");
 
             Console.WriteLine("Creating first order");
-            Order o = Locations.Instance.GetLocation("Store1").CreateNewOrder("Item1", 10, c);
+            Store.Order o = Locations.Instance.GetLocation("Store1").CreateNewOrder("Item1", 10, c);
             o.FinallizeOrder();
 
 
