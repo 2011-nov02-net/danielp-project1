@@ -31,5 +31,6 @@ namespace MyStore.DataModel
 
         void UpdateOrder(Store.Order o);
 
+        void LoadDBDataToModel();
     }
 }

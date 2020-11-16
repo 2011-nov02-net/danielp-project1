@@ -155,6 +155,56 @@ namespace MyStore.DataModel
         }
 
 
+        void IDbRepository.LoadDBDataToModel()
+        {
+            using Project0DBContext context = ConnectToDB();
+            //get all locations -> model
+            foreach(Location l in context.Locations)
+            {
+                Store.Locations.Instance.RegisterLocation(l.LocationName);
+            }
+
+            //get customers -> model
+            foreach(Customer c in context.Customers)
+            {
+                Store.Customer newcust = Store.Customers.Instance.RegisterCustomer(
+                    new Name(c.FirstName, c.LastName, c?.MiddleInitial?[0]));
+
+                if(c.StoreLocation != null)
+                {
+                    newcust.SetDefaultStore(Store.Locations.Instance.GetLocation(c.StoreLocation));
+                }
+            }
+
+            //get all items -> model
+            foreach (Item i in context.Items)
+            {
+                Store.StoreCatalogue.Instance.RegisterItem(i.ItemName, (float) i.ItemPrice);
+            }
+
+            //get all orders -> model
+            // as historic orders 
+            foreach(Order o in context.Orders.Include(oi => oi.OrderItems).ThenInclude(oi => oi.Item).Include(oi => oi.Customer))
+            {
+                //get all items in the order
+                ICollection<ItemCount> orderItems = new List<ItemCount>();
+                foreach( OrderItem orderItem in o.OrderItems)
+                {
+                    orderItems.Add(new ItemCount(orderItem.Quantity, orderItem.Item.ItemName));
+                }
+
+                Store.Orders.Instance.CreateAndAddPastOrder(
+                    o.StoreLocation,
+                    getCustomerName(o.Customer),
+                    o.OrderTime,
+                    orderItems
+                    );               
+            }
+
+            //get all store invintories
+            throw new NotImplementedException();
+        }
+
         private Project0DBContext ConnectToDB()
         {
             return new Project0DBContext(this.dbContextOptions);
@@ -188,5 +238,11 @@ namespace MyStore.DataModel
 
             return DBCustomer;
         }
+
+        private Name getCustomerName(Customer c)
+        {
+            return new Name(c.FirstName, c.LastName, c.MiddleInitial?[0]);
+        }
+
     }
 }
