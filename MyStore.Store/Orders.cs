@@ -9,7 +9,7 @@ namespace MyStore.Store
     /// <summary>
     /// singleton
     /// </summary>
-    class Orders
+    public class Orders
     {
         private List<IOrder> AllOrders;
         private static Orders _instance;
