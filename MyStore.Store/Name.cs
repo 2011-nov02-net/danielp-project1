@@ -81,5 +81,18 @@ namespace MyStore.Store
         {
             return First + " " + (MiddleInitial?.ToString() ?? " ")+ " " + Last;
         }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Name)
+            {
+                Name other = (Name) obj;
+
+                return First == other.First && Last == other.Last && MiddleInitial == other.MiddleInitial;
+            } else
+            {
+                return base.Equals(obj);
+            }          
+        }
     };
 }
