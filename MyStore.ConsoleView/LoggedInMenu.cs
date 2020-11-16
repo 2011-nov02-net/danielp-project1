@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MyStore.Store;
+using System.Linq;
 
 namespace MyStore.ConsoleView
 {
@@ -63,12 +64,28 @@ namespace MyStore.ConsoleView
             }
         }
 
-        //TODO: display customer order history, req
+        //display customer order history
         // asks model for customer's orders, prints them, then returns
         //DisplayMenu should return self for this
         private void DisplayCustomerOrders()
         {
-            throw new System.NotImplementedException();
+            IEnumerable<Store.IOrder> orders = Repo.GetOrderHistory(LoggedInCustomer);
+
+            if(orders.Count() <= 0)
+            {
+                Console.WriteLine("\nThis customer has no orders");
+            }
+
+            foreach(IOrder o in orders)
+            {
+                Console.WriteLine($"On {o.Time}, from {o.OrderLoc.Where}");
+
+                foreach( ItemCount ic in o.Items)
+                {
+                    Console.WriteLine($"\t{ic.ThisItem.name} x{ic.Count}\t\t{ic.ThisItem.cost}");
+                }
+                Console.WriteLine($"\t\tTotal:\t${o.Cost}\n");
+            }
         }
     }
 }

@@ -76,7 +76,7 @@ namespace MyStore.Store
         /// <param name="itemName">The human readable name of an item</param>
         /// <param name="itemPrice">The price of the item</param>
         /// <returns>The newly created item.</returns>
-        public IItem RegisterItem(string itemName, float itemPrice)
+        public IItem RegisterItem(string itemName, decimal itemPrice)
         {
             // prevents multiple items with the same name from being added.
             if (!AllItems.ContainsKey(itemName))
@@ -126,8 +126,8 @@ namespace MyStore.Store
             private int ItemId;
             // disallow negative costs
 
-            private float _cost;
-            public float cost 
+            private decimal _cost;
+            public decimal cost 
             {
                 get
                 {
@@ -174,7 +174,7 @@ namespace MyStore.Store
                 info.AddValue("Cost", cost);
             }
 
-            protected internal Item(string itemname, float itemprice)
+            protected internal Item(string itemname, decimal itemprice)
             {
                 this.name = itemname;
                 this.cost = itemprice;

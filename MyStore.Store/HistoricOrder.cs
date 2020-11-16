@@ -15,17 +15,20 @@ namespace MyStore.Store
 
         public ICollection<ItemCount> Items { get; }
 
+        public decimal Cost { get;  }
+
         internal void EditOrderAmounts(string itemname, int amount)
         {
             Items.Add(new ItemCount(amount, itemname));
         }
 
-        internal HistoricOrder(string locationName, Name customerName, DateTime time, ICollection<ItemCount> Items)
+        internal HistoricOrder(string locationName, Name customerName, DateTime time, ICollection<ItemCount> Items, decimal cost)
         {
             OrderLoc = Locations.Instance.GetLocation(locationName);
             Customer = Customers.Instance.GetCustomer(customerName);
             this.Time = time;
             this.Items = Items;
+            this.Cost = cost;
         }
 
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)

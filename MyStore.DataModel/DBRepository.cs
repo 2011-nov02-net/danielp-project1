@@ -64,20 +64,27 @@ namespace MyStore.DataModel
 
             Customer DBCustomer = GetDBCustomerByName(DBContext, name);
 
-            if (Customers.Instance.HasCustomer(name))
+            if(DBCustomer != null)
             {
-                //something weird happened probably. Expecting customers to be gotten from 
-                //the model first before checking DB.
-                Console.Error.WriteLine($"Warning: Customer {name} already existed in the model");
-                return Customers.Instance.GetCustomer(name);
-            } else
-            {
-                if(DBCustomer.StoreLocation != null)
+                if (Customers.Instance.HasCustomer(name))
                 {
+                    //something weird happened probably. Expecting customers to be gotten from 
+                    //the model first before checking DB.
+                    Console.Error.WriteLine($"Warning: Customer {name} already existed in the model");
+                    return Customers.Instance.GetCustomer(name);
+                }
+                else
+                {
+                    if (DBCustomer.StoreLocation != null)
+                    {
+                        return Customers.Instance.RegisterCustomer(name, Locations.Instance.GetOrRegisterLocation(DBCustomer.StoreLocation));
+                    }
                     return Customers.Instance.RegisterCustomer(name, Locations.Instance.GetOrRegisterLocation(DBCustomer.StoreLocation));
                 }
-                return Customers.Instance.RegisterCustomer(name, Locations.Instance.GetOrRegisterLocation(DBCustomer.StoreLocation));
-            }
+            } else
+            {
+                return null;
+            }      
         }
 
         /// <summary>
@@ -109,22 +116,66 @@ namespace MyStore.DataModel
             return customers;
         }
 
-        //TODO: get history (req)
+        //get history (req)
         public IEnumerable<IOrder> GetOrderHistory(Store.Customer c)
         {
-            throw new NotImplementedException();
+            Project0DBContext dBContext = this.ConnectToDB();
+
+            Customer customer = GetDBCustomerByName(dBContext, c.CustomerName);
+            customer = dBContext.Customers
+                .Where(cust => cust.Id == customer.Id)
+                .Include(cust => cust.Orders)
+                .ThenInclude(ord => ord.OrderItems)
+                .ThenInclude(ordi => ordi.Item)
+                .FirstOrDefault();
+
+
+            IEnumerable<IOrder> orders = Store.Orders.Instance.GetOrdersByCustomer(c);
+
+            foreach (Order CustomerOrder_DB in customer.Orders)
+            {
+                bool foundEquiv = false;
+                foreach(Store.IOrder CustomerOrder_MD in orders)
+                {
+                    if (!this.EquivilentOrder(CustomerOrder_MD, CustomerOrder_DB))
+                    {
+                        foundEquiv = true;
+                        break;
+                    }
+                }
+
+                if (!foundEquiv)
+                {
+
+                    ICollection<ItemCount> orderitems = new List<ItemCount>();
+                    foreach(OrderItem oi in CustomerOrder_DB.OrderItems)
+                    {
+                        orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
+                    }
+                    Store.Orders.Instance.CreateAndAddPastOrder(CustomerOrder_DB.StoreLocation, this.getCustomerName(CustomerOrder_DB.Customer), CustomerOrder_DB.OrderTime, orderitems, CustomerOrder_DB.OrderTotal);
+                }
+            }
+
+            orders = Store.Orders.Instance.GetOrdersByCustomer(c);
+            return orders;
         }
         
+
+
         //TODO: get history (req)
         public IEnumerable<IOrder> GetOrderHistory(Store.Location l)
         {
             throw new NotImplementedException();
         }
 
+
+
         public IEnumerable<ItemCount> GetStoreStocks(Store.Location l)
         {
             throw new NotImplementedException();
         }
+
+
 
         /// <summary>
         /// Take a finalized order from the model, and convert it into a db order, adjust store invintories, 
@@ -167,10 +218,14 @@ namespace MyStore.DataModel
             DBContext.SaveChanges();
         }
 
+
+
         public void UpdateOrder(Store.Order o)
         {
             throw new NotImplementedException();
         }
+
+
 
         /// <summary>
         /// Loads all the DB Items into memory
@@ -204,7 +259,7 @@ namespace MyStore.DataModel
             //get all items -> model
             foreach (Item i in context.Items)
             {
-                Store.StoreCatalogue.Instance.RegisterItem(i.ItemName, (float) i.ItemPrice);
+                Store.StoreCatalogue.Instance.RegisterItem(i.ItemName,  i.ItemPrice);
             }
 
             //get all orders -> model
@@ -222,7 +277,8 @@ namespace MyStore.DataModel
                     o.StoreLocation,
                     getCustomerName(o.Customer),
                     o.OrderTime,
-                    orderItems
+                    orderItems,
+                    o.OrderTotal
                     );               
             }
 
@@ -233,10 +289,14 @@ namespace MyStore.DataModel
             }
         }
 
+
+
         private Project0DBContext ConnectToDB()
         {
             return new Project0DBContext(this.dbContextOptions);
         }
+
+
 
         /// <summary>
         /// Get the db's object for a customer
@@ -267,9 +327,68 @@ namespace MyStore.DataModel
             return DBCustomer;
         }
 
+
+
         private Name getCustomerName(Customer c)
         {
             return new Name(c.FirstName, c.LastName, c.MiddleInitial?[0]);
+        }
+
+
+        /// <summary>
+        /// Check if a store order is equivilent with a model order
+        /// </summary>
+        /// <param name="storder"></param>
+        /// <param name="modelOrder"></param>
+        /// <returns></returns>
+        private bool EquivilentOrder(Store.IOrder storder, Order modelOrder)
+        {
+            bool result = true;
+
+            //compare store
+            if(storder.OrderLoc.Where != modelOrder.StoreLocation)
+            {
+                result = false;
+                return result;
+            }
+
+            //compare customer
+            if(! (new Name(modelOrder.Customer.FirstName, modelOrder.Customer.LastName, modelOrder.Customer.MiddleInitial?[0]).Equals(storder.Customer.CustomerName)))
+            {
+                result = false;
+                return result;
+            }
+
+            if(storder.Cost !=  modelOrder.OrderTotal)
+            {
+                result = false;
+                return result;
+            }
+
+            //compare time with some leeway
+            if (Math.Abs(storder.Time.Ticks - modelOrder.OrderTime.Ticks) > 1000)
+            {
+                result = false;
+                return result;
+            }
+
+            //compare order items
+            foreach(OrderItem oi in modelOrder.OrderItems)
+            {
+                foreach(Store.ItemCount ic in storder.Items)
+                {
+                    if(ic.ThisItem.name == oi.Item.ItemName && ic.Count == oi.Quantity)
+                    {
+                        continue;
+                    } else
+                    {
+                        result = false;
+                        return result;
+                    }
+                }
+            }
+
+            return result;
         }
 
     }

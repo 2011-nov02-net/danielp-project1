@@ -7,7 +7,7 @@ namespace MyStore.Store
 {
     public interface IItem : ISerializable
     {
-        public float cost { get; }
+        public decimal cost { get; }
         public string name { get;  }
 
         //private string UPCCode

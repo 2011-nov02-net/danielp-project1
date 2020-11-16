@@ -28,6 +28,8 @@ namespace MyStore.Store
         //must reject unreasonable number of items.
         public ICollection<ItemCount> Items { get; }
 
+        public decimal Cost { get; }
+
 
         /// <summary>
         /// Finalizes the order and adds it to the customer and location's order history.

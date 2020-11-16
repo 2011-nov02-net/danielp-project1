@@ -20,17 +20,9 @@ namespace MyStore.ConsoleView
             Console.WriteLine("Would you like to see a list of all customers? y/n");
             int choice = Program.ValidYesNoOption();
 
-            if(choice == 0) //yes
+            if (choice == 0) //yes
             {
-                IEnumerable<Store.Customer> customers = Repo.GetCustomers();
-
-                foreach(Store.Customer c in customers)
-                {
-                    Console.WriteLine($"{c}");
-                }
-
-                Console.WriteLine("\n"); //write a few lines
-
+                DisplayCustomers();
             }
 
 
@@ -38,6 +30,8 @@ namespace MyStore.ConsoleView
             Customer Current = null;
             do
             {
+                FoundCustomer = false;
+
                 //get a name from the user
                 Name fullname = GetName();
 
@@ -45,29 +39,60 @@ namespace MyStore.ConsoleView
                 try
                 {
                     Current = Customers.Instance.GetCustomer(fullname);
-                } catch (CustomerNotFoundException e) {
+                }
+                catch (CustomerNotFoundException e)
+                {
                     Console.Error.WriteLine(e.Message);
                     Current = Repo.GetCustomerByName(fullname);
                 }
 
-                if(Current != null)
+                if (Current != null)
                 {
                     FoundCustomer = true;
-                } else
+                }
+                else
                 {
                     //customer could not be found:
                     //ask if they want to make a new customer instead.
-                    Console.WriteLine("Customer not found, would you like to make a new customer?");
-                    int keepLooking = Program.ValidYesNoOption();
+                    Console.WriteLine("Customer not found, would you like to make a new customer? y/n");
+                    Console.WriteLine("\nWhat would you like to do?");
+                    Console.WriteLine("{F}ind - continue looking for a customer.");
+                    Console.WriteLine("{V}iew - view a list of existing customers.");
+                    Console.WriteLine("{N}ew - Create a new customer with the name " + fullname.ToString());
 
-                    if(keepLooking == 0)
+
+                    choice = -1;
+                    while (!Program.ValidOption(Console.ReadLine(),
+                        new List<string> { "f", "find", "v", "view", "n", "new" },
+                        out choice))
                     {
-                        return new CreateCustomer(Repo).DisplayMenu(fullname);
+
+                    }
+
+                    switch (choice)
+                    {
+                        case 0:
+                        case 1:
+                            //do nothing, get new name 
+                            break;
+                        case 2:
+                        case 3:
+                            //show a list of customers.
+                            DisplayCustomers();
+                            break;
+                        case 4:
+                        case 5:
+                            return new CreateCustomer(Repo).DisplayMenu(fullname);
+                            break;
+                        default:
+                            //error state
+                            Console.Error.WriteLine("Error, unexpected input in FindCustomer.");
+                            return this;
                     }
                 }
             }
             while (!FoundCustomer);
-         
+
             return new LoggedInMenu(Repo, Current);
         }
 
@@ -96,6 +121,19 @@ namespace MyStore.ConsoleView
 
 
             return new Name(firstName, lastName, middleInitial);
+        }
+
+
+        public void DisplayCustomers()
+        {
+            IEnumerable<Store.Customer> customers = Repo.GetCustomers();
+
+            foreach (Store.Customer c in customers)
+            {
+                Console.WriteLine($"{c}");
+            }
+
+            Console.WriteLine("\n"); //write a few lines
         }
     }
 }

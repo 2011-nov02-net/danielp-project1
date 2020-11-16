@@ -24,6 +24,28 @@ namespace MyStore.Store
 
         private List<ItemCount> _items;
 
+        private decimal _orderCost = -1m;
+
+        public decimal Cost
+        {
+            get
+            {
+                if(_orderCost < 0)
+                {
+                    decimal cost = 0;
+                    foreach(ItemCount ic in _items)
+                    {
+                        cost += ic.Count * ic.ThisItem.cost;
+                    }
+
+                    return cost;
+                } else
+                {
+                    return _orderCost;
+                }
+            }
+        }
+
         //items and amount, optionally any price modifyer too for sales
         //must reject unreasonable number of items.
         public ICollection<ItemCount> Items 
@@ -50,6 +72,8 @@ namespace MyStore.Store
                 }
             }
         }
+
+       
 
 
         /// <summary>
@@ -155,6 +179,7 @@ namespace MyStore.Store
         public void FinallizeOrder()
         {
             this.Time = DateTime.UtcNow;
+            _orderCost = this.Cost;
 
 
             if (EnoughStockForAllItems())
