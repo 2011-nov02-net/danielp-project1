@@ -17,8 +17,8 @@ namespace MyStore.DataModel
         }
 
         /// <summary>
-        /// Takes a model customer, creates a DB customer, and sends it to the database. Assumes the
-        /// customer has already been added to the model.
+        /// Takes a model customer, creates a DB customer, and sends it to the database. Will register
+        /// the customer with the data model if the customer isn't already.
         /// </summary>
         /// <remarks>
         /// May throw exceptions if the store name is over 100 characters, or doesn't exist in the DB.
@@ -27,8 +27,12 @@ namespace MyStore.DataModel
         public void CreateCustomer(Store.Customer customer)
         {
             using Project0DBContext DBContext = new Project0DBContext(dbContextOptions);
+            if (!Customers.Instance.HasCustomer(customer.CustomerName))
+            {
+                Customers.Instance.RegisterCustomer(customer);
+            }
 
-            Customer newcustomer = new Customer();
+            DataModel.Customer newcustomer = new Customer();
             newcustomer.Id = (DBContext.Customers.OrderByDescending(cust => cust.Id).Take(1).First().Id) + 1;
             newcustomer.LastName = customer.CustomerName.Last;
             newcustomer.FirstName = customer.CustomerName.First;
@@ -87,11 +91,13 @@ namespace MyStore.DataModel
             throw new NotImplementedException();
         }
 
+        //TODO: get history (req)
         public IEnumerable<IOrder> GetOrderHistory(Store.Customer c)
         {
             throw new NotImplementedException();
         }
-
+        
+        //TODO: get history (req)
         public IEnumerable<IOrder> GetOrderHistory(Store.Location l)
         {
             throw new NotImplementedException();
@@ -102,12 +108,20 @@ namespace MyStore.DataModel
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Take a finalized order from the model, and convert it into a db order, adjust store invintories, 
+        /// and insert it.
+        /// </summary>
+        /// <exception cref="NullReferenceException"> 
+        /// This might throw a null reference if the store has no invintory for an item in the order in the database.
+        /// </exception>
+        /// <param name="o">A model order. This order should have had Finalize() called on it, as this method doesn't</param>
         public void PlaceOrder(Store.Order o)
         {
             using Project0DBContext DBContext = new Project0DBContext(dbContextOptions);
 
             Order newOrder = new Order();
-            //Assuming default is null.
+            //default is null.
             int nextid = (DBContext.Customers.OrderByDescending(cust => cust.Id).FirstOrDefault()?.Id ?? -1 ) + 1;
             newOrder.Id = nextid;
             newOrder.StoreLocation = o.OrderLoc.Where;
@@ -146,7 +160,12 @@ namespace MyStore.DataModel
             return new Project0DBContext(this.dbContextOptions);
         }
 
-
+        /// <summary>
+        /// Get the db's object for a customer
+        /// </summary>
+        /// <param name="DBContext">current connection</param>
+        /// <param name="name">The name of the customer</param>
+        /// <returns>DB customer</returns>
         private Customer GetDBCustomerByName(Project0DBContext DBContext, Name name)
         {
             Customer DBCustomer;
