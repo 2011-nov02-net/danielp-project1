@@ -54,5 +54,16 @@ namespace MyStore.Store
                 return base.Equals(obj);
             }           
         }
+
+
+        public override string ToString()
+        {
+            string customerstring = CustomerName.ToString();
+            if (DefaultStore != null)
+            {
+                customerstring += "\t HomeStore: " + DefaultStore.Where;
+            }
+            return customerstring;
+        }
     }
 }
