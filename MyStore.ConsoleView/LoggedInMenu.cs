@@ -63,7 +63,7 @@ namespace MyStore.ConsoleView
             }
         }
 
-        //TODO: display customer order history
+        //TODO: display customer order history, req
         // asks model for customer's orders, prints them, then returns
         //DisplayMenu should return self for this
         private void DisplayCustomerOrders()

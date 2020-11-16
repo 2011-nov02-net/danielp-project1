@@ -138,6 +138,7 @@ namespace MyStore.Store
         public void DeleteOrder()
         {
             //TODO: reset stocks, delete from Orders.instance
+            throw new NotImplementedException();
         }
 
 
