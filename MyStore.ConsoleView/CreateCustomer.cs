@@ -22,10 +22,11 @@ namespace MyStore.ConsoleView
 
             do
             {
-                customerName = GetName();
+                customerName = FindCustomer.GetName();
                 try
                 {
                     Current = Customers.Instance.RegisterCustomer(Current);
+                    Repo.CreateCustomer(Current);
                     gotValidName = true;
 
                 }
@@ -42,19 +43,20 @@ namespace MyStore.ConsoleView
             return new LoggedInMenu(Repo, Current);
         }
 
-        //TODO: implement function
-        private Name GetName()
+        //ASSUMES THE NAME HAS BEEN CHECKED, by FindCustomer.DisplayMenu
+        internal IMenu DisplayMenu(Name UnusedName)
         {
+            Customer Current = Customers.Instance.RegisterCustomer(UnusedName);
+            Repo.CreateCustomer(Current);
+            
+            //if something has gone wrong, just go to the normal create customer flow.
+            if(Current == null)
+            {
+                return this;
+            }
 
-            //get first name
-
-            //ask if want to include middle initial
-            //get middle initial
-
-            //get last name
-
-
-            throw new NotImplementedException();
+            return new LoggedInMenu(Repo, Current);
         }
+
     }
 }

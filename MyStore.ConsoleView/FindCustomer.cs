@@ -17,6 +17,7 @@ namespace MyStore.ConsoleView
         public IMenu DisplayMenu()
         {
             //TODO: ASK And possibly display list of all customers
+            // y/n q + method
 
 
             bool FoundCustomer = false;
@@ -31,6 +32,7 @@ namespace MyStore.ConsoleView
                 {
                     Current = Customers.Instance.GetCustomer(fullname);
                 } catch (CustomerNotFoundException e) {
+                    Console.Error.WriteLine(e.Message);
                     Current = Repo.GetCustomerByName(fullname);
                 }
 
@@ -46,7 +48,7 @@ namespace MyStore.ConsoleView
 
                     if(keepLooking == 0)
                     {
-                        return new CreateCustomer(Repo);
+                        return new CreateCustomer(Repo).DisplayMenu(fullname);
                     }
                 }
             }
