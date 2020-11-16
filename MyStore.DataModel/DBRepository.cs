@@ -80,15 +80,33 @@ namespace MyStore.DataModel
             }
         }
 
+        /// <summary>
+        /// Get a list of all customers in the model.
+        /// </summary>
+        /// <returns>An enumerable list of all customers. (Concretely a hashset) </returns>
         public IEnumerable<Store.Customer> GetCustomers()
         {
             //get all customers from DB
+            using Project0DBContext context = this.ConnectToDB();
+
+            HashSet<Store.Customer> customers = new HashSet<Store.Customer>();
 
             //convert and check if in model
-            // if not, add to model
+            foreach(Customer customer in context.Customers)
+            {
+                Name cname = this.getCustomerName(customer);
+                // if not, add to model
+                if (!Customers.Instance.HasCustomer(cname))
+                {
+                    Store.Customer NewCustomer = Store.Customers.Instance.RegisterCustomer(cname, customer.StoreLocation);
+                } else
+                {
+                    customers.Add(Store.Customers.Instance.GetCustomer(cname));
+                }
+            }
 
             //return list
-            throw new NotImplementedException();
+            return customers;
         }
 
         //TODO: get history (req)
