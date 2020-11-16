@@ -40,5 +40,17 @@ namespace MyStore.Store
         {
             this.DefaultStore = l;
         }
+
+        public override bool Equals(object obj)
+        {
+            if( obj is Customer)
+            {
+                Customer other = (Customer)obj;
+                return this.CustomerName.Equals(other.CustomerName);
+            } else
+            {
+                return base.Equals(obj);
+            }           
+        }
     }
 }
