@@ -58,22 +58,7 @@ namespace MyStore.DataModel
         {
             using Project0DBContext DBContext = new Project0DBContext(dbContextOptions);
 
-            Customer DBCustomer;
-            if (name.MiddleInitial == null)
-            {
-                DBCustomer = DBContext.Customers.Where(cust =>
-                    name.First.StartsWith(cust.FirstName)
-                    && name.Last.StartsWith(cust.LastName)
-                    && null == cust.MiddleInitial)
-                    .SingleOrDefault();
-            } else
-            {
-                DBCustomer = DBContext.Customers.Where(cust =>
-                    name.First.StartsWith(cust.FirstName)
-                    && name.Last.StartsWith(cust.LastName)
-                    && name.MiddleInitial.ToString() == cust.MiddleInitial)
-                    .Take(1).SingleOrDefault();
-            }
+            Customer DBCustomer = GetDBCustomerByName(DBContext, name);
 
             if (Customers.Instance.HasCustomer(name))
             {
@@ -93,6 +78,12 @@ namespace MyStore.DataModel
 
         public IEnumerable<Store.Customer> GetCustomers()
         {
+            //get all customers from DB
+
+            //convert and check if in model
+            // if not, add to model
+
+            //return list
             throw new NotImplementedException();
         }
 
@@ -111,12 +102,40 @@ namespace MyStore.DataModel
             throw new NotImplementedException();
         }
 
-        public void PlaceOrder(Order o)
+        public void PlaceOrder(Store.Order o)
         {
-            throw new NotImplementedException();
+            using Project0DBContext DBContext = new Project0DBContext(dbContextOptions);
+
+            Order newOrder = new Order();
+            //Assuming default is null.
+            int nextid = (DBContext.Customers.OrderByDescending(cust => cust.Id).FirstOrDefault()?.Id ?? -1 ) + 1;
+            newOrder.Id = nextid;
+            newOrder.StoreLocation = o.OrderLoc.Where;
+            newOrder.Customer = GetDBCustomerByName(DBContext, o.Customer.CustomerName);
+            newOrder.OrderTime = o.Time;
+
+            decimal total = 0;
+            foreach (ItemCount item in o.Items)
+            {
+                total += item.Count * (Decimal) item.ThisItem.cost;
+
+                OrderItem orderItem = new OrderItem();
+                orderItem.Order = newOrder;
+                orderItem.Quantity = item.Count;
+                orderItem.ItemId = item.ThisItem.name;
+                newOrder.OrderItems.Add(orderItem);
+
+                //change store stocks, Assumes there's already an invintory entry, otherwise throws exception.
+                Invintory iv = DBContext.Invintories.Find(new {o.OrderLoc.Where, item.ThisItem.name}) ;
+                iv.Quantity -= item.Count;
+            }
+            newOrder.OrderTotal = total;
+
+            DBContext.Orders.Add(newOrder);
+            DBContext.SaveChanges();
         }
 
-        public void UpdateOrder(Order o)
+        public void UpdateOrder(Store.Order o)
         {
             throw new NotImplementedException();
         }
@@ -125,6 +144,30 @@ namespace MyStore.DataModel
         private Project0DBContext ConnectToDB()
         {
             return new Project0DBContext(this.dbContextOptions);
+        }
+
+
+        private Customer GetDBCustomerByName(Project0DBContext DBContext, Name name)
+        {
+            Customer DBCustomer;
+            if (name.MiddleInitial == null)
+            {
+                DBCustomer = DBContext.Customers.Where(cust =>
+                    name.First.StartsWith(cust.FirstName)
+                    && name.Last.StartsWith(cust.LastName)
+                    && null == cust.MiddleInitial)
+                    .SingleOrDefault();
+            }
+            else
+            {
+                DBCustomer = DBContext.Customers.Where(cust =>
+                    name.First.StartsWith(cust.FirstName)
+                    && name.Last.StartsWith(cust.LastName)
+                    && name.MiddleInitial.ToString() == cust.MiddleInitial)
+                    .Take(1).SingleOrDefault();
+            }
+
+            return DBCustomer;
         }
     }
 }

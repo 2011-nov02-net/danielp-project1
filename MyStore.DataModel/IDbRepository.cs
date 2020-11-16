@@ -27,9 +27,9 @@ namespace MyStore.DataModel
         IEnumerable<Store.ItemCount> GetStoreStocks(Store.Location l);
 
 
-        void PlaceOrder(Order o);
+        void PlaceOrder(Store.Order o);
 
-        void UpdateOrder(Order o);
+        void UpdateOrder(Store.Order o);
 
     }
 }
