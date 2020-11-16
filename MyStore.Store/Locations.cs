@@ -110,5 +110,23 @@ namespace MyStore.Store
                 throw new ArgumentException("Error: location not found.");
             }          
         }
+
+        /// <summary>
+        /// Get the location or register a new one at that location.
+        /// </summary>
+        /// <param name="where">The name of the location.</param>
+        /// <returns>A new or existing Location object.</returns>
+        public Location GetOrRegisterLocation(string where)
+        {
+            Location loc;
+            if (_stores.TryGetValue(where, out loc))
+            {
+                return loc;
+            }
+            else
+            {
+                return RegisterLocation(where);
+            }
+        }
     }
 }
