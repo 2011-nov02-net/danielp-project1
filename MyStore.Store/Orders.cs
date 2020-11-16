@@ -40,6 +40,28 @@ namespace MyStore.Store
         {
             return AllOrders.AsReadOnly().Where(ord => ord.OrderLoc == l);
         }
+
+        /// <summary>
+        /// Add a new order to the list of orders.
+        /// </summary>
+        /// <param name="newo"></param>
+        public void AddOrders(IOrder newo)
+        {
+            AllOrders.Add(newo);
+        }
+
+        /// <summary>
+        /// Create and adds a new historic order representing a completed and validated order.
+        /// NOTE: this bypassis validity checks, and should only be used for past orders.
+        /// </summary>
+        /// <param name="locationName"></param>
+        /// <param name="customerName"></param>
+        /// <param name="time"></param>
+        /// <param name="items"></param>
+        public void CreateAndAddPastOrder(string locationName, Name customerName, DateTime time, ICollection<ItemCount> items )
+        {
+            AllOrders.Add(new HistoricOrder(locationName, customerName, time, items));
+        }
     }
 }
 

@@ -166,6 +166,7 @@ namespace MyStore.Store
                 {
                     OrderLoc.RemovePurchasedStock(ic);
                 }
+                Orders.Instance.AddOrders(this);
 
             } else
             {
