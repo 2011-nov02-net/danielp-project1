@@ -97,7 +97,7 @@ CREATE TABLE Store.Orders (
 	OrderTotal MONEY
 		NOT NULL,
 	OrderTime DATETIME
-		NULL,
+		NOT NULL,
 	CONSTRAINT PositiveMoney_orders CHECK (OrderTotal >= 0),
 	CONSTRAINT order_PK PRIMARY KEY (Id),
 	CONSTRAINT StoreOrders_FK FOREIGN KEY (StoreLocation) REFERENCES Store.[Location] (LocationName),

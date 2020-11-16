@@ -16,7 +16,7 @@ namespace MyStore.DataModel
         public int CustomerId { get; set; }
         public string StoreLocation { get; set; }
         public decimal OrderTotal { get; set; }
-        public DateTime? OrderTime { get; set; }
+        public DateTime OrderTime { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual Location StoreLocationNavigation { get; set; }

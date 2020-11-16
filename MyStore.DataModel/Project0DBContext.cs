@@ -95,7 +95,7 @@ namespace MyStore.DataModel
             modelBuilder.Entity<Location>(entity =>
             {
                 entity.HasKey(e => e.LocationName)
-                    .HasName("PK__Location__F946BB85BE7B4585");
+                    .HasName("PK__Location__F946BB85A0BF01B5");
 
                 entity.ToTable("Location", "Store");
 
