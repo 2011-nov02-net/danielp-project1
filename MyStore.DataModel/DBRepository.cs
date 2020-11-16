@@ -7,11 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyStore.DataModel
 {
-    class DBRepository : IDbRepository
+    public class DBRepository : IDbRepository
     {
-        
+        private DbContextOptions<Project0DBContext> dbContextOptions;
 
-
+        public DBRepository (DbContextOptions<Project0DBContext> dbContextOptions)
+        {
+            this.dbContextOptions = dbContextOptions;
+        }
 
 
         public void CreateCustomer(Store.Customer customer)
@@ -52,6 +55,12 @@ namespace MyStore.DataModel
         public void UpdateOrder(Order o)
         {
             throw new NotImplementedException();
+        }
+
+
+        private Project0DBContext ConnectToDB()
+        {
+            return new Project0DBContext(this.dbContextOptions);
         }
     }
 }

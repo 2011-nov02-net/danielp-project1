@@ -7,12 +7,14 @@ namespace MyStore.ConsoleView
     internal class LoggedInMenu : IMenu
     {
         private Customer LoggedInCustomer;
+        private DataModel.IDbRepository Repo;
 
         private List<string> ValidInputs = new List<string> { "q", "quit", "l", "log out", "v", "view orders", "f", "find store" };
 
-        public LoggedInMenu(Customer current)
+        public LoggedInMenu(DataModel.IDbRepository repo, Customer current)
         {
             this.LoggedInCustomer = current;
+            Repo = repo;
         }
 
         public IMenu DisplayMenu()
@@ -41,7 +43,7 @@ namespace MyStore.ConsoleView
                 //log out
                 case 2:
                 case 3:
-                    return new StartMenu();
+                    return new StartMenu(Repo);
                     break;
                 //view customer orders
                 case 4:
@@ -52,7 +54,7 @@ namespace MyStore.ConsoleView
                 //find store
                 case 6:
                 case 7:
-                    return new SelectStoreMenu(LoggedInCustomer);
+                    return new SelectStoreMenu(Repo, LoggedInCustomer);
                     break;
                 //Some error has happened, just go back and do this menu over again.
                 default:

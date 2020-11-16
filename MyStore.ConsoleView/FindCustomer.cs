@@ -6,7 +6,12 @@ namespace MyStore.ConsoleView
 {
     internal class FindCustomer : IMenu
     {
+        private DataModel.IDbRepository Repo;
 
+        public FindCustomer(DataModel.IDbRepository repo)
+        {
+            Repo = repo;
+        }
 
         public IMenu DisplayMenu()
         {
@@ -28,7 +33,7 @@ namespace MyStore.ConsoleView
 
 
             
-            return new LoggedInMenu(Current);
+            return new LoggedInMenu(Repo, Current);
         }
     }
 }

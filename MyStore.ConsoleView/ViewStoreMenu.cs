@@ -6,9 +6,12 @@ namespace MyStore.ConsoleView
     {
         private Customer currentCustomer;
         private Location selectedStore;
+        private DataModel.IDbRepository Repo;
 
-        public ViewStoreMenu(Customer currentCustomer, Location selectedStore)
+
+        public ViewStoreMenu(DataModel.IDbRepository repo, Customer currentCustomer, Location selectedStore)
         {
+            Repo = repo;
             this.currentCustomer = currentCustomer;
             this.selectedStore = selectedStore;
         }
@@ -16,7 +19,7 @@ namespace MyStore.ConsoleView
         public IMenu DisplayMenu()
         {
             throw new System.NotImplementedException();
-            return new OrderMenu(currentCustomer, selectedStore);
+            return new OrderMenu(Repo, currentCustomer, selectedStore);
         }
 
         //todo: Implement view stock

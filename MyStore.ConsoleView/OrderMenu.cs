@@ -7,9 +7,11 @@ namespace MyStore.ConsoleView
         private Customer currentCustomer;
         private Location selectedStore;
         private Order currentOrder;
+        private DataModel.IDbRepository Repo;
 
-        public OrderMenu(Customer currentCustomer, Location selectedStore)
+        public OrderMenu(DataModel.IDbRepository repo, Customer currentCustomer, Location selectedStore)
         {
+            Repo = repo;
             this.currentCustomer = currentCustomer;
             this.selectedStore = selectedStore;
         }
@@ -20,7 +22,7 @@ namespace MyStore.ConsoleView
 
             //cancel order
             //TODO: undo changes from the order in the model
-            return new ViewStoreMenu(currentCustomer, selectedStore);
+            return new ViewStoreMenu(Repo, currentCustomer, selectedStore);
         }
 
         private void AddItem()

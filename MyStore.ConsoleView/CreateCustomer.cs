@@ -6,6 +6,13 @@ namespace MyStore.ConsoleView
 {
     internal class CreateCustomer : IMenu
     {
+        private DataModel.IDbRepository Repo;
+
+        public CreateCustomer(DataModel.IDbRepository repo)
+        {
+            Repo = repo;
+        }
+
         public IMenu DisplayMenu()
         {
             Customer Current = null;
@@ -26,12 +33,13 @@ namespace MyStore.ConsoleView
                 {
                     gotValidName = false;
                     Current = null;
+                    Console.WriteLine(e.Message);
                     Console.WriteLine("Names must be unique, that one isn't. Try again please.");
                 }
 
             } while (!gotValidName);
 
-            return new LoggedInMenu(Current);
+            return new LoggedInMenu(Repo, Current);
         }
 
         //TODO: implement function

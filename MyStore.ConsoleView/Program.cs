@@ -10,24 +10,21 @@ namespace MyStore.ConsoleView
 {
     class Program
     {
-
-        static internal DbContextOptions<Project0DBContext> s_dbContextOptions;
-
-
         static void Main(string[] args)
         {
-            SetupContextOptions();
+            DbContextOptions<Project0DBContext> dbContextOptions = SetupContextOptions();
 
-            if(s_dbContextOptions == null)
+            if(dbContextOptions == null)
             {
                 Console.WriteLine("Exiting Program . . .");
                 return;
             }
 
+            IDbRepository repo = new DBRepository(dbContextOptions);
             Console.WriteLine("Welcome to the store!");
 
             //basically hold the current state of the program
-            IMenu CurrentMenu = new StartMenu();
+            IMenu CurrentMenu = new StartMenu(repo);
 
             while( CurrentMenu != null)
             {
@@ -68,21 +65,20 @@ namespace MyStore.ConsoleView
         }
 
 
-        private static void SetupContextOptions()
+        private static DbContextOptions<Project0DBContext> SetupContextOptions()
         {
             DbContextOptionsBuilder<Project0DBContext> optionsBuilder = new DbContextOptionsBuilder<Project0DBContext>();
             string fileloc = "./../../../../MyStore.dataModel/ConnectionString.txt";
             if (!File.Exists(fileloc))
             {
                 Console.WriteLine($"Error: Expected a file called \"ConnectionString.txt\" at {fileloc} holding only the database connection string.");
-                s_dbContextOptions = null;
-                return;
+                return null;
             }
 
             string connectionStr = File.ReadAllText(fileloc);
 
             optionsBuilder.UseSqlServer(connectionStr);
-            s_dbContextOptions = optionsBuilder.Options;
+            return optionsBuilder.Options;
         }
 
         private static void Setup()

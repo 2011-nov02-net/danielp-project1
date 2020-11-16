@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MyStore.DataModel;
 
 namespace MyStore.ConsoleView
 {
@@ -7,7 +8,12 @@ namespace MyStore.ConsoleView
     {
         //                                                   0     1      2     3     4    5
         private List<string> ValidInputs = new List<string>{"q", "quit", "n", "new", "f", "find" };
+        private IDbRepository Repo;
 
+        public StartMenu(IDbRepository repo)
+        {
+            Repo = repo;
+        }
 
         public IMenu DisplayMenu()
         {
@@ -32,11 +38,11 @@ namespace MyStore.ConsoleView
                     break;
                 case 2:
                 case 3:
-                    return new CreateCustomer();
+                    return new CreateCustomer(Repo);
                     break;
                 case 4:
                 case 5:
-                    return new FindCustomer();
+                    return new FindCustomer(Repo);
                     break;
                 default:
                     //Some error has happened, just go back and do this menu over again.

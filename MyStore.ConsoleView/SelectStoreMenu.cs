@@ -5,10 +5,14 @@ namespace MyStore.ConsoleView
     internal class SelectStoreMenu : IMenu
     {
         private Customer CurrentCustomer;
+        private DataModel.IDbRepository Repo;
+        private Customer loggedInCustomer;
 
-        public SelectStoreMenu(Customer customer)
+
+        public SelectStoreMenu(DataModel.IDbRepository repo, Customer loggedInCustomer)
         {
-            this.CurrentCustomer = customer;
+            Repo = repo;
+            this.loggedInCustomer = loggedInCustomer;
         }
 
 
@@ -19,7 +23,7 @@ namespace MyStore.ConsoleView
 
             throw new System.NotImplementedException();
 
-            return new ViewStoreMenu(CurrentCustomer, selectedStore);
+            return new ViewStoreMenu(Repo, CurrentCustomer, selectedStore);
         }
     }
 }
