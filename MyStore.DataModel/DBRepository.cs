@@ -154,7 +154,13 @@ namespace MyStore.DataModel
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Loads all the DB Items into memory
+        /// </summary>
+        /// <remarks>
+        /// Will have uncaught exceptions if used more than once. This is probably a compramise and 
+        /// impracticle for large databases but makes logic easier.
+        /// </remarks>
         void IDbRepository.LoadDBDataToModel()
         {
             using Project0DBContext context = ConnectToDB();
@@ -167,8 +173,7 @@ namespace MyStore.DataModel
             //get customers -> model
             foreach(Customer c in context.Customers)
             {
-                Store.Customer newcust = Store.Customers.Instance.RegisterCustomer(
-                    new Name(c.FirstName, c.LastName, c?.MiddleInitial?[0]));
+                Store.Customer newcust = Store.Customers.Instance.RegisterCustomer(getCustomerName(c));
 
                 if(c.StoreLocation != null)
                 {
@@ -202,7 +207,10 @@ namespace MyStore.DataModel
             }
 
             //get all store invintories
-            throw new NotImplementedException();
+            foreach(Invintory i in context.Invintories)
+            {
+                Locations.Instance.GetLocation(i.StoreLocation).AddInventory(i.ItemName, i.Quantity);
+            }
         }
 
         private Project0DBContext ConnectToDB()

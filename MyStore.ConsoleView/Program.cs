@@ -23,6 +23,9 @@ namespace MyStore.ConsoleView
             IDbRepository repo = new DBRepository(dbContextOptions);
             Console.WriteLine("Welcome to the store!");
 
+            Console.WriteLine("Loading database data . . .");
+            repo.LoadDBDataToModel();
+
             //basically hold the current state of the program
             IMenu CurrentMenu = new StartMenu(repo);
 
