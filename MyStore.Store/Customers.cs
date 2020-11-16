@@ -101,7 +101,7 @@ namespace MyStore.Store
                 }
             }
 
-            return desired ?? throw new ArgumentException();
+            return desired ?? throw new CustomerNotFoundException($"{customerName} not found.");
         }
 
         /// <summary>
