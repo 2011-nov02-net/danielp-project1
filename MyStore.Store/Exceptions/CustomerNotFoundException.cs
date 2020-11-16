@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace MyStore.Store.Exceptions
 {
     [Serializable]
-    internal class CustomerNotFoundException : ArgumentException
+    public class CustomerNotFoundException : ArgumentException
     {
         public CustomerNotFoundException()
         {
