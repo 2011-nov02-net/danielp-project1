@@ -16,8 +16,22 @@ namespace MyStore.ConsoleView
 
         public IMenu DisplayMenu()
         {
-            //TODO: ASK And possibly display list of all customers
-            // y/n q + method
+            //ASK And possibly display list of all customers
+            Console.WriteLine("Would you like to see a list of all customers? y/n");
+            int choice = Program.ValidYesNoOption();
+
+            if(choice == 0) //yes
+            {
+                IEnumerable<Store.Customer> customers = Repo.GetCustomers();
+
+                foreach(Store.Customer c in customers)
+                {
+                    Console.WriteLine($"{c}");
+                }
+
+                Console.WriteLine("\n"); //write a few lines
+
+            }
 
 
             bool FoundCustomer = false;
