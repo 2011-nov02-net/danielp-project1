@@ -191,12 +191,14 @@ namespace MyStore.DataModel
             //get customers -> model
             foreach(Customer c in context.Customers)
             {
-                Store.Customer newcust = Store.Customers.Instance.RegisterCustomer(getCustomerName(c));
+                Store.Customer newcust = Store.Customers.Instance.RegisterCustomer(getCustomerName(c), c.StoreLocation);
 
+                /*
                 if(c.StoreLocation != null)
                 {
                     newcust.SetDefaultStore(Store.Locations.Instance.GetLocation(c.StoreLocation));
                 }
+                */
             }
 
             //get all items -> model

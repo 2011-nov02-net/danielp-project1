@@ -25,7 +25,8 @@ namespace MyStore.ConsoleView
                 customerName = FindCustomer.GetName();
                 try
                 {
-                    Current = Customers.Instance.RegisterCustomer(Current);
+                    Store.Location defloc = null;
+                    Current = Customers.Instance.RegisterCustomer(customerName, defloc);
                     Repo.CreateCustomer(Current);
                     gotValidName = true;
 
@@ -46,7 +47,8 @@ namespace MyStore.ConsoleView
         //ASSUMES THE NAME HAS BEEN CHECKED, by FindCustomer.DisplayMenu
         internal IMenu DisplayMenu(Name UnusedName)
         {
-            Customer Current = Customers.Instance.RegisterCustomer(UnusedName);
+            Location s = null;
+            Customer Current = Store.Customers.Instance.RegisterCustomer(UnusedName, s);
             Repo.CreateCustomer(Current);
             
             //if something has gone wrong, just go to the normal create customer flow.
