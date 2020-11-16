@@ -76,5 +76,10 @@ namespace MyStore.Store
             }
             info.AddValue("Last", Last);
         }
+
+        public override string ToString()
+        {
+            return First + " " + (MiddleInitial?.ToString() ?? " ")+ " " + Last;
+        }
     };
 }
