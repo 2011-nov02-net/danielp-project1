@@ -72,6 +72,26 @@ namespace MyStore.Store
         /// <summary>
         /// Tells the system that a customer exists.
         /// </summary>
+        /// <param name="name">The name of a customer.</param>
+        /// <param name="DefaultStore">(Optional) the defualt location for a customer.</param>
+        /// <returns>The new customer object.</returns>
+        public Customer RegisterCustomer(Name name, string DefaultStore = null)
+        {
+            if(DefaultStore != null)
+            {
+                return RegisterCustomer(new Customer(name, Locations.Instance.GetOrRegisterLocation(DefaultStore)));
+            } else
+            {
+
+                return RegisterCustomer(new Customer(name));
+            }
+            
+        }
+
+
+        /// <summary>
+        /// Tells the system that a customer exists.
+        /// </summary>
         /// <param name="first">The customer's first name.</param>
         /// <param name="last">The customer's last name.</param>
         /// <param name="middle">The customer's middle initial.</param>
