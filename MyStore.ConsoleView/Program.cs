@@ -40,7 +40,7 @@ namespace MyStore.ConsoleView
         /// <param name="validInput">The list of valid input strings.</param>
         /// <param name="ChoiceIndex">The index of the user's choice in the validInput array, or -1 if it was not in the array.</param>
         /// <returns></returns>
-        internal static bool ValidOption(string input, List<String> validInput, out int ChoiceIndex)
+        internal static bool ValidOption(string input, List<string> validInput, out int ChoiceIndex)
         {
             //normalize input
             input = input.Trim().ToLower();
@@ -59,9 +59,35 @@ namespace MyStore.ConsoleView
             if (!WasValid)
             {
                 Console.WriteLine($"\"{input}\" Was not recognized as valid input.");
+
+                Console.Write("Please choose from:");
+
+                foreach(string option in validInput)
+                {
+                    Console.Write($" \"{option}\",");
+                }
+
+                Console.WriteLine();
             }
 
             return WasValid;
+        }
+
+
+        /// <summary>
+        /// Reads and validates a response to a yes or no question already asked.
+        /// </summary>
+        /// <returns> 0 for yes, 1 for no. </returns>
+        public static int ValidYesNoOption()
+        {
+            int choice;
+            //wait until valid response.
+            while (!Program.ValidOption(Console.ReadLine(), new List<string> { "y", "n" }, out choice))
+            {
+
+            }
+            
+            return choice;
         }
 
 
