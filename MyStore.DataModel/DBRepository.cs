@@ -22,7 +22,7 @@ namespace MyStore.DataModel
             throw new NotImplementedException();
         }
 
-        public Store.Customer GetCustomerByName()
+        public Store.Customer GetCustomerByName(Name name)
         {
             throw new NotImplementedException();
         }

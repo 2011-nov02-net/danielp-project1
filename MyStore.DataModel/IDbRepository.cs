@@ -13,7 +13,7 @@ namespace MyStore.DataModel
         //console handles giving this the changed object, this handles sending that to db entities
         //probably with a save function
 
-        Store.Customer GetCustomerByName();
+        Store.Customer GetCustomerByName(Store.Name name);
 
         IEnumerable<Store.Customer> GetCustomers();
 
