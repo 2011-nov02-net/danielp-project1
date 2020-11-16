@@ -112,5 +112,26 @@ namespace MyStore.Store
         {
             return (List<Customer>)AllCustomers.OrderBy(customer => customer.CustomerName);
         }
+
+        /// <summary>
+        /// Checks if the customer has been registered.
+        /// </summary>
+        /// <param name="name">Name of the customer</param>
+        /// <returns>True if the customer exists in the list, otherwise false.</returns>
+        public bool HasCustomer(Name name)
+        {
+            bool result = false;
+
+            foreach( Customer c in AllCustomers)
+            {
+                if( c.CustomerName.Equals(name) )
+                {
+                    result =  true;
+                    break;
+                }
+            }
+
+            return result;
+        }
     }
 }
