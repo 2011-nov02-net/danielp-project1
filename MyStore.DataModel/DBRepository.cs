@@ -16,10 +16,35 @@ namespace MyStore.DataModel
             this.dbContextOptions = dbContextOptions;
         }
 
-
+        /// <summary>
+        /// Takes a model customer, creates a DB customer, and sends it to the database.
+        /// </summary>
+        /// <remarks>
+        /// May throw exceptions if the store name is over 100 characters, or doesn't exist in the DB.
+        /// </remarks>
+        /// <param name="customer">The model customer.</param>
         public void CreateCustomer(Store.Customer customer)
         {
-            throw new NotImplementedException();
+            using Project0DBContext DBContext = new Project0DBContext(dbContextOptions);
+
+            Customer newcustomer = new Customer();
+            newcustomer.Id = (DBContext.Customers.OrderByDescending(cust => cust.Id).Take(1).First().Id) + 1;
+            newcustomer.LastName = customer.CustomerName.Last;
+            newcustomer.FirstName = customer.CustomerName.First;
+
+            if(customer.CustomerName.MiddleInitial != null)
+            {
+                newcustomer.MiddleInitial = customer.CustomerName.MiddleInitial.ToString();
+            }
+            
+            if(customer.DefaultStore != null)
+            {
+                //TODO: limit to 100 characters.
+                newcustomer.StoreLocation = customer.DefaultStore.Where;
+            }
+
+            DBContext.Customers.Add(newcustomer);
+            DBContext.SaveChanges();
         }
 
         /// <summary>
