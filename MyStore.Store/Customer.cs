@@ -18,7 +18,9 @@ namespace MyStore.Store
 
         //NOTE: optional req
         #nullable enable
-        Location? DefaultStore = null;
+        public Location? DefaultStore { get; private set; } = null;
+
+       
 
         internal Customer(Name name, Location? DefaultStore = null)
         {
