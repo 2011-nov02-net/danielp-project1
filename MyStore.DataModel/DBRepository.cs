@@ -17,7 +17,8 @@ namespace MyStore.DataModel
         }
 
         /// <summary>
-        /// Takes a model customer, creates a DB customer, and sends it to the database.
+        /// Takes a model customer, creates a DB customer, and sends it to the database. Assumes the
+        /// customer has already been added to the model.
         /// </summary>
         /// <remarks>
         /// May throw exceptions if the store name is over 100 characters, or doesn't exist in the DB.
