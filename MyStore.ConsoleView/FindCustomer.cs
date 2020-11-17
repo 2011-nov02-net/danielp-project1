@@ -54,7 +54,6 @@ namespace MyStore.ConsoleView
                 {
                     //customer could not be found:
                     //ask if they want to make a new customer instead.
-                    Console.WriteLine("Customer not found, would you like to make a new customer? y/n");
                     Console.WriteLine("\nWhat would you like to do?");
                     Console.WriteLine("{F}ind - continue looking for a customer.");
                     Console.WriteLine("{V}iew - view a list of existing customers.");

@@ -116,7 +116,43 @@ namespace MyStore.DataModel
             return customers;
         }
 
+
+        IEnumerable<Store.Location> IDbRepository.GetLocations()
+        {
+            //get all customers from DB
+            using Project0DBContext context = this.ConnectToDB();
+
+            HashSet<Store.Location> locations = new HashSet<Store.Location>();
+
+            //convert and check if in model
+            foreach (Location l in context.Locations)
+            {
+                string lname = l.LocationName;
+                // if not, add to model
+                if (!Locations.Instance.HasLocation(lname))
+                {
+                    Store.Location NewLocation = Store.Locations.Instance.RegisterLocation(lname);
+                    //get invintory
+                    AddStockToModel(context, l);
+                    locations.Add(NewLocation);
+                }
+                else
+                {
+                    locations.Add(Store.Locations.Instance.GetLocation(lname));
+                }
+            }
+
+            //return list
+            return locations;
+        }
+
         //get history (req)
+        /// <summary>
+        /// Gets all unique order histories involving a customer, and loads them into the model
+        /// if they're not already there.
+        /// </summary>
+        /// <param name="c">The model's version of the customer.</param>
+        /// <returns> A list of all IOrders related to the customer.</returns>
         public IEnumerable<IOrder> GetOrderHistory(Store.Customer c)
         {
             Project0DBContext dBContext = this.ConnectToDB();
@@ -289,8 +325,47 @@ namespace MyStore.DataModel
             }
         }
 
+        /// <summary>
+        /// Get a specific store from the db.
+        /// </summary>
+        /// <param name="storeName"></param>
+        /// <returns></returns>
+        Store.Location IDbRepository.GetLocation(string storeName)
+        {
+            using Project0DBContext context = ConnectToDB();
+            Location store = context.Locations
+                    .Where(str => str.LocationName == storeName)
+                    .Include(str => str.Invintories)
+                    .FirstOrDefault();
+
+            if(store != null)
+            {
+                if (Locations.Instance.HasLocation(storeName))
+                {
+                    return Locations.Instance.GetLocation(storeName);
+                }
+                else
+                {
+                    //create location
+                    Store.Location newLocation = Locations.Instance.RegisterLocation(storeName);
+                    //add invintory
+                    foreach(Invintory inv in store.Invintories)
+                    {
+                        newLocation.AddInventory(inv.ItemName, inv.Quantity);
+                    }
+                    return newLocation;
+                }
+            } else
+            {
+                return null;
+            }          
+        }
 
 
+        /// <summary>
+        /// Connect to the database.
+        /// </summary>
+        /// <returns>A new DB context</returns>
         private Project0DBContext ConnectToDB()
         {
             return new Project0DBContext(this.dbContextOptions);
@@ -391,5 +466,19 @@ namespace MyStore.DataModel
             return result;
         }
 
+        /// <summary>
+        /// Use the location to get the invintory added to the model.
+        /// </summary>
+        /// <param name="location"></param>
+        private void AddStockToModel(Project0DBContext context, Location location)
+        {
+
+            Store.Location modelLoc = Store.Locations.Instance.GetLocation(location.LocationName);
+            foreach(Invintory invintory in context.Invintories
+                .Where(inv => inv.StoreLocation == location.LocationName))
+            {
+                modelLoc.AddInventory(invintory.ItemName, invintory.Quantity);
+            }
+        }
     }
 }

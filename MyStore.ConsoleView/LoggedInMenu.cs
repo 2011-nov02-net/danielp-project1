@@ -69,11 +69,14 @@ namespace MyStore.ConsoleView
         //DisplayMenu should return self for this
         private void DisplayCustomerOrders()
         {
+            Console.WriteLine();
+
             IEnumerable<Store.IOrder> orders = Repo.GetOrderHistory(LoggedInCustomer);
 
             if(orders.Count() <= 0)
             {
-                Console.WriteLine("\nThis customer has no orders");
+                Console.WriteLine("This customer has no orders\n");
+                return;
             }
 
             foreach(IOrder o in orders)
@@ -82,9 +85,9 @@ namespace MyStore.ConsoleView
 
                 foreach( ItemCount ic in o.Items)
                 {
-                    Console.WriteLine($"\t{ic.ThisItem.name} x{ic.Count}\t\t{ic.ThisItem.cost}");
+                    Console.WriteLine($"\t{ic.ThisItem.name, 20}\tx{ic.Count}\t{ic.ThisItem.cost:C}");
                 }
-                Console.WriteLine($"\t\tTotal:\t${o.Cost}\n");
+                Console.WriteLine($"\t{"Order",20}\tTotal:\t{o.Cost:C}\n");
             }
         }
     }

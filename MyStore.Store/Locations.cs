@@ -128,5 +128,10 @@ namespace MyStore.Store
                 return RegisterLocation(where);
             }
         }
+
+        public bool HasLocation(string storeName)
+        {
+            return _stores.ContainsKey(storeName);
+        }
     }
 }

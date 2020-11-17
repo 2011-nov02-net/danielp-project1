@@ -32,5 +32,7 @@ namespace MyStore.DataModel
         void UpdateOrder(Store.Order o);
 
         void LoadDBDataToModel();
+        Store.Location GetLocation(string storeName);
+        IEnumerable<Store.Location> GetLocations();
     }
 }

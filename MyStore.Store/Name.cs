@@ -79,7 +79,7 @@ namespace MyStore.Store
 
         public override string ToString()
         {
-            return First + " " + (MiddleInitial?.ToString() ?? " ")+ " " + Last;
+            return $"{First,20} {MiddleInitial?.ToString() ?? " "} {Last, 20}";
         }
 
         public override bool Equals(object obj)
