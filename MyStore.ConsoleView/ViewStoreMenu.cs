@@ -31,7 +31,7 @@ namespace MyStore.ConsoleView
                 Console.WriteLine("{S}tocks - View the store's current stocks.");
             }
             while (!Program.ValidOption(Console.ReadLine(), 
-                                        new List<string>{"b",  "back", "o", "order" },
+                                        new List<string>{"b",  "back", "o", "order", "v", "view", "s", "stocks" },
                                         out userchoice));
 
 
@@ -61,12 +61,10 @@ namespace MyStore.ConsoleView
                     break;
                 //Some error has happened, just go back and do this menu over again.
                 default:
+                    ViewStoreOrderHistory();
                     return this;
                     break;
-            }
-
-
-            
+            }         
         }
 
         //Implement view stock
