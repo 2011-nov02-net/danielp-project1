@@ -53,7 +53,7 @@ namespace MyStore.ConsoleView
                 //find store
                 case 6:
                 case 7:
-                    return new SelectStoreMenu(Repo, LoggedInCustomer);
+                    return new SelectStoreMenu(Repo, this.LoggedInCustomer);
                     break;
                 //Some error has happened, just go back and do this menu over again.
                 default:

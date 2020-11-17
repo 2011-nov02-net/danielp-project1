@@ -6,7 +6,6 @@ namespace MyStore.ConsoleView
 {
     internal class SelectStoreMenu : IMenu
     {
-        private Customer CurrentCustomer;
         private DataModel.IDbRepository Repo;
         private Customer loggedInCustomer;
 
@@ -102,7 +101,7 @@ namespace MyStore.ConsoleView
                 return this;
             }
 
-            return new ViewStoreMenu(Repo, CurrentCustomer, selectedStore);
+            return new ViewStoreMenu(Repo, this.loggedInCustomer, selectedStore);
         }
 
         private void DisplayStores()

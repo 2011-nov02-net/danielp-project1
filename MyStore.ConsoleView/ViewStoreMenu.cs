@@ -7,15 +7,14 @@ namespace MyStore.ConsoleView
 {
     internal class ViewStoreMenu : IMenu
     {
-        private Customer currentCustomer;
+        private Store.Customer Customer;
         private Location selectedStore;
         private DataModel.IDbRepository Repo;
-
 
         public ViewStoreMenu(DataModel.IDbRepository repo, Customer currentCustomer, Location selectedStore)
         {
             Repo = repo;
-            this.currentCustomer = currentCustomer;
+            Customer = currentCustomer;
             this.selectedStore = selectedStore;
         }
 
@@ -40,12 +39,12 @@ namespace MyStore.ConsoleView
                 //back
                 case 0:
                 case 1:                 
-                    return new LoggedInMenu(Repo, currentCustomer);
+                    return new LoggedInMenu(Repo, Customer);
                     break;
                 //order
                 case 2:
                 case 3:
-                    return new OrderMenu(Repo, currentCustomer, selectedStore);
+                    return new OrderMenu(Repo, Customer, selectedStore);
                     break;
                 //view store orders
                 case 4:
@@ -100,7 +99,7 @@ namespace MyStore.ConsoleView
 
             foreach (IOrder o in orders)
             {
-                Console.WriteLine($"On {o.Time}, from {o.OrderLoc.Where}");
+                Console.WriteLine($"On {o.Time}, from {o.OrderLoc.Where} by {o.Customer.CustomerName}");
 
                 foreach (ItemCount ic in o.Items)
                 {

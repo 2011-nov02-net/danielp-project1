@@ -212,6 +212,8 @@ namespace MyStore.DataModel
             Location location = dBContext.Locations
                             .Where(loc => loc.LocationName == l.Where)
                             .Include(cust => cust.Orders)
+                            .ThenInclude(cust => cust.Customer)
+                            .Include(cust => cust.Orders)
                             .ThenInclude(ord => ord.OrderItems)
                             .ThenInclude(ordi => ordi.Item)                            
                             .FirstOrDefault();
@@ -224,23 +226,28 @@ namespace MyStore.DataModel
                 bool foundEquiv = false;
                 foreach (Store.IOrder LocationOrder_MD in orders)
                 {
-                    if (!this.EquivilentOrder(LocationOrder_MD, LocationOrder_DB))
+                    foundEquiv = EquivilentOrder(LocationOrder_MD, LocationOrder_DB);
+                    if (foundEquiv)
                     {
-                        foundEquiv = true;
                         break;
                     }
                 }
 
                 if (!foundEquiv)
                 {
-
+                    Console.WriteLine("no equiv found, creating order.");
                     ICollection<ItemCount> orderitems = new List<ItemCount>();
                     foreach (OrderItem oi in LocationOrder_DB.OrderItems)
                     {
                         orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
                     }
-                    Store.Orders.Instance.CreateAndAddPastOrder(l.Where, 
-                            getCustomerName(dBContext.Customers.Find(LocationOrder_DB.CustomerId)),
+
+                    Name customername = getCustomerName(dBContext.Customers
+                                            .Where(dbcust => dbcust.Id  == LocationOrder_DB.CustomerId).FirstOrDefault()
+                                        );
+
+                    Store.Orders.Instance.CreateAndAddPastOrder(l.Where,
+                            customername,
                             LocationOrder_DB.OrderTime, 
                             orderitems, 
                             LocationOrder_DB.OrderTotal);
@@ -464,9 +471,9 @@ namespace MyStore.DataModel
         /// <summary>
         /// Check if a store order is equivilent with a model order
         /// </summary>
-        /// <param name="storder"></param>
-        /// <param name="modelOrder"></param>
-        /// <returns></returns>
+        /// <param name="storder"> A Model order</param>
+        /// <param name="modelOrder">A DB order</param>
+        /// <returns>True if an order is the same, otherwise false.</returns>
         private bool EquivilentOrder(Store.IOrder storder, Order modelOrder)
         {
             bool result = true;
@@ -479,7 +486,8 @@ namespace MyStore.DataModel
             }
 
             //compare customer
-            if(! (new Name(modelOrder.Customer.FirstName, modelOrder.Customer.LastName, modelOrder.Customer.MiddleInitial?[0]).Equals(storder.Customer.CustomerName)))
+            if(! (new Name(modelOrder.Customer.FirstName, modelOrder.Customer.LastName, modelOrder.Customer.MiddleInitial?[0])
+                .Equals(storder.Customer.CustomerName)))
             {
                 result = false;
                 return result;
