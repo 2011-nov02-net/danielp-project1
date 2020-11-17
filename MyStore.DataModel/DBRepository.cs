@@ -173,7 +173,7 @@ namespace MyStore.DataModel
                 bool foundEquiv = false;
                 foreach(Store.IOrder CustomerOrder_MD in orders)
                 {
-                    if (!this.EquivilentOrder(CustomerOrder_MD, CustomerOrder_DB))
+                    if (EquivilentOrder(CustomerOrder_MD, CustomerOrder_DB))
                     {
                         foundEquiv = true;
                         break;
@@ -226,7 +226,7 @@ namespace MyStore.DataModel
                 bool foundEquiv = false;
                 foreach (Store.IOrder LocationOrder_MD in orders)
                 {
-                    foundEquiv = EquivilentOrder(LocationOrder_MD, LocationOrder_DB);
+                    foundEquiv = foundEquiv || EquivilentOrder(LocationOrder_MD, LocationOrder_DB);
                     if (foundEquiv)
                     {
                         break;
@@ -509,16 +509,20 @@ namespace MyStore.DataModel
             //compare order items
             foreach(OrderItem oi in modelOrder.OrderItems)
             {
+                bool foundmatch = false;
                 foreach(Store.ItemCount ic in storder.Items)
                 {
                     if(ic.ThisItem.name == oi.Item.ItemName && ic.Count == oi.Quantity)
                     {
-                        continue;
-                    } else
-                    {
-                        result = false;
-                        return result;
-                    }
+                        foundmatch = true; 
+                        break;
+                    } 
+                }
+
+                if (!foundmatch)
+                {
+                    result = false;
+                    return result;
                 }
             }
 
