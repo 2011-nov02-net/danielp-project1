@@ -21,8 +21,6 @@ namespace MyStore.ConsoleView
         public IMenu DisplayMenu()
         {
             int userchoice;
-
-
             do
             {
                 Console.WriteLine("Please choose from the following options:");

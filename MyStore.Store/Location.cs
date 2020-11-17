@@ -43,6 +43,11 @@ namespace MyStore.Store
         }
 
 
+        public IEnumerable<ItemCount> GetLocationStock()
+        {
+            return Stocks.Values;
+        }
+
         //order function
         //must reject if not enough of an item in stock.
         //possibly modify remaining stock

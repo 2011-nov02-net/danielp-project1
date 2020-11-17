@@ -1,4 +1,7 @@
-﻿using MyStore.Store;
+﻿using System;
+using System.Collections.Generic;
+using MyStore.Store;
+using System.Linq;
 
 namespace MyStore.ConsoleView
 {
@@ -18,20 +21,95 @@ namespace MyStore.ConsoleView
 
         public IMenu DisplayMenu()
         {
-            throw new System.NotImplementedException();
-            return new OrderMenu(Repo, currentCustomer, selectedStore);
+            int userchoice;
+            do
+            {
+                Console.WriteLine("Please choose from the following options:");
+                Console.WriteLine("{B}ack - Go back to the logged in menu.");
+                Console.WriteLine("{O}rder - Place an order for an item.");
+                Console.WriteLine("{V}iew orders - See the store's order history.");
+                Console.WriteLine("{S}tocks - View the store's current stocks.");
+            }
+            while (!Program.ValidOption(Console.ReadLine(), 
+                                        new List<string>{"b",  "back", "o", "order" },
+                                        out userchoice));
+
+
+            switch (userchoice)
+            {
+                //back
+                case 0:
+                case 1:                 
+                    return new LoggedInMenu(Repo, currentCustomer);
+                    break;
+                //order
+                case 2:
+                case 3:
+                    return new OrderMenu(Repo, currentCustomer, selectedStore);
+                    break;
+                //view store orders
+                case 4:
+                case 5:
+                    this.ViewStoreOrderHistory();
+                    return this;
+                    break;
+                //view store stocks
+                case 6:
+                case 7:
+                    ViewStock();
+                    return this;
+                    break;
+                //Some error has happened, just go back and do this menu over again.
+                default:
+                    return this;
+                    break;
+            }
+
+
+            
         }
 
-        //todo: Implement view stock
+        //Implement view stock
         private void ViewStock()
         {
-            throw new System.NotImplementedException();
+            //I think the store's stocks should have been pulled from the DB with the store
+            if (selectedStore.GetLocationStock().Count() <= 0)
+            {
+                Console.WriteLine("\nThis Location has no items to sell currently.");
+                return;
+            }
+
+            Console.WriteLine($"{selectedStore.Where} has the following currently in stock:");
+            foreach(ItemCount ic in selectedStore.GetLocationStock())
+            {
+                Console.WriteLine($"{ic.ThisItem.name, 20}\t{ic.ThisItem.cost:C}\tWith {ic.Count} in stock.");
+            }
+            Console.WriteLine("\n");
         }
 
-        //TODO: implement view store order history
+        //implement view store order history
         private void ViewStoreOrderHistory()
         {
-            throw new System.NotImplementedException();
+            Console.WriteLine();
+
+            IEnumerable<Store.IOrder> orders = Repo.GetOrderHistory(selectedStore);
+
+            if (orders.Count() <= 0)
+            {
+                Console.WriteLine("This store has no orders\n");
+                return;
+            }
+
+            foreach (IOrder o in orders)
+            {
+                Console.WriteLine($"On {o.Time}, from {o.OrderLoc.Where}");
+
+                foreach (ItemCount ic in o.Items)
+                {
+                    Console.WriteLine($"\t{ic.ThisItem.name,20}\tx{ic.Count}\t{ic.ThisItem.cost:C}");
+                }
+                Console.WriteLine($"\t{"Order",20}\tTotal:\t{o.Cost:C}\n");
+            }           
         }
     }
 }

@@ -198,17 +198,68 @@ namespace MyStore.DataModel
         
 
 
-        //TODO: get history (req)
+        //get history (req)
+        /// <summary>
+        /// Given a model location, return all orders placed from that location.
+        /// Also updates the model with any missing orders.
+        /// </summary>
+        /// <param name="l">The model location.</param>
+        /// <returns>List of orders.</returns>
         public IEnumerable<IOrder> GetOrderHistory(Store.Location l)
         {
-            throw new NotImplementedException();
+            Project0DBContext dBContext = this.ConnectToDB();  
+
+            Location location = dBContext.Locations
+                            .Where(loc => loc.LocationName == l.Where)
+                            .Include(cust => cust.Orders)
+                            .ThenInclude(ord => ord.OrderItems)
+                            .ThenInclude(ordi => ordi.Item)                            
+                            .FirstOrDefault();
+
+
+            IEnumerable<IOrder> orders = Store.Orders.Instance.GetOrdersByLocation(l);
+
+            foreach (Order LocationOrder_DB in location.Orders)
+            {
+                bool foundEquiv = false;
+                foreach (Store.IOrder LocationOrder_MD in orders)
+                {
+                    if (!this.EquivilentOrder(LocationOrder_MD, LocationOrder_DB))
+                    {
+                        foundEquiv = true;
+                        break;
+                    }
+                }
+
+                if (!foundEquiv)
+                {
+
+                    ICollection<ItemCount> orderitems = new List<ItemCount>();
+                    foreach (OrderItem oi in LocationOrder_DB.OrderItems)
+                    {
+                        orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
+                    }
+                    Store.Orders.Instance.CreateAndAddPastOrder(l.Where, 
+                            getCustomerName(dBContext.Customers.Find(LocationOrder_DB.CustomerId)),
+                            LocationOrder_DB.OrderTime, 
+                            orderitems, 
+                            LocationOrder_DB.OrderTotal);
+                }
+            }
+
+            orders = Store.Orders.Instance.GetOrdersByLocation(l);
+            return orders;
         }
 
 
 
         public IEnumerable<ItemCount> GetStoreStocks(Store.Location l)
         {
-            throw new NotImplementedException();
+            IEnumerable<ItemCount> ModdelStock = l.GetLocationStock();
+            //may have uncommitted changes in an asynchronus enviorment
+            //no way to reconsile stock changes, and there shouldn't be any discrepency ...
+            //so just returning
+            return ModdelStock;
         }
 
 
