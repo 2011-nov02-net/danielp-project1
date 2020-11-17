@@ -38,7 +38,7 @@ namespace MyStore.Store
 
         public IEnumerable<IOrder> GetOrdersByLocation(Location l)
         {
-            return AllOrders.AsReadOnly().Where(ord => ord.OrderLoc == l);
+            return AllOrders.AsReadOnly().Where(ord => ord.OrderLoc.Where == l.Where);
         }
 
         /// <summary>
@@ -62,6 +62,9 @@ namespace MyStore.Store
         {
             AllOrders.Add(new HistoricOrder(locationName, customerName, time, items, cost));
         }
+
+
+       
     }
 }
 

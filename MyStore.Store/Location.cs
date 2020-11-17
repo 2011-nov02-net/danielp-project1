@@ -204,5 +204,15 @@ namespace MyStore.Store
             info.AddValue("Stocks", Stocks);
             info.AddValue("OrderHistory", LocationOrderHistory);
         }
+
+        public override bool Equals(object obj)
+        {
+            if( obj is Location)
+            {
+                Location other = (Location)obj;
+                return other.Where.Equals(Where);
+            }
+            return base.Equals(obj);
+        }
     }
 }
