@@ -4,6 +4,7 @@ using System.Text;
 using MyStore.Store;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using MyStore.Store.Exceptions;
 
 namespace MyStore.DataModel
 {
@@ -16,6 +17,8 @@ namespace MyStore.DataModel
             this.dbContextOptions = dbContextOptions;
         }
 
+
+        #region Customers
         /// <summary>
         /// Takes a model customer, creates a DB customer, and sends it to the database. Will register
         /// the customer with the data model if the customer isn't already.
@@ -116,7 +119,14 @@ namespace MyStore.DataModel
             return customers;
         }
 
+        #endregion
 
+
+        #region Stores
+        /// <summary>
+        /// Get a list of all locations from the DB, and updates the model if any are missing.
+        /// </summary>
+        /// <returns></returns>
         IEnumerable<Store.Location> IDbRepository.GetLocations()
         {
             //get all customers from DB
@@ -146,6 +156,85 @@ namespace MyStore.DataModel
             return locations;
         }
 
+        /*
+        public IEnumerable<ItemCount> GetStoreStocks(Store.Location l)
+        {
+            IEnumerable<ItemCount> ModdelStock = l.GetLocationStock();
+            //may have uncommitted changes in an asynchronus enviorment
+            //no way to reconsile stock changes, and there shouldn't be any discrepency ...
+            //so just returning
+            return ModdelStock;
+        }
+        */
+
+
+        /// <summary>
+        /// Get a specific store from the db.
+        /// </summary>
+        /// <param name="storeName"></param>
+        /// <returns></returns>
+        Store.Location IDbRepository.GetLocation(string storeName)
+        {
+            using Project0DBContext context = ConnectToDB();
+            Location store = context.Locations
+                    .Where(str => str.LocationName == storeName)
+                    .Include(str => str.Invintories)
+                    .FirstOrDefault();
+
+            if (store != null)
+            {
+                if (Locations.Instance.HasLocation(storeName))
+                {
+                    return Locations.Instance.GetLocation(storeName);
+                }
+                else
+                {
+                    //create location
+                    Store.Location newLocation = Locations.Instance.RegisterLocation(storeName);
+                    //add invintory
+                    foreach (Invintory inv in store.Invintories)
+                    {
+                        newLocation.AddInventory(inv.ItemName, inv.Quantity);
+                    }
+                    return newLocation;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Intended to be used to set a store's stock equal to current stocks in DB
+        /// </summary>
+        /// <param name="selectedStore"></param>
+        void IDbRepository.UpdateAndOverwriteStoreStocks(Store.Location selectedStore)
+        {
+            using Project0DBContext context = this.ConnectToDB();
+
+            foreach(Invintory inv in context.Invintories.Where(x => x.StoreLocation == selectedStore.Where))
+            {
+                if (inv.Quantity != selectedStore.CheckStock(inv.ItemName))
+                {
+                    try
+                    {
+                        selectedStore.SetItemStock(inv.ItemName, inv.Quantity);
+                    }
+                    catch (ItemNotFoundException e)
+                    {
+                        addMissingItems(context);
+                        selectedStore.SetItemStock(inv.ItemName, inv.Quantity);
+                    }                
+                }              
+            }
+        }
+
+
+        #endregion
+
+
+        #region Orders
         //get history (req)
         /// <summary>
         /// Gets all unique order histories involving a customer, and loads them into the model
@@ -259,18 +348,6 @@ namespace MyStore.DataModel
         }
 
 
-
-        public IEnumerable<ItemCount> GetStoreStocks(Store.Location l)
-        {
-            IEnumerable<ItemCount> ModdelStock = l.GetLocationStock();
-            //may have uncommitted changes in an asynchronus enviorment
-            //no way to reconsile stock changes, and there shouldn't be any discrepency ...
-            //so just returning
-            return ModdelStock;
-        }
-
-
-
         /// <summary>
         /// Take a finalized order from the model, and convert it into a db order, adjust store invintories, 
         /// and insert it.
@@ -311,13 +388,8 @@ namespace MyStore.DataModel
             DBContext.Orders.Add(newOrder);
             DBContext.SaveChanges();
         }
-
-
-
-        public void UpdateOrder(Store.Order o)
-        {
-            throw new NotImplementedException();
-        }
+       
+        #endregion
 
 
 
@@ -383,42 +455,10 @@ namespace MyStore.DataModel
             }
         }
 
-        /// <summary>
-        /// Get a specific store from the db.
-        /// </summary>
-        /// <param name="storeName"></param>
-        /// <returns></returns>
-        Store.Location IDbRepository.GetLocation(string storeName)
-        {
-            using Project0DBContext context = ConnectToDB();
-            Location store = context.Locations
-                    .Where(str => str.LocationName == storeName)
-                    .Include(str => str.Invintories)
-                    .FirstOrDefault();
+        
 
-            if(store != null)
-            {
-                if (Locations.Instance.HasLocation(storeName))
-                {
-                    return Locations.Instance.GetLocation(storeName);
-                }
-                else
-                {
-                    //create location
-                    Store.Location newLocation = Locations.Instance.RegisterLocation(storeName);
-                    //add invintory
-                    foreach(Invintory inv in store.Invintories)
-                    {
-                        newLocation.AddInventory(inv.ItemName, inv.Quantity);
-                    }
-                    return newLocation;
-                }
-            } else
-            {
-                return null;
-            }          
-        }
 
+        #region Private Helpers
 
         /// <summary>
         /// Connect to the database.
@@ -529,10 +569,14 @@ namespace MyStore.DataModel
             return result;
         }
 
+
         /// <summary>
         /// Use the location to get the invintory added to the model.
         /// </summary>
-        /// <param name="location"></param>
+        /// <remarks>
+        /// ONLY for use when initializing a store
+        /// </remarks>
+        /// <param name="location">The location to fetch and add all stocks to</param>
         private void AddStockToModel(Project0DBContext context, Location location)
         {
 
@@ -543,5 +587,23 @@ namespace MyStore.DataModel
                 modelLoc.AddInventory(invintory.ItemName, invintory.Quantity);
             }
         }
+
+        /// <summary>
+        /// Add any missing items to the model.
+        /// </summary>
+        /// <param name="context"></param>
+        private void addMissingItems(Project0DBContext context)
+        {
+            foreach (Item i in context.Items)
+            {
+                if (!StoreCatalogue.Instance.ItemExists(i.ItemName))
+                {
+                    Store.StoreCatalogue.Instance.RegisterItem(i.ItemName, i.ItemPrice);
+                }              
+            }
+        }
+        #endregion
+
+        //stuff
     }
 }

@@ -44,6 +44,10 @@ namespace MyStore.ConsoleView
                 //order
                 case 2:
                 case 3:
+                    //make sure the model's stock is in synch with the db 
+                    //before disconnecting for a while. 
+                    //will not ask db while creating order, will only try at the end.
+                    ReLoadStoreInvintory();
                     return new OrderMenu(Repo, Customer, selectedStore);
                     break;
                 //view store orders
@@ -66,10 +70,21 @@ namespace MyStore.ConsoleView
             }         
         }
 
+
+        /// <summary>
+        /// asks the repo for the stores invintory, and overwrites the current invintory.
+        /// </summary>
+        private void ReLoadStoreInvintory()
+        {
+            Repo.UpdateAndOverwriteStoreStocks(selectedStore);
+        }
+
         //Implement view stock
         private void ViewStock()
         {
             //I think the store's stocks should have been pulled from the DB with the store
+            //TODO: pull from db
+            ReLoadStoreInvintory();
             if (selectedStore.GetLocationStock().Count() <= 0)
             {
                 Console.WriteLine("\nThis Location has no items to sell currently.");

@@ -93,6 +93,73 @@ namespace MyStore.ConsoleView
             return choice;
         }
 
+        /// <summary>
+        /// Get any integer amount
+        /// </summary>
+        /// <returns>The Amount</returns>
+        public static int GetIntegerAmount()
+        {
+            bool isvalid = false;
+            int userInput;
+
+            do
+            {
+                string inputStr = Console.ReadLine().Trim();
+                isvalid = Int32.TryParse(inputStr, out userInput);
+
+                if (!isvalid)
+                {
+                    Console.WriteLine($"Please input a number. The program could not interpret {userInput} properly.");
+                }
+
+            } while (!isvalid);
+
+            return userInput;
+        }
+
+        /// <summary>
+        /// Get a number from the user within the range given inclusive.
+        /// </summary>
+        /// <param name="max">The maximum number the user can select inclusive.</param>
+        /// <param name="min">The minimum number the user can select inclusive.</param>
+        /// <returns></returns>
+        public static int GetIntegerAmount(int max, int min = 0)
+        {
+            if( max < min)
+            {
+                int temp = min;
+                min = max;
+                max = temp;
+            }
+
+            bool isvalid = false;
+            int userInput;
+
+            do
+            {
+                string inputStr = Console.ReadLine().Trim();
+                isvalid = Int32.TryParse(inputStr, out userInput);
+
+                if (!isvalid)
+                {
+                    Console.WriteLine($"Please input a number. The program could not interpret {userInput} properly.");
+                } else
+                {
+                    isvalid = isvalid && userInput >= min && userInput <= max;
+                    if (userInput < min)
+                    {
+                        Console.WriteLine($"Error, must be greater than {min}.");
+                    } else if (userInput > max)
+                    {
+                        Console.WriteLine($"Error, must be less than {max}.");
+                    }
+                }
+
+            } while (!isvalid);
+
+            return userInput;
+        }
+
 
         private static DbContextOptions<Project0DBContext> SetupContextOptions()
         {

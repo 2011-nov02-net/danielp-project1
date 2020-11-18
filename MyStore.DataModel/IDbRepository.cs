@@ -24,15 +24,17 @@ namespace MyStore.DataModel
 
         IEnumerable<Store.IOrder> GetOrderHistory(Store.Location l);
 
-        IEnumerable<Store.ItemCount> GetStoreStocks(Store.Location l);
+        //IEnumerable<Store.ItemCount> GetStoreStocks(Store.Location l);
 
 
         void PlaceOrder(Store.Order o);
 
-        void UpdateOrder(Store.Order o);
-
         void LoadDBDataToModel();
+
         Store.Location GetLocation(string storeName);
+
         IEnumerable<Store.Location> GetLocations();
+
+        void UpdateAndOverwriteStoreStocks(Store.Location selectedStore);
     }
 }
