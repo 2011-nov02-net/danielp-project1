@@ -102,6 +102,11 @@ namespace MyStore.ConsoleView
             Console.WriteLine("What is your/the desired customer's first name?");
             string firstName = Console.ReadLine().Trim();
 
+            if(firstName.Length >= 20)
+            {
+                firstName = firstName.Substring(0, 20);
+            }
+
             //ask if middle inital
             Console.WriteLine("Does you/the desired customer have a middle name? y/n");
             int hasMiddle = Program.ValidYesNoOption();
@@ -117,6 +122,11 @@ namespace MyStore.ConsoleView
             //get last name
             Console.WriteLine("What is your/the desired customer's last name?");
             string lastName = Console.ReadLine().Trim();
+
+            if (lastName.Length >= 20)
+            {
+                lastName = lastName.Substring(0, 20);
+            }
 
 
             return new Name(firstName, lastName, middleInitial);
