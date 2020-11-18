@@ -214,5 +214,28 @@ namespace MyStore.Store
             }
             return base.Equals(obj);
         }
+
+
+        /// <summary>
+        /// Comprimise with the encapsulation to let the DB set stocks if something is out of synch.
+        /// </summary>
+        public void SetItemStock(string itemname, int amount)
+        {
+            Console.Error.WriteLine("Warning: directly setting a store's stock may cause inconsistancy, or something. ... it violates encapsulation.");
+            if (Stocks.ContainsKey(itemname))
+            {
+                Stocks[itemname] = new ItemCount(amount, itemname);
+            }
+            else
+            {
+                if (StoreCatalogue.Instance.ItemExists(itemname))
+                {
+                    Stocks[itemname] = new ItemCount(amount, itemname);
+                } else
+                {
+                    throw new ItemNotFoundException($"{itemname} cannot be found.");
+                }
+            }
+        }
     }
 }
