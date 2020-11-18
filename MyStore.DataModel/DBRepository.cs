@@ -362,7 +362,7 @@ namespace MyStore.DataModel
 
             Order newOrder = new Order();
             //default is null.
-            int nextid = (DBContext.Customers.OrderByDescending(cust => cust.Id).FirstOrDefault()?.Id ?? -1 ) + 1;
+            int nextid = (DBContext.Orders.OrderByDescending(cust => cust.Id).FirstOrDefault()?.Id ?? 0 ) + 1;
             newOrder.Id = nextid;
             newOrder.StoreLocation = o.OrderLoc.Where;
             newOrder.Customer = GetDBCustomerByName(DBContext, o.Customer.CustomerName);
@@ -380,7 +380,7 @@ namespace MyStore.DataModel
                 newOrder.OrderItems.Add(orderItem);
 
                 //change store stocks, Assumes there's already an invintory entry, otherwise throws exception.
-                Invintory iv = DBContext.Invintories.Find(new {o.OrderLoc.Where, item.ThisItem.name}) ;
+                Invintory iv = DBContext.Invintories.Find(o.OrderLoc.Where, item.ThisItem.name) ;
                 iv.Quantity -= item.Count;
             }
             newOrder.OrderTotal = total;
@@ -522,9 +522,9 @@ namespace MyStore.DataModel
             if(storder.OrderLoc.Where != modelOrder.StoreLocation)
             {
                 result = false;
+
                 return result;
             }
-
             //compare customer
             if(! (new Name(modelOrder.Customer.FirstName, modelOrder.Customer.LastName, modelOrder.Customer.MiddleInitial?[0])
                 .Equals(storder.Customer.CustomerName)))
@@ -540,7 +540,7 @@ namespace MyStore.DataModel
             }
 
             //compare time with some leeway
-            if (Math.Abs(storder.Time.Ticks - modelOrder.OrderTime.Ticks) > 1000)
+            if (Math.Abs( (storder.Time - modelOrder.OrderTime).TotalMinutes ) > 45)
             {
                 result = false;
                 return result;

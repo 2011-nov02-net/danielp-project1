@@ -54,18 +54,17 @@ namespace MyStore.ConsoleView
             {
                 Console.Out.WriteLine("\nType the name of the item you wish to buy");
             } while (!Program.ValidOption(Console.ReadLine(), items, out itemindex));
-           
+
             /*
              * At this point, stocks should be a list of all items with at least one in stock, items should be an
              * index aligned list of their names
              * and itemindex should be the index of the item name that the customer types.
              */
 
-            int amountofitem = 0;
             Console.WriteLine($"How many of {items[itemindex]}s would you like to buy?");
-            int amount = Program.GetIntegerAmount(max: amountofitem, min: 0);
+            int amount = Program.GetIntegerAmount(max: stocks[itemindex].Count, min: 0);
 
-            Order currentOrder = selectedStore.CreateNewOrder(stocks[itemindex].ThisItem, amountofitem, currentCustomer);
+            Order currentOrder = selectedStore.CreateNewOrder(stocks[itemindex].ThisItem, amount, currentCustomer);
 
             return new EditOrderMenu(Repo, currentCustomer, selectedStore, currentOrder);
         }

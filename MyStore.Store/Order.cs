@@ -22,7 +22,7 @@ namespace MyStore.Store
         /// </summary>
         public DateTime Time { get; private set; }
 
-        private List<ItemCount> _items;
+        private List<ItemCount> _items = new List<ItemCount>();
 
         private decimal _orderCost = -1m;
 
@@ -54,23 +54,7 @@ namespace MyStore.Store
             {
                 return _items.AsReadOnly();
             } 
-            private set
-            {
-                if(OrderLoc is null)
-                {
-                    throw new NullReferenceException("This order has no store yet.");
-                }
-
-                if (EnoughStockForAllItems())
-                {
-                    _items = value.ToList<ItemCount>();
-                    
-                }
-                else
-                {
-                    throw new NotEnoughStockException($"Not Enough stock at {OrderLoc.Where}");
-                }
-            }
+           
         }
 
        
@@ -91,6 +75,11 @@ namespace MyStore.Store
             Customer = c;
             OrderLoc = l;
             _items = items.ToList<ItemCount>();
+
+            if (!this.EnoughStockForAllItems())
+            {
+                throw new NotEnoughStockException("Not enough of the items @ location for this order.");
+            }
         }   
 
         /// <summary>
@@ -117,27 +106,38 @@ namespace MyStore.Store
         /// number of itemname being in the order. Can also throw a Not Enough Stock exception
         /// if there is not enough stock to be bought at the current location for the new ammount.
         /// </remarks>
+        /// <exception cref="NotEnoughStockException">If there's not enough stock.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">If there would be a negative amount in the order</exception>
         /// <param name="itemname">The name of the item</param>
-        /// <param name="amount">The amount, + or -, to change the quantity of item in the order by.</param>
-        public void EditOrderAmounts(string itemname, int amount)
+        /// <param name="deltaAmount">The amount, + or -, to change the quantity of item in the order by.</param>
+        public void EditOrderAmounts(string itemname, int deltaAmount)
         {
-            ItemCount newcount;      
-            foreach(ItemCount ic in Items)
-            {
-                ItemCount oldcount;
+            ItemCount newcount;
+            ItemCount oldcount;
+            //find the old count for the item
+            foreach (ItemCount ic in Items)
+            {               
                 if (ic.ThisItem.name == itemname)
                 {
                     oldcount = ic;
 
-                    if(amount + oldcount.Count >= 0 
-                        && OrderLoc.CheckIfEnoughStock(itemname, amount + oldcount.Count))
+                    if(deltaAmount + oldcount.Count >= 0 
+                        && OrderLoc.CheckIfEnoughStock(itemname, deltaAmount + oldcount.Count))
                     {
                         //avoid duplicate entries for the item in the list of items.
                         _items.Remove(oldcount);
-                        amount += oldcount.Count;
+
+                        //Make sure this isn't removing an item from the order before adding the new
+                        //ItemCount to the list of items in the order
+                        if (deltaAmount > 0)
+                        {
+                            newcount = new ItemCount(oldcount.Count + deltaAmount, oldcount.ThisItem.name);
+                            _items.Add(newcount);
+                        }
+
                     } else
                     {
-                        if(amount + oldcount.Count < 0)
+                        if(deltaAmount + oldcount.Count < 0)
                         {
                             throw new ArgumentOutOfRangeException("Error: Would be buying a negative amount of the item.");
                         }else
@@ -148,23 +148,46 @@ namespace MyStore.Store
                     break;
                 }
             }
+        }
 
-            //Make sure this isn't removing an item from the order before adding the new
-            //ItemCount to the list of items in the order
-            if(amount > 0)
+        /// <summary>
+        /// Remove an item from the order
+        /// </summary>
+        /// <param name="v"></param>
+        public void RemoveItem(string v)
+        {
+            foreach(ItemCount ic in _items)
             {
-                newcount = new ItemCount(amount, itemname);
-                _items.Add(newcount);
+                if(ic.ThisItem.name == v)
+                {
+                    _items.Remove(ic);
+                    break;
+                }
             }
         }
 
 
-        public void DeleteOrder()
+        /// <summary>
+        /// Add an item to the order.
+        /// </summary>
+        /// <exception cref="NotEnoughStockException">If there's not enough stock</exception>
+        /// <param name="item"></param>
+        /// <param name="amount"></param>
+        public void AddItem(IItem item, int amount)
         {
-            //TODO: reset stocks, delete from Orders.instance
-            throw new NotImplementedException();
+            if(OrderLoc.CheckIfEnoughStock(item.name, amount)){
+                this._items.Add(new ItemCount(amount, item.name));
+            } else
+            {
+                throw new NotEnoughStockException("not enough stock to buy " + item.name);
+            }
         }
 
+
+        public void AddItem(string itemname, int amount)
+        {
+            AddItem(StoreCatalogue.Instance.GetItem(itemname), amount);
+        }
 
 
         //must double check stocks

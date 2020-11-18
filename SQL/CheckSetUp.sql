@@ -46,3 +46,26 @@ INSERT INTO Store.OrderItems (OrderID, ItemID, Quantity) VALUES
 	(1, 'Acorns', 10),
 	(2, 'Dreams', 1)
 ;
+
+
+UPDATE Store.Invintory
+Set Quantity = 1000
+WHERE ItemName = 'Acorns';
+
+
+
+INSERT INTO Store.Invintory(StoreLocation, ItemName, Quantity) VALUES
+	('Right Here', 'Hopes', 20);
+
+	
+INSERT INTO Store.Invintory(StoreLocation, ItemName, Quantity) VALUES
+	('Elsewhere', 'Memory', 10);
+
+		
+INSERT INTO Store.Invintory(StoreLocation, ItemName, Quantity) VALUES
+	('Nowhere', 'Dreams', 27),
+	('Nowhere', 'Hopes', 10);
+
+
+	select * 
+	from Store.Orders;

@@ -32,6 +32,7 @@ namespace MyStore.ConsoleView
             while( CurrentMenu != null)
             {
                 CurrentMenu = CurrentMenu.DisplayMenu();
+                Console.WriteLine();
             }
         }
 
