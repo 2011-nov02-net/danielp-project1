@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MyStore.DataModel
 {
-    public partial class Project0DBContext : DbContext
+    public partial class MyStoreDbContext : DbContext
     {
-        public Project0DBContext()
+        public MyStoreDbContext()
         {
         }
 
-        public Project0DBContext(DbContextOptions<Project0DBContext> options)
+        public MyStoreDbContext(DbContextOptions<MyStoreDbContext> options)
             : base(options)
         {
         }
@@ -23,7 +23,8 @@ namespace MyStore.DataModel
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderItem> OrderItems { get; set; }
-
+          
+          
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>(entity =>

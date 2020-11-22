@@ -12,7 +12,7 @@ namespace MyStore.ConsoleView
     {
         static void Main(string[] args)
         {
-            DbContextOptions<Project0DBContext> dbContextOptions = SetupContextOptions();
+            DbContextOptions<MyStoreDbContext> dbContextOptions = SetupContextOptions();
 
             if(dbContextOptions == null)
             {
@@ -162,9 +162,9 @@ namespace MyStore.ConsoleView
         }
 
 
-        private static DbContextOptions<Project0DBContext> SetupContextOptions()
+        private static DbContextOptions<MyStoreDbContext> SetupContextOptions()
         {
-            DbContextOptionsBuilder<Project0DBContext> optionsBuilder = new DbContextOptionsBuilder<Project0DBContext>();
+            DbContextOptionsBuilder<MyStoreDbContext> optionsBuilder = new DbContextOptionsBuilder<MyStoreDbContext>();
             string fileloc = "./../../../../MyStore.dataModel/ConnectionString.txt";
             if (!File.Exists(fileloc))
             {

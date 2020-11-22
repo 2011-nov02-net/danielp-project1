@@ -10,9 +10,9 @@ namespace MyStore.DataModel
 {
     public class DBRepository : IDbRepository
     {
-        private DbContextOptions<Project0DBContext> dbContextOptions;
+        private DbContextOptions<MyStoreDbContext> dbContextOptions;
 
-        public DBRepository (DbContextOptions<Project0DBContext> dbContextOptions)
+        public DBRepository (DbContextOptions<MyStoreDbContext> dbContextOptions)
         {
             this.dbContextOptions = dbContextOptions;
         }
@@ -29,7 +29,7 @@ namespace MyStore.DataModel
         /// <param name="customer">The model customer.</param>
         public void CreateCustomer(Store.Customer customer)
         {
-            using Project0DBContext DBContext = new Project0DBContext(dbContextOptions);
+            using MyStoreDbContext DBContext = new MyStoreDbContext(dbContextOptions);
             if (!Customers.Instance.HasCustomer(customer.CustomerName))
             {
                 Customers.Instance.RegisterCustomer(customer);
@@ -63,7 +63,7 @@ namespace MyStore.DataModel
         /// <returns>The customer created (or returned) by the Customers object in the datamodel.</returns>
         public Store.Customer GetCustomerByName(Name name)
         {
-            using Project0DBContext DBContext = new Project0DBContext(dbContextOptions);
+            using MyStoreDbContext DBContext = new MyStoreDbContext(dbContextOptions);
 
             Customer DBCustomer = GetDBCustomerByName(DBContext, name);
 
@@ -97,7 +97,7 @@ namespace MyStore.DataModel
         public IEnumerable<Store.Customer> GetCustomers()
         {
             //get all customers from DB
-            using Project0DBContext context = this.ConnectToDB();
+            using MyStoreDbContext context = this.ConnectToDB();
 
             HashSet<Store.Customer> customers = new HashSet<Store.Customer>();
 
@@ -130,7 +130,7 @@ namespace MyStore.DataModel
         IEnumerable<Store.Location> IDbRepository.GetLocations()
         {
             //get all customers from DB
-            using Project0DBContext context = this.ConnectToDB();
+            using MyStoreDbContext context = this.ConnectToDB();
 
             HashSet<Store.Location> locations = new HashSet<Store.Location>();
 
@@ -175,7 +175,7 @@ namespace MyStore.DataModel
         /// <returns></returns>
         Store.Location IDbRepository.GetLocation(string storeName)
         {
-            using Project0DBContext context = ConnectToDB();
+            using MyStoreDbContext context = ConnectToDB();
             Location store = context.Locations
                     .Where(str => str.LocationName == storeName)
                     .Include(str => str.Invintories)
@@ -211,7 +211,7 @@ namespace MyStore.DataModel
         /// <param name="selectedStore"></param>
         void IDbRepository.UpdateAndOverwriteStoreStocks(Store.Location selectedStore)
         {
-            using Project0DBContext context = this.ConnectToDB();
+            using MyStoreDbContext context = this.ConnectToDB();
 
             foreach(Invintory inv in context.Invintories.Where(x => x.StoreLocation == selectedStore.Where))
             {
@@ -244,7 +244,7 @@ namespace MyStore.DataModel
         /// <returns> A list of all IOrders related to the customer.</returns>
         public IEnumerable<IOrder> GetOrderHistory(Store.Customer c)
         {
-            Project0DBContext dBContext = this.ConnectToDB();
+            MyStoreDbContext dBContext = this.ConnectToDB();
 
             Customer customer = GetDBCustomerByName(dBContext, c.CustomerName);
             customer = dBContext.Customers
@@ -296,7 +296,7 @@ namespace MyStore.DataModel
         /// <returns>List of orders.</returns>
         public IEnumerable<IOrder> GetOrderHistory(Store.Location l)
         {
-            Project0DBContext dBContext = this.ConnectToDB();  
+            MyStoreDbContext dBContext = this.ConnectToDB();  
 
             Location location = dBContext.Locations
                             .Where(loc => loc.LocationName == l.Where)
@@ -358,7 +358,7 @@ namespace MyStore.DataModel
         /// <param name="o">A model order. This order should have had Finalize() called on it, as this method doesn't</param>
         public void PlaceOrder(Store.Order o)
         {
-            using Project0DBContext DBContext = new Project0DBContext(dbContextOptions);
+            using MyStoreDbContext DBContext = new MyStoreDbContext(dbContextOptions);
 
             Order newOrder = new Order();
             //default is null.
@@ -402,7 +402,7 @@ namespace MyStore.DataModel
         /// </remarks>
         void IDbRepository.LoadDBDataToModel()
         {
-            using Project0DBContext context = ConnectToDB();
+            using MyStoreDbContext context = ConnectToDB();
             //get all locations -> model
             foreach(Location l in context.Locations)
             {
@@ -464,9 +464,9 @@ namespace MyStore.DataModel
         /// Connect to the database.
         /// </summary>
         /// <returns>A new DB context</returns>
-        private Project0DBContext ConnectToDB()
+        private MyStoreDbContext ConnectToDB()
         {
-            return new Project0DBContext(this.dbContextOptions);
+            return new MyStoreDbContext(this.dbContextOptions);
         }
 
 
@@ -477,7 +477,7 @@ namespace MyStore.DataModel
         /// <param name="DBContext">current connection</param>
         /// <param name="name">The name of the customer</param>
         /// <returns>DB customer</returns>
-        private Customer GetDBCustomerByName(Project0DBContext DBContext, Name name)
+        private Customer GetDBCustomerByName(MyStoreDbContext DBContext, Name name)
         {
             Customer DBCustomer;
             if (name.MiddleInitial == null)
@@ -577,7 +577,7 @@ namespace MyStore.DataModel
         /// ONLY for use when initializing a store
         /// </remarks>
         /// <param name="location">The location to fetch and add all stocks to</param>
-        private void AddStockToModel(Project0DBContext context, Location location)
+        private void AddStockToModel(MyStoreDbContext context, Location location)
         {
 
             Store.Location modelLoc = Store.Locations.Instance.GetLocation(location.LocationName);
@@ -592,7 +592,7 @@ namespace MyStore.DataModel
         /// Add any missing items to the model.
         /// </summary>
         /// <param name="context"></param>
-        private void addMissingItems(Project0DBContext context)
+        private void addMissingItems(MyStoreDbContext context)
         {
             foreach (Item i in context.Items)
             {
