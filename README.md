@@ -1,2 +1,2 @@
-# danielp-project0
-A console based storefront application.
+# danielp-project1
+A web based storefront application.
