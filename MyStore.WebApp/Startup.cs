@@ -48,9 +48,15 @@ namespace MyStore.WebApp
 
             app.UseEndpoints(endpoints =>
             {
+
+                endpoints.MapControllerRoute(
+                    name: "Login",
+                    pattern: "Customer/{action=Choose}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
             });
         }
     }
