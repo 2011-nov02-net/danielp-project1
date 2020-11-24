@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MyStore.WebApp.Models.StoreViewModels.CustomerViewModel>
+
+@{
+    ViewData["Title"] = "Choose";
+}
+
+<h1>Choose</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<p>
+    <!--TODO: fix routing, keep search string in url-->
+    @using (Html.BeginForm("Choose", "Customer", FormMethod.Get))
+    {
+    <p>
+        Name: @Html.TextBox("searchString") <br />
+        <input type="submit" value="Search" />
+    </p>
+}
+</p>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumOrders)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumOrders)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

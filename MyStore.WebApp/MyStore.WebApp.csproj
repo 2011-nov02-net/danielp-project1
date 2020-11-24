@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Customer\" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyStore.DataModel\MyStore.DataModel.csproj" />
+    <ProjectReference Include="..\MyStore.Store\MyStore.Store.csproj" />
   </ItemGroup>
 
 </Project>

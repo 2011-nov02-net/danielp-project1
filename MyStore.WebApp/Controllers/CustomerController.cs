@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyStore.WebApp.Models.StoreViewModels;
 
 namespace MyStore.WebApp.Controllers
 {
@@ -11,9 +12,19 @@ namespace MyStore.WebApp.Controllers
     {
         //GETl  /Customer/Choose
         // log into a customer
-        public ActionResult Choose()
+        public ActionResult Choose(string searchString)
         {
-            return View();
+            /* List of customers as CustomerViewModel in an IEnumerable*/
+            IEnumerable<CustomerViewModel> allCustomers = new List<CustomerViewModel>();
+
+            //filtered by search string
+            if( !string.IsNullOrEmpty(searchString))
+            {
+                allCustomers = allCustomers.Where(
+                    cust => cust.Name.Contains(searchString));
+            }
+
+            return View(allCustomers);
         }
 
         // GET: Customer/Create

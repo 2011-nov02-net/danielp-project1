@@ -50,7 +50,11 @@ namespace MyStore.WebApp
             {
 
                 endpoints.MapControllerRoute(
-                    name: "Login",
+                    name: "login",
+                    pattern: "Customer/Choose/{searchString?}");
+
+                endpoints.MapControllerRoute(
+                    name: "default-customer",
                     pattern: "Customer/{action=Choose}/{id?}");
 
                 endpoints.MapControllerRoute(

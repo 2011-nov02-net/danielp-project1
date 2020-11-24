@@ -9,11 +9,12 @@ namespace MyStore.WebApp.Controllers
 {
     public class StoreController : Controller
     {
-        // GET: StoreController
+        // GET: Store/Stores
         //view list of stores
-        public ActionResult Index()
+        public ActionResult Stores()
         {
-            return View();
+
+            return View(/* list of all stores, as StoreViewModels in an IEnumerable */);
         }
 
         // GET: StoreController/Details/5
