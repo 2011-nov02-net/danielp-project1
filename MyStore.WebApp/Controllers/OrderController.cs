@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyStore.WebApp.Models.StoreViewModels;
 
 namespace MyStore.WebApp.Controllers
 {
@@ -18,7 +19,10 @@ namespace MyStore.WebApp.Controllers
         // GET: OrderController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            //TODO: get order items
+            IEnumerable<ReceiptItemViewModel> OrderItems = new List<ReceiptItemViewModel>();
+
+            return View(OrderItems);
         }
 
         // GET: OrderController/Create
