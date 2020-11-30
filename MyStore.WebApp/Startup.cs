@@ -58,20 +58,20 @@ namespace MyStore.WebApp
 
             app.UseAuthorization();
 
+
+
+
             app.UseEndpoints(endpoints =>
             {
-
-                endpoints.MapControllerRoute(
-                    name: "login",
-                    pattern: "Customer/Choose/{searchString?}");
-
-                endpoints.MapControllerRoute(
-                    name: "default-customer",
-                    pattern: "Customer/{action=Choose}/{id?}");
-
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+                endpoints.MapControllerRoute(
+                   name: "default-customer",
+                   pattern: "Customer/{action=Choose}/{searchString?}");
+
 
             });
         }
