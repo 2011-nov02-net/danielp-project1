@@ -8,11 +8,11 @@ using MyStore.Store.Exceptions;
 
 namespace MyStore.DataModel
 {
-    public class DBRepository : IDbRepository
+    public class DBRepositoryNoConnection : IDbRepository
     {
         private DbContextOptions<MyStoreDbContext> dbContextOptions;
 
-        public DBRepository (DbContextOptions<MyStoreDbContext> dbContextOptions)
+        public DBRepositoryNoConnection (DbContextOptions<MyStoreDbContext> dbContextOptions)
         {
             this.dbContextOptions = dbContextOptions;
         }

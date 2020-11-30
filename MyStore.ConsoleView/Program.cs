@@ -20,7 +20,7 @@ namespace MyStore.ConsoleView
                 return;
             }
 
-            IDbRepository repo = new DBRepository(dbContextOptions);
+            IDbRepository repo = new DBRepositoryNoConnection(dbContextOptions);
             Console.WriteLine("Welcome to the store!");
 
             Console.WriteLine("Loading database data . . .");
