@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MyStore.Store;
+using MyStore.Store.Exceptions;
 
 namespace MyStore.DataModel
 {
@@ -47,7 +48,15 @@ namespace MyStore.DataModel
                 //get invintory
                 foreach (Invintory inv in DbLocation.Invintories)
                 {
-                    StoreLocation.AddInventory(inv.ItemName, inv.Quantity);
+                    try
+                    {
+                        StoreLocation.AddInventory(inv.ItemName, inv.Quantity);
+                    } catch(ItemNotFoundException e)
+                    {
+                        StoreCatalogue.Instance.RegisterItem(inv.ItemName, inv.ItemNameNavigation.ItemPrice);
+                    }
+
+
                 }
             }
             else

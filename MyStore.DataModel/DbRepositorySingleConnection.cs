@@ -108,7 +108,7 @@ namespace MyStore.DataModel
             HashSet<Store.Location> locations = new HashSet<Store.Location>();
 
             //convert and check if in model
-            foreach (Location l in _context.Locations.Include(store => store.Invintories))
+            foreach (Location l in _context.Locations.Include(store => store.Invintories).ThenInclude(inv => inv.ItemNameNavigation))
             {
                 Store.Location NewLocation = Db_StoreMapper.MapLocationToStore(l);
 

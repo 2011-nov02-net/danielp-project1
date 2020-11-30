@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyStore.DataModel;
+using MyStore.WebApp.Models.StoreViewModels;
 
 namespace MyStore.WebApp.Controllers
 {
@@ -11,10 +13,16 @@ namespace MyStore.WebApp.Controllers
     {
         // GET: Store/Stores
         //view list of stores
-        public ActionResult Stores()
+        public ActionResult Stores([FromServices] IDbRepository repo )
         {
+            List<StoreViewModel> stores = new List<StoreViewModel>();
 
-            return View(/* list of all stores, as StoreViewModels in an IEnumerable */);
+            foreach (var x in repo.GetLocations().ToList())
+            {
+                stores.Add(StoreToViewMapper.MapLocationToStore(x));
+            }
+            
+            return View(stores);
         }
 
         // GET: StoreController/Details/5
