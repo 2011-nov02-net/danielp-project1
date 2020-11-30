@@ -43,19 +43,31 @@ namespace MyStore.WebApp.Models.StoreViewModels
                 //possibly from the DB context????
             }
 
+            set
+            {
+
+            }
+
         }
 
 
-        [Display(Name = "Items in Stock (NYI)")]
+        private int _numitemsinstock = 0;
+
+        [Display(Name = "Items in Stock")]
         public int NumItemsInStock
         {
             get
             {
-                return 0;
+                return _numitemsinstock;
 
                 //if(Locations.hasLocation(this.Name)) -> 
                 //return Store.Locations.Instance.GetLocation().Stocks.Count;
                 //possibly from the DB context????
+            }
+
+            set
+            {
+                _numitemsinstock = value;
             }
 
         }

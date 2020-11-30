@@ -13,16 +13,6 @@ namespace MyStore.WebApp.Models.StoreViewModels
 
         //num orders? with fancy get?
         [Display(Name = "Number of Orders (NYI)")]
-        public int NumOrders {
-            get
-            {
-                return 0;
-
-                //if(Customers.hasCustomer(new Store.Name(this.Name))) -> 
-                //return Store.Orders.Instance.GetOrdersByCustomer().Count;
-                //possibly from the DB context????
-            }
-
-        }
+        public int NumOrders { get; set; }
     }
 }
