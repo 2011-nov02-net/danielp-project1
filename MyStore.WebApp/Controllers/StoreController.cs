@@ -29,12 +29,17 @@ namespace MyStore.WebApp.Controllers
         //view a particular store's orders
         public ActionResult Orders(int id)
         {
-            return View();
+            //TODO: redirect to orders filtered to store
+            return RedirectToAction("Index", "Orders", id);
         }
 
         public ActionResult Stock(int id)
         {
-            return View();
+            List<StockItemViewModel> stocks = new List<StockItemViewModel>();
+
+            //TODO: get stocks
+
+            return View(stocks);
         }
 
         /*

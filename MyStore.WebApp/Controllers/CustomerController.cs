@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyStore.DataModel;
+using MyStore.Store;
 using MyStore.WebApp.Models.StoreViewModels;
 
 namespace MyStore.WebApp.Controllers
@@ -12,16 +14,21 @@ namespace MyStore.WebApp.Controllers
     {
         //GETl  /Customer/Choose
         // log into a customer
-        public ActionResult Choose(string searchString)
+        public ActionResult Choose([FromServices] IDbRepository repo, string searchString)
         {
             /* List of customers as CustomerViewModel in an IEnumerable*/
-            IEnumerable<CustomerViewModel> allCustomers = new List<CustomerViewModel>();
+            List<CustomerViewModel> allCustomers = new List<CustomerViewModel>();
+
+            foreach(var c in repo.GetCustomers().ToList())
+            {
+                allCustomers.Add(StoreToViewMapper.MapCustomerToView(c));
+            }
 
             //filtered by search string
             if( !string.IsNullOrEmpty(searchString))
             {
                 allCustomers = allCustomers.Where(
-                    cust => cust.Name.Contains(searchString));
+                    cust => cust.Name.Contains(searchString)).ToList();
             }
 
             return View(allCustomers);
@@ -29,8 +36,20 @@ namespace MyStore.WebApp.Controllers
 
         // GET: Customer/Create
         // create a customer
-        public ActionResult Create()
+        public ActionResult Create([FromServices] IDbRepository repo)
         {
+            List<String> stores = new List<string>();
+
+            stores.Add("None");
+
+            foreach ( var store in repo.GetLocations().ToList())
+            {
+                stores.Add(store.Where);
+            }
+
+           
+
+            ViewData["Stores"] = stores;
             return View();
         }
 
@@ -46,11 +65,43 @@ namespace MyStore.WebApp.Controllers
         // POST: Customer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create([FromServices] IDbRepository repo, IFormCollection collection)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                Console.WriteLine(collection["HomeStore"]);
+                Console.WriteLine(collection["Name"]);
+
+
+                Store.Location homestore = null;
+                if (collection["HomeStore"] != "None")
+                {
+                    homestore = repo.GetLocation(collection["HomeStore"]);
+                }
+
+                String middlinit = collection["MiddleInitial"];
+                char? middle = null;
+                if(middlinit != null && middlinit.Length > 0)
+                {
+                    middle = middlinit[0];
+                }
+
+                Name custname = new Name(collection["FirstName"], collection["LastName"], middle);
+
+                if (Customers.Instance.HasCustomer(custname))
+                {
+                    // Invalid name, go back
+
+                    return View();
+
+                } else
+                {
+                    Store.Customer newcustomer = Customers.Instance.RegisterCustomer(custname, homestore);
+                    repo.CreateCustomer(newcustomer);
+
+
+                    return RedirectToAction("Choose");
+                }                
             }
             catch
             {
