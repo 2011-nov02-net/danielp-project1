@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyStore.DataModel;
+using System.Configuration;
 
 namespace MyStore.WebApp
 {
@@ -26,8 +27,10 @@ namespace MyStore.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            Environment.GetEnvironmentVariable("VaultURI");
             services.AddDbContext<MyStoreDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))
+               options.UseSqlServer( Configuration.GetValue<String>("SqlServer"))
                    .LogTo(Console.WriteLine)
                 );
 

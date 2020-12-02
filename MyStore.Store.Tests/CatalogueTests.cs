@@ -4,6 +4,7 @@ using MyStore.Store;
 using static MyStore.Store.StoreCatalogue;
 using System.Diagnostics;
 using Xunit.Sdk;
+using MyStore.Store.Exceptions;
 
 namespace MyStore.Store.Tests
 {
@@ -14,7 +15,7 @@ namespace MyStore.Store.Tests
         {
             //arrange
             string itemname = "TestItem";
-            float itemcost = 10;
+            decimal itemcost = 10;
             IItem newitem = StoreCatalogue.Instance.RegisterItem(itemname, itemcost);
             //act 
             IItem testitem = StoreCatalogue.Instance.GetItem(itemname);
