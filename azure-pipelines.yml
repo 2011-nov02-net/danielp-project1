@@ -40,6 +40,8 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '2011-nov02-net_danielp-project1'
     projectName: 'Proj 1'
+    extraProperties: 'sonar.exclusions=**/lib/**'
+      
 
 - task: UseDotNet@2
   displayName: 'Use SDK current'
