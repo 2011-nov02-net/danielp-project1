@@ -1,0 +1,28 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+# this file defines pipleins, which are rules for building and validating source code in a repo.
+# written in a format called YAML, similar to JSON or XML. 
+# very sensitive to indentation
+
+# trigger is  alist of branches that will trigger the pipeline to run.
+trigger:
+- main
+
+# short for build-agent pool, so what kind of agent is going to be running the steps.
+pool:
+  vmImage: 'ubuntu-latest'
+
+# config vars used for multiple steps
+variables:
+  buildConfiguration: 'Release'
+
+#these steps are run in sequence by build agent, in a directory 
+# that contians the most recent pushed repo
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+  # can also include a working directory
+- publish: $(System.DefaultWorkingDirectory)/MyStore.WebApp/bin/Release/netcoreapp3.1
+  artifact: Build_ArtifactFeed
