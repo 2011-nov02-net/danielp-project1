@@ -25,6 +25,7 @@ variables:
 # that contians the most recent pushed repo
 steps:
 - task: UseDotNet@2
+  displayName: 'Use SDK current'
   inputs:
     packageType: 'sdk'
     version: '3.1.x'
@@ -33,6 +34,7 @@ steps:
   displayName: 'dotnet build $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet Test $(buildConfiguration)'
   inputs:
     command: 'test'
     projects: '$(System.DefaultWorkingDirectory)/MyStore.Store.Tests/MyStore.Store.Tests.csproj'
@@ -41,4 +43,5 @@ steps:
 
   # can also include a working directory
 - publish: MyStore.WebApp/bin/Release/netcoreapp3.1
+  displayName: 'publish artifact'
   artifact: Build_ArtifactFeed
