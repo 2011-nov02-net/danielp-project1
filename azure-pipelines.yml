@@ -10,6 +10,7 @@
 trigger:
 - main
 
+
 # short for build-agent pool, so what kind of agent is going to be running the steps.
 pool:
   vmImage: 'ubuntu-latest'
@@ -79,6 +80,7 @@ steps:
 
 - task: AzureRmWebAppDeployment@4
   displayName: "Deploy to Azure App service"
+  condition: and( succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'Azure subscription 1 (e92a324b-9577-4df8-b544-5189c2ff2bbb)'
