@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using MyStore.Store.Exceptions;
 using static MyStore.Store.StoreCatalogue;
 
@@ -10,7 +9,7 @@ namespace MyStore.Store
     /// <summary>
     /// Represents a store location.
     /// </summary>
-    public class Location : ISerializable
+    public class Location
     {
         /// <summary>
         /// Where the store is located. Can also be though of it's name. This is the
@@ -194,16 +193,6 @@ namespace MyStore.Store
             }
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new System.ArgumentNullException("info");
-
-
-            info.AddValue("Where", this.Where);
-            info.AddValue("Stocks", Stocks);
-            info.AddValue("OrderHistory", LocationOrderHistory);
-        }
 
         public override bool Equals(object obj)
         {

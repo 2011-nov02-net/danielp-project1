@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace MyStore.Store
 {
-    public struct Name : IComparer<Name>, ISerializable
+    public struct Name : IComparer<Name>
     {
         public string First { get; }
         public char? MiddleInitial { get; }
@@ -65,16 +64,6 @@ namespace MyStore.Store
             {
                 return x.First.CompareTo(y.First);
             }
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("First", First);
-            if(MiddleInitial != null)
-            {
-                info.AddValue("Middle", MiddleInitial);
-            }
-            info.AddValue("Last", Last);
         }
 
         public override string ToString()

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace MyStore.Store
@@ -29,14 +28,6 @@ namespace MyStore.Store
             this.Time = time;
             this.Items = Items;
             this.Cost = cost;
-        }
-
-        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("OrderLoc", OrderLoc.Where);
-            info.AddValue("Customer", Customer.CustomerName, typeof(Name));
-            info.AddValue("When", Time);
-            info.AddValue("Items", Items);
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace MyStore.Store
 {
-    public class Customer : ISerializable
+    public class Customer
     {
         //order history
         public IEnumerable<IOrder> CustomerOrderHistory 
@@ -28,15 +27,6 @@ namespace MyStore.Store
             this.DefaultStore = DefaultStore;
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Name", CustomerName);
-
-            if(DefaultStore != null)
-            {
-                info.AddValue("DefaultStore", DefaultStore);
-            }
-        }
 
         public void SetDefaultStore(Location l)
         {
