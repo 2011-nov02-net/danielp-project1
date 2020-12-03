@@ -18,11 +18,27 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
+# two common types of steps, script, and "task"
+# tasks from the right hand thingy are easier than writing our own scripts
+
 #these steps are run in sequence by build agent, in a directory 
 # that contians the most recent pushed repo
 steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.1'
+
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: '$(System.DefaultWorkingDirectory)/MyStore.Store.Tests/MyStore.Store.Tests.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    testRunTitle: 'Unit Tests'
+
   # can also include a working directory
-- publish: $(System.DefaultWorkingDirectory)/MyStore.WebApp/bin/Release/netcoreapp3.1
+- publish: MyStore.WebApp/bin/Release/netcoreapp3.1
   artifact: Build_ArtifactFeed
