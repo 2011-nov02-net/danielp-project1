@@ -45,3 +45,15 @@ steps:
 - publish: MyStore.WebApp/bin/Release/netcoreapp3.1
   displayName: 'publish artifact'
   artifact: Build_ArtifactFeed
+
+- script: dotnet publish --configuration $(buildConfiguration) --output publish
+  displayName: 'dotnet build $(buildConfiguration)'
+
+- task: AzureRmWebAppDeployment@4
+  displayName: "Deploy to Azure App service"
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1 (e92a324b-9577-4df8-b544-5189c2ff2bbb)'
+    appType: 'webAppLinux'
+    WebAppName: 'noelwiz'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/publish'
