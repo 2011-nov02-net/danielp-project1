@@ -108,4 +108,4 @@ stages:
                 azureSubscription: 'Azure subscription 1 (e92a324b-9577-4df8-b544-5189c2ff2bbb)'
                 appType: 'webAppLinux'
                 WebAppName: 'noelwiz'
-                packageForLinux: '$(System.ArtifactsDirectory)/BuildAppArtifact'
+                packageForLinux: '$(Pipeline.Workspace)/BuildAppArtifact'
