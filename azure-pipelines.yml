@@ -90,7 +90,8 @@ stages:
 - stage: release
   jobs:
     #default behavior is to download artifact. the job job defaults to download source code
-    - deployment: app-service-deployment
+    - deployment: app_service_deployment
+      displayName: app deployment
       environment: prod
       strategy: 
        runOnce:
