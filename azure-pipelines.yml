@@ -27,10 +27,10 @@ steps:
 
 
 - task: UseDotNet@2
-  displayName: 'Use SDK current'
+  displayName: 'Use SDK for sonar'
   inputs:
     packageType: 'sdk'
-    version: '3.1.x'
+    version: '2.0.x'
 
 - task: SonarCloudPrepare@1
   displayName: 'Sonar Cloud Setup'
@@ -51,6 +51,15 @@ steps:
   displayName: 'Sonar Cloud Run analysis - Timeout'
   inputs:
     pollingTimeoutSec: '300'
+
+- task: UseDotNet@2
+  displayName: 'Use SDK current'
+  inputs:
+    packageType: 'sdk'
+    version: '3.1.x'
+
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet rebuild $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet Test $(buildConfiguration)'
