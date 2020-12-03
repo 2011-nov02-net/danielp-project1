@@ -24,3 +24,5 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
   # can also include a working directory
+- publish: $(System.DefaultWorkingDirectory)/MyStore.WebApp/bin/Release/netcoreapp3.1
+  artifact: Build_ArtifactFeed
