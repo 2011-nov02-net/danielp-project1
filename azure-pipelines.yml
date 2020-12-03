@@ -24,6 +24,14 @@ variables:
 #these steps are run in sequence by build agent, in a directory 
 # that contians the most recent pushed repo
 steps:
+
+- task: SonarCloudPrepare@1
+  displayName: 'Sonar Cloud Setup'
+  inputs:
+    SonarCloud: 'Sonar Cloud Proj 1'
+    organization: '2011-nov02-net'
+    scannerMode: 'CLI'
+    configMode: 'file'
 - task: UseDotNet@2
   displayName: 'Use SDK current'
   inputs:
@@ -32,6 +40,14 @@ steps:
 
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+
+- task: SonarCloudAnalyze@1
+  displayName: 'Sonar Cloud Run analysis - Run'
+
+- task: SonarCloudPublish@1
+  displayName: 'Sonar Cloud Run analysis - Timeout'
+  inputs:
+    pollingTimeoutSec: '300'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet Test $(buildConfiguration)'
