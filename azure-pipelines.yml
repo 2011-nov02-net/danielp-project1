@@ -10,80 +10,101 @@
 trigger:
 - main
 
-
-# short for build-agent pool, so what kind of agent is going to be running the steps.
-pool:
-  vmImage: 'ubuntu-latest'
-
-# config vars used for multiple steps
-variables:
-  buildConfiguration: 'Release'
-
-# two common types of steps, script, and "task"
-# tasks from the right hand thingy are easier than writing our own scripts
-
-#these steps are run in sequence by build agent, in a directory 
-# that contians the most recent pushed repo
-steps:
-
-
-- task: UseDotNet@2
-  displayName: 'Use SDK for sonar'
-  inputs:
-    packageType: 'sdk'
-    version: '2.0.x'
-
-- task: SonarCloudPrepare@1
-  displayName: 'Sonar Cloud Setup'
-  inputs:
-    SonarCloud: 'Sonar Cloud Proj 1'
-    organization: '2011-nov02-net'
-    scannerMode: 'MSBuild'
-    projectKey: '2011-nov02-net_danielp-project1'
-    projectName: 'Proj 1'
-    extraProperties: 'sonar.exclusions=**/lib/**'
+stages:
+- stage: build
+  jobs:
+    - job: build
       
+      # short for build-agent pool, so what kind of agent is going to be running the steps.
+      pool:
+        vmImage: 'ubuntu-latest'
 
-- task: UseDotNet@2
-  displayName: 'Use SDK current'
-  inputs:
-    packageType: 'sdk'
-    version: '3.1.x'
+      # config vars used for multiple steps
+      variables:
+        buildConfiguration: 'Release'
 
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+      # two common types of steps, script, and "task"
+      # tasks from the right hand thingy are easier than writing our own scripts
 
-- task: SonarCloudAnalyze@1
-  displayName: 'Sonar Cloud Run analysis - Run'
+      #these steps are run in sequence by build agent, in a directory 
+      # that contians the most recent pushed repo
+      steps:
 
-- task: SonarCloudPublish@1
-  displayName: 'Sonar Cloud Run analysis - Timeout'
-  inputs:
-    pollingTimeoutSec: '300'
+      #get first sdk
+      - task: UseDotNet@2
+        displayName: 'Use SDK for sonar'
+        inputs:
+          packageType: 'sdk'
+          version: '2.0.x'
+
+       #sonar settings
+      - task: SonarCloudPrepare@1
+        displayName: 'Sonar Cloud Setup'
+        inputs:
+          SonarCloud: 'Sonar Cloud Proj 1'
+          organization: '2011-nov02-net'
+          scannerMode: 'MSBuild'
+          projectKey: '2011-nov02-net_danielp-project1'
+          projectName: 'Proj 1'
+          extraProperties: 'sonar.exclusions=**/lib/**'
+            
+
+      #get sdl
+      - task: UseDotNet@2
+        displayName: 'Use SDK current'
+        inputs:
+          packageType: 'sdk'
+          version: '3.1.x'
+
+      - script: dotnet build --configuration $(buildConfiguration)
+        displayName: 'dotnet build $(buildConfiguration)'
+
+      #publish to sonar
+      - task: SonarCloudAnalyze@1
+        displayName: 'Sonar Cloud Run analysis - Run'
+
+      - task: SonarCloudPublish@1
+        displayName: 'Sonar Cloud Run analysis - Timeout'
+        inputs:
+          pollingTimeoutSec: '300'
 
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet Test $(buildConfiguration)'
-  inputs:
-    command: 'test'
-    projects: '$(System.DefaultWorkingDirectory)/MyStore.Store.Tests/MyStore.Store.Tests.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-    testRunTitle: 'Unit Tests'
+      - task: DotNetCoreCLI@2
+        displayName: 'dotnet Test $(buildConfiguration)'
+        inputs:
+          command: 'test'
+          projects: '$(System.DefaultWorkingDirectory)/MyStore.Store.Tests/MyStore.Store.Tests.csproj'
+          arguments: '--configuration $(buildConfiguration)'
+          testRunTitle: 'Unit Tests'
 
-  # can also include a working directory
-- publish: MyStore.WebApp/bin/Release/netcoreapp3.1
-  displayName: 'publish artifact'
-  artifact: Build_ArtifactFeed
+        # can also include a working directory
 
-- script: dotnet publish --configuration $(buildConfiguration) --output publish
-  displayName: 'dotnet build $(buildConfiguration)'
+      - script: dotnet publish --configuration $(buildConfiguration) --output publish
+        displayName: 'dotnet build $(buildConfiguration)'
 
-- task: AzureRmWebAppDeployment@4
-  displayName: "Deploy to Azure App service"
-  condition: and( succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure subscription 1 (e92a324b-9577-4df8-b544-5189c2ff2bbb)'
-    appType: 'webAppLinux'
-    WebAppName: 'noelwiz'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/publish'
+      - publish:  MyStore.WebApp/bin/Release/netcoreapp3.1
+        displayName: 'publish artifact'
+        artifact: BuildAppArtifact
+
+
+- stage: release
+  jobs:
+    #default behavior is to download artifact. the job job defaults to download source code
+    - deployment: app-service-deployment
+      environment: prod
+      strategy: 
+       runOnce:
+         deploy:
+           steps:
+            - download: current
+              artifact: BuildAppArtifact
+              displayName: downloaded artifact
+            - task: AzureRmWebAppDeployment@4
+              displayName: "Deploy to Azure App service"
+              #condition: and( succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+              inputs:
+                ConnectionType: 'AzureRM'
+                azureSubscription: 'Azure subscription 1 (e92a324b-9577-4df8-b544-5189c2ff2bbb)'
+                appType: 'webAppLinux'
+                WebAppName: 'noelwiz'
+                packageForLinux: '$(System.DefaultWorkingDirectory)/publish'
