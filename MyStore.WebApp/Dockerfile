@@ -3,6 +3,7 @@
 
 # 1. choose a base image witht he dependencies for the program we're going to copy in
 # change from runtime to sdk, so we can build in image
+# might have to change this to a sdk package
 FROM mcr.microsoft.com/dotnet/aspnet:3.1
 
 # 2. copy our program into the image
@@ -17,10 +18,22 @@ WORKDIR /app
 # 3 (new) runs durring docker build, not durring docker run, so sets up the image for when you un the container
 RUN dotnet build . -o publish 
 
+#remaps the thing to listen to port 3210, which requests to outer port 7654 are redirected to in the first
+# docker run command in how to use
+ENV ASPNETCORE_URLS http://*:3210
+
+
+#entry point similar to cmd
+#techniacllt defaults to /bin/sh -c
+# run whatever next as a shell command
+#cmd is appended to entrypoint for that docker run intial command
+ENTRYPOINT ["dotnet", "out/DockerizedMvc.dll"]
+
 # 4. configure it with the command to use to start containers
 CMD dotnet /app/publish/MyStore.WebApp.dll
 
 #how to use 
-# docker run -it --rm -p 7654:80 --name aspnetcore_sample mcr.microsoft.com/dotnet/samples:aspnetapp
+# docker run -it -p 7654:3210 $APP_NAME
+# docker run -it -p 7654:80 --name aspnetcore_sample mcr.microsoft.com/dotnet/samples:aspnetapp
 # 1. docker build -t docker-webapp .
 # 2. docker run docker-webapp
