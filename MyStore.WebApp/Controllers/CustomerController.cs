@@ -110,7 +110,6 @@ namespace MyStore.WebApp.Controllers
         }
 
 
-        /*
         //TODO: decide if we want customers to be editable based on info we wind up displayed
         // could be to change name, but that is a big change in the DB, and not a req
         // GET: Customer/Edit/5
@@ -133,9 +132,9 @@ namespace MyStore.WebApp.Controllers
                 return View();
             }
         }
-        */
+        
 
-        /*
+        /* probably wont let deletion happen because it will mess with orders in the DB
         // GET: Customer/Delete/5
         public ActionResult Delete(int id)
         {
