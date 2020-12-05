@@ -28,16 +28,13 @@ namespace MyStore.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
 
-            Environment.GetEnvironmentVariable("VaultURI");
             services.AddDbContext<MyStoreDbContext>(options =>
-               options.UseSqlServer( Configuration.GetValue<String>("SqlServer"))
-                   .LogTo(Console.WriteLine)
-                );
+              options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))
+                  .LogTo(Console.WriteLine)
+               );
 
-            services.AddTransient<IDbRepository,DbRepositorySingleConnection>();
-
-            
-
+            services.AddTransient<IDbRepository, DbRepositorySingleConnection>();
+      
             services.AddControllersWithViews();
         }
 
