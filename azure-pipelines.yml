@@ -83,11 +83,11 @@ stages:
 
         # can also include a working directory
 
-      - script: dotnet publish --configuration $(buildConfiguration) --output publish
+      - script: dotnet publish --configuration $(buildConfiguration) --output $(System.DefaultWorkingDirectory)/publish
         displayName: 'dotnet build $(buildConfiguration)'
         #workingDirectory: 
 
-      - publish:  MyStore.WebApp/bin/Release/netcoreapp3.1
+      - publish:  $(System.DefaultWorkingDirectory)/publish
         displayName: 'publish artifact'
         artifact: BuildAppArtifact
 
