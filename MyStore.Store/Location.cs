@@ -226,5 +226,14 @@ namespace MyStore.Store
                 }
             }
         }
+
+        /// <summary>
+        /// Return list of current store stocks.
+        /// </summary>
+        /// <returns>A read only collection of itemcounts represnting the current stock</returns>
+        public IReadOnlyCollection<ItemCount> CheckAllStock()
+        {
+            return Stocks.Values;
+        }
     }
 }
