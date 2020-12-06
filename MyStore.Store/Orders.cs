@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 
 namespace MyStore.Store
 {
-    //TODO: Replace order history classes.
     /// <summary>
     /// singleton
     /// </summary>
