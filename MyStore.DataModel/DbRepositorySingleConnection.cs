@@ -42,7 +42,6 @@ namespace MyStore.DataModel
 
             if (customer.DefaultStore != null)
             {
-                //TODO: limit to 100 characters.
                 newcustomer.StoreLocation = customer.DefaultStore.Where;
             }
 

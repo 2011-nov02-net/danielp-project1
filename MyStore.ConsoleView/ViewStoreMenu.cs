@@ -83,7 +83,6 @@ namespace MyStore.ConsoleView
         private void ViewStock()
         {
             //I think the store's stocks should have been pulled from the DB with the store
-            //TODO: pull from db
             ReLoadStoreInvintory();
             if (selectedStore.GetLocationStock().Count() <= 0)
             {

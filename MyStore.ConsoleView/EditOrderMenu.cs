@@ -177,15 +177,6 @@ namespace MyStore.ConsoleView
             return;
         }
 
-        /*
-        //TODO: future concern/ignored
-        private void EditOrderQuantity()
-        {
-            throw new System.NotImplementedException();
-        }
-        */
-
-
         public void ViewSomeStock(List<ItemCount> stockItmes)
         {
 
