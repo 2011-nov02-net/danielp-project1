@@ -43,7 +43,7 @@
     </dl>
 </div>
 
-@if (Model.orders.Count > 0)
+@if (Model.orders != null && Model.orders.Count > 0)
 {
 <div>
     <h4>Orders</h4>
