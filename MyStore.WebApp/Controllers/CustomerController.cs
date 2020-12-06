@@ -14,7 +14,6 @@ namespace MyStore.WebApp.Controllers
     public class CustomerController : Controller
     {
         //GET  /Customer/Choose
-        // view all customers, search by name.
         /// <summary>
         /// Display a list of all customers that you can search by name
         /// </summary>
@@ -118,9 +117,6 @@ namespace MyStore.WebApp.Controllers
             }
         }
 
-
-        //TODO: decide if we want customers to be editable based on info we wind up displayed
-        // could be to change name, but that is a big change in the DB, and not a req
         // GET: Customer/Edit/5
         public ActionResult Edit([FromServices] IDbRepository repo, string customerName)
         {
@@ -142,6 +138,7 @@ namespace MyStore.WebApp.Controllers
         }
 
         // POST: Customer/Edit/5
+        //TODO: store old name so we know who to update.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
