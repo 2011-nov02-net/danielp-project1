@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -56,13 +55,17 @@ namespace MyStore.WebApp.Controllers
             {
                 //todo: set error thing to display on the view, could not find customer
 
-                return View(nameof(Choose));
+                return RedirectToAction(nameof(Choose));
             } else
             {
-                repo.GetCustomerByName(new Name(customerName));
+                CustomerViewModel customer =
+                    StoreToViewMapper.MapCustomerToView(
+                        repo.GetCustomerByName(new Name(customerName)
+                        )
+                    );
 
 
-                return View();
+                return View(customer);
             }
         }
 
@@ -120,6 +123,7 @@ namespace MyStore.WebApp.Controllers
         // GET: Customer/Edit/5
         public ActionResult Edit([FromServices] IDbRepository repo, string customerName)
         {
+            CustomerViewModel customerViewModel = null;
             if (string.IsNullOrWhiteSpace(customerName))
             {
                 Console.Error.WriteLine("Bad Customer Name given.");
@@ -128,13 +132,16 @@ namespace MyStore.WebApp.Controllers
             {
                 //todo: fix so that this will work, either split up first/middle/last or do something else, or just 
                 //accept that space will be converted to +
-                customerName = HttpUtility.UrlDecode(customerName);
-                repo.GetCustomerByName(new Name(customerName));
+                //customerName = HttpUtility.UrlDecode(customerName);
+
+                customerViewModel = StoreToViewMapper.MapCustomerToView(
+                    repo.GetCustomerByName(new Name(customerName))
+                    );
             }
             
 
             ViewData["Stores"] = GetStoreNames(repo);
-            return View();
+            return View(customerViewModel ?? new CustomerViewModel());
         }
 
         // POST: Customer/Edit/5
