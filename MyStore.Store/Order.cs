@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 using MyStore.Store.Exceptions;
 
 namespace MyStore.Store
@@ -15,17 +13,28 @@ namespace MyStore.Store
          *      not allow change to another store with not enough stock.
          *      or remove items that aren't in stock there
          */
+        /// <summary>
+        /// The location an order was placed at
+        /// </summary>
         public Location OrderLoc { get; }
+
+        /// <summary>
+        /// The customer who placed the order
+        /// </summary>
         public Customer Customer { get; }
+
         /// <summary>
         /// The time the order was placed.
         /// </summary>
         public DateTime Time { get; private set; }
-
+       
         private List<ItemCount> _items = new List<ItemCount>();
 
         private decimal _orderCost = -1m;
 
+        /// <summary>
+        /// The total cost of the order
+        /// </summary>
         public decimal Cost
         {
             get
@@ -48,6 +57,9 @@ namespace MyStore.Store
 
         //items and amount, optionally any price modifyer too for sales
         //must reject unreasonable number of items.
+        /// <summary>
+        /// The items in the order.
+        /// </summary>
         public ICollection<ItemCount> Items 
         {
             get
@@ -240,14 +252,6 @@ namespace MyStore.Store
             }
 
             return EnoughStock;
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("OrderLoc", OrderLoc.Where);
-            info.AddValue("Customer", Customer.CustomerName, typeof(Name));
-            info.AddValue("When", Time);
-            info.AddValue("Items", this._items);
         }
     }
 }
