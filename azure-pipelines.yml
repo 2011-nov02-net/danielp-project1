@@ -109,3 +109,5 @@ stages:
                 appType: 'webAppLinux'
                 WebAppName: 'noelwiz'
                 packageForLinux: '$(Pipeline.Workspace)/BuildAppArtifact'
+                RuntimeStack: 'DOTNETCORE|3.1'
+                StartupCommand: 'dotnet run MyStore.WebApp'
