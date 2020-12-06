@@ -53,20 +53,23 @@ namespace MyStore.WebApp
 
             app.UseAuthorization();
 
-
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "/{controller=Home}/{action=Index}/{id?}");
 
 
                 endpoints.MapControllerRoute(
                    name: "default-customer",
-                   pattern: "Customer/{action=Choose}/{searchString?}");
+                   pattern: "/Customer/{action=Choose}/{searchString?}");
 
+
+                //will default to home index when no route is found.
+                endpoints.MapFallbackToController(
+                        action: "Index",
+                        controller: "Home"                      
+                    );
 
             });
         }
