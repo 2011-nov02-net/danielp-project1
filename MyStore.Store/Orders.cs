@@ -62,8 +62,6 @@ namespace MyStore.Store
         {
             AllOrders.Add(new HistoricOrder(locationName, customerName, time, items, cost));
         }
-
-
        
     }
 }
