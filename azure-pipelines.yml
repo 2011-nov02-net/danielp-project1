@@ -111,8 +111,6 @@ stages:
               inputs:
                 ConnectionType: 'AzureRM'
                 azureSubscription: 'Azure subscription 1 (e92a324b-9577-4df8-b544-5189c2ff2bbb)'
-                appType: 'webAppLinux'
+                appType: 'webApp'
                 WebAppName: 'noelwiz'
                 packageForLinux: '$(Pipeline.Workspace)/BuildAppArtifact'
-                RuntimeStack: 'DOTNETCORE|3.1'
-                StartupCommand: 'dotnet MyStore.WebApp.dll'
