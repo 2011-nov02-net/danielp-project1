@@ -53,7 +53,9 @@ namespace MyStore.DataModel
                         StoreLocation.AddInventory(inv.ItemName, inv.Quantity);
                     } catch(ItemNotFoundException e)
                     {
+                        Console.WriteLine(e.Message);
                         StoreCatalogue.Instance.RegisterItem(inv.ItemName, inv.ItemNameNavigation.ItemPrice);
+                        StoreLocation.AddInventory(inv.ItemName, inv.Quantity);
                     }
 
 
