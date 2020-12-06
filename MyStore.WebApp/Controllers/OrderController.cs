@@ -22,21 +22,15 @@ namespace MyStore.WebApp.Controllers
             {
                 foreach (var order in repoorders)
                 {
-                    OrderViewModel orderViewModel = new OrderViewModel();
-                    orderViewModel.Name = order.Customer.CustomerName.ToString();
-                    orderViewModel.NumItems = order.Items.Count();
-                    orderViewModel.OrderTotal = order.Cost;
-                    orderViewModel.StoreName = order.OrderLoc.Where;
-
+                    OrderViewModel orderViewModel = StoreToViewMapper.MapOrderToViewModel(order);
                     orders.Add(orderViewModel);
                 }
             }
-
             return View(orders);
         }
 
         // GET: OrderController/Details/5
-        //TODO: Replace defualt
+        //TODO: Replace defualt store with something taken from link
         public ActionResult Details([FromServices] IDbRepository repo, string store = "Elsewhere", int id = -1)
         {
             //TODO: REPLACE THIS WITH SOMETHING that just takes one query
@@ -60,11 +54,7 @@ namespace MyStore.WebApp.Controllers
 
                 foreach(var item in Order.Items)
                 {
-                    ReceiptItemViewModel receptItemViewModel = new ReceiptItemViewModel();
-                    receptItemViewModel.amount = item.Count;
-                    receptItemViewModel.cost = item.ThisItem.cost * item.Count;
-                    receptItemViewModel.name = item.ThisItem.name;
-
+                    ReceiptItemViewModel receptItemViewModel = StoreToViewMapper.MapOrderEntryToRecieptItem(item);
                     OrderItems.Add(receptItemViewModel);
                 }
 

@@ -10,9 +10,9 @@ namespace MyStore.WebApp.Models.StoreViewModels
         public static CustomerViewModel MapCustomerToView(Store.Customer StoreCust)
         {
             CustomerViewModel customerViewModel = new CustomerViewModel();
-            //customerViewModel.FirstName = StoreCust.CustomerName.First;
-            //customerViewModel.MiddleInitial = StoreCust.CustomerName.MiddleInitial;
-            //customerViewModel.LastName = StoreCust.CustomerName.Last;
+            customerViewModel.FirstName = StoreCust.CustomerName.First;
+            customerViewModel.MiddleInitial = StoreCust.CustomerName.MiddleInitial;
+            customerViewModel.LastName = StoreCust.CustomerName.Last;
             customerViewModel.Name = StoreCust.CustomerName.ToString();
             customerViewModel.NumOrders = StoreCust.CustomerOrderHistory.Count();
             customerViewModel.HomeStore = StoreCust.DefaultStore?.Where ?? "None";
@@ -48,6 +48,18 @@ namespace MyStore.WebApp.Models.StoreViewModels
 
 
             return storeViewModel;
+        }
+
+
+        public static OrderViewModel MapOrderToViewModel(Store.IOrder storeorder)
+        {
+            OrderViewModel ovm = new OrderViewModel();
+            ovm.Name = storeorder.Customer.CustomerName.ToString();
+            ovm.NumItems = storeorder.Items.Count();
+            ovm.OrderTotal = storeorder.Cost;
+            ovm.StoreName = storeorder.OrderLoc.Where;
+
+            return ovm;
         }
     }
 }
