@@ -8,7 +8,9 @@
 
 # trigger is  alist of branches that will trigger the pipeline to run.
 trigger:
-- main
+ branches:
+   include:
+     - master
 
 stages:
 - stage: build
@@ -32,7 +34,7 @@ stages:
 
       #get first sdk
       - task: UseDotNet@2
-        displayName: 'Use SDK for sonar'
+        displayName: 'Use 2.0 SDK for sonar'
         inputs:
           packageType: 'sdk'
           version: '2.0.x'
@@ -51,13 +53,15 @@ stages:
 
       #get sdl
       - task: UseDotNet@2
-        displayName: 'Use SDK current'
+        displayName: 'Use current SDK to build'
         inputs:
           packageType: 'sdk'
           version: '3.1.x'
 
       - script: dotnet build --configuration $(buildConfiguration)
         displayName: 'dotnet build $(buildConfiguration)'
+        #if we want to build a specific project only, could specify
+        #workingDirectory: 
 
       #publish to sonar
       - task: SonarCloudAnalyze@1
@@ -70,7 +74,7 @@ stages:
 
 
       - task: DotNetCoreCLI@2
-        displayName: 'dotnet Test $(buildConfiguration)'
+        displayName: 'dotnet Test Build - $(buildConfiguration)'
         inputs:
           command: 'test'
           projects: '$(System.DefaultWorkingDirectory)/MyStore.Store.Tests/MyStore.Store.Tests.csproj'
@@ -81,6 +85,7 @@ stages:
 
       - script: dotnet publish --configuration $(buildConfiguration) --output publish
         displayName: 'dotnet build $(buildConfiguration)'
+        #workingDirectory: 
 
       - publish:  MyStore.WebApp/bin/Release/netcoreapp3.1
         displayName: 'publish artifact'
@@ -110,4 +115,4 @@ stages:
                 WebAppName: 'noelwiz'
                 packageForLinux: '$(Pipeline.Workspace)/BuildAppArtifact'
                 RuntimeStack: 'DOTNETCORE|3.1'
-                StartupCommand: 'dotnet run MyStore.WebApp'
+                StartupCommand: 'dotnet MyStore.WebApp.dll'
