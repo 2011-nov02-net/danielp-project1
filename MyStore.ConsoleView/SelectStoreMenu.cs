@@ -94,13 +94,6 @@ namespace MyStore.ConsoleView
             }
             while (!storeFound);
 
-            //should never happen
-            if( selectedStore == null)
-            {
-                Console.Error.WriteLine("Error: store found, but store is null.");
-                return this;
-            }
-
             return new ViewStoreMenu(Repo, this.loggedInCustomer, selectedStore);
         }
 
