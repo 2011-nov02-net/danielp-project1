@@ -7,7 +7,7 @@ namespace MyStore.ConsoleView
 {
     internal class FindCustomer : IMenu
     {
-        private DataModel.IDbRepository Repo;
+        private readonly DataModel.IDbRepository Repo;
 
         public FindCustomer(DataModel.IDbRepository repo)
         {
@@ -60,13 +60,10 @@ namespace MyStore.ConsoleView
                     Console.WriteLine("{N}ew - Create a new customer with the name " + fullname.ToString());
 
 
-                    choice = -1;
                     while (!Program.ValidOption(Console.ReadLine(),
                         new List<string> { "f", "find", "v", "view", "n", "new" },
                         out choice))
-                    {
 
-                    }
 
                     switch (choice)
                     {
@@ -82,7 +79,6 @@ namespace MyStore.ConsoleView
                         case 4:
                         case 5:
                             return new CreateCustomer(Repo).DisplayMenu(fullname);
-                            break;
                         default:
                             //error state
                             Console.Error.WriteLine("Error, unexpected input in FindCustomer.");

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MyStore.DataModel;
 using MyStore.Store;
 
@@ -47,19 +46,16 @@ namespace MyStore.ConsoleView
                     //NOTE: ORDERS don't modify store amounts, so fine to just like ignore hthe order
 
                     return new ViewStoreMenu(Repo, currentCustomer, selectedStore);
-                    break;
                 //add item
                 case 2:
                 case 3:
                     this.AddItem();
                     return this;
-                    break;
                 //remove item
                 case 4:
                 case 5:
                     this.RemoveItem();
                     return this;
-                    break;
                 //done
                 case 6:
                 case 7:
@@ -73,11 +69,9 @@ namespace MyStore.ConsoleView
                         Console.Out.WriteLine("Error: " + e?.Message);
                     }
                     return new ViewStoreMenu(Repo, currentCustomer, selectedStore);
-                    break;
                 //Some error has happened, just go back and do this menu over again.
                 default:
                     return this;
-                    break;
             }
         }
 
@@ -144,7 +138,6 @@ namespace MyStore.ConsoleView
             Console.WriteLine($"How many of {items[itemindex]}s would you like to buy?");
             int amount = Program.GetIntegerAmount(max: stocks[itemindex].Count, min: 0);
 
-            //Order currentOrder = selectedStore.CreateNewOrder(stocks[itemindex].ThisItem, amountofitem, currentCustomer);
             currentOrder.AddItem(stocks[itemindex].ThisItem, amount);
         }
 
@@ -166,10 +159,6 @@ namespace MyStore.ConsoleView
 
 
             int choice;
-            do
-            {
-
-            }
             while (!Program.ValidOption(Console.ReadLine(), itemNames, out choice));
 
 

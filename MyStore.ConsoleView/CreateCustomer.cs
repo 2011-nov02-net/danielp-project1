@@ -6,7 +6,7 @@ namespace MyStore.ConsoleView
 {
     internal class CreateCustomer : IMenu
     {
-        private DataModel.IDbRepository Repo;
+        private readonly DataModel.IDbRepository Repo;
 
         public CreateCustomer(DataModel.IDbRepository repo)
         {
