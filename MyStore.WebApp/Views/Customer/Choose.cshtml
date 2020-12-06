@@ -30,25 +30,30 @@
                 <th>
                     @Html.DisplayNameFor(model => model.NumOrders)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HomeStore)
+                </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumOrders)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumOrders)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HomeStore)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { customerName = item.Name }) |
+                    @Html.ActionLink("Details", "Details", new { customerName = item.Name })
+                </td>
+            </tr>
             }
         </tbody>
     </table>
