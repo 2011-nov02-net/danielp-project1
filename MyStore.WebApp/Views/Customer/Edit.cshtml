@@ -29,11 +29,15 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="HomeStore" class="control-label"></label>
-                <input asp-for="HomeStore" class="form-control" />
-                <span asp-validation-for="HomeStore" class="text-danger"></span>
-            </div>
+            <select class="form-group" id="HomeStore" , name="HomeStore">
+                <option>None</option>
+                @foreach (string storename in (List<String>)ViewData["Stores"])
+                {
+                    <option>
+                        @storename
+                    </option>
+                }
+            </select>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

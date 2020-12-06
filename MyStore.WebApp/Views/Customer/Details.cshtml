@@ -1,0 +1,101 @@
+﻿@model MyStore.WebApp.Models.StoreViewModels.CustomerViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Customer - @Model.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MiddleInitial)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MiddleInitial)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NumOrders)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumOrders)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.HomeStore)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.HomeStore)
+        </dd>
+    </dl>
+</div>
+
+@if (Model.orders.Count > 0)
+{
+<div>
+    <h4>Orders</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.orders[0].Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.orders[0].StoreName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.orders[0].NumItems)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.orders[0].OrderTotal)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.orders)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StoreName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumItems)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderTotal)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+

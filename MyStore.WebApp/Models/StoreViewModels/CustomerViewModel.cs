@@ -36,5 +36,8 @@ namespace MyStore.WebApp.Models.StoreViewModels
         [Display(Name = "Home Store")]
         [Required]
         public string HomeStore { get; set; }
+
+        [Display(Name = "Orders")]
+        public List<OrderViewModel> orders { get; set; }
     }
 }
