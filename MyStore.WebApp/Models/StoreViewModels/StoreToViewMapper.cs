@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using MyStore.Store;
 
 namespace MyStore.WebApp.Models.StoreViewModels
 {
@@ -43,7 +43,10 @@ namespace MyStore.WebApp.Models.StoreViewModels
             StoreViewModel storeViewModel = new StoreViewModel();
 
             storeViewModel.Name = l.Where;
-            //storeViewModel.NumItemsInStock = 0; //todo: expose count of items in stock where current stock > 0
+            storeViewModel.NumItemsInStock = l.GetAllStock().ToList()
+                .Where(item => 
+                    item.Count > 0)
+                .Count(); 
             storeViewModel.NumOrders = l.LocationOrderHistory.Count();
 
 

@@ -42,7 +42,11 @@ namespace MyStore.Store
         }
 
 
-        public IEnumerable<ItemCount> GetLocationStock()
+        /// <summary>
+        /// Return list of current store stocks.
+        /// </summary>
+        /// <returns>A read only collection of itemcounts represnting the current stock</returns>
+        public IEnumerable<ItemCount> GetAllStock()
         {
             return Stocks.Values;
         }
@@ -227,13 +231,6 @@ namespace MyStore.Store
             }
         }
 
-        /// <summary>
-        /// Return list of current store stocks.
-        /// </summary>
-        /// <returns>A read only collection of itemcounts represnting the current stock</returns>
-        public IReadOnlyCollection<ItemCount> CheckAllStock()
-        {
-            return Stocks.Values;
-        }
+
     }
 }

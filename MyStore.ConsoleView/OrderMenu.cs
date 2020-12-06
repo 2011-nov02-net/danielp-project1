@@ -21,7 +21,7 @@ namespace MyStore.ConsoleView
         public IMenu DisplayMenu()
         {
             //getting this for logic check here early.
-            List<ItemCount> stocks = selectedStore.GetLocationStock().Where(curritem => curritem.Count > 0).ToList();
+            List<ItemCount> stocks = selectedStore.GetAllStock().Where(curritem => curritem.Count > 0).ToList();
 
             if(stocks.Count() <= 0)
             {
@@ -78,14 +78,14 @@ namespace MyStore.ConsoleView
         /// </remarks>
         public static void ViewStock(Location thisSelectedStore)
         {
-            if (thisSelectedStore.GetLocationStock().Count() <= 0)
+            if (thisSelectedStore.GetAllStock().Count() <= 0)
             {
                 Console.WriteLine("\nThis Location has no items to sell currently.");
                 return;
             }
 
             Console.WriteLine($"{thisSelectedStore.Where} has the following currently in stock:");
-            foreach (ItemCount ic in thisSelectedStore.GetLocationStock())
+            foreach (ItemCount ic in thisSelectedStore.GetAllStock())
             {
                 Console.WriteLine($"{ic.ThisItem.name,20}\t{ic.ThisItem.cost:C}\tWith {ic.Count} in stock.");
             }

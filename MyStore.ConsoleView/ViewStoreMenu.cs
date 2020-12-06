@@ -84,14 +84,14 @@ namespace MyStore.ConsoleView
         {
             //I think the store's stocks should have been pulled from the DB with the store
             ReLoadStoreInvintory();
-            if (selectedStore.GetLocationStock().Count() <= 0)
+            if (selectedStore.GetAllStock().Count() <= 0)
             {
                 Console.WriteLine("\nThis Location has no items to sell currently.");
                 return;
             }
 
             Console.WriteLine($"{selectedStore.Where} has the following currently in stock:");
-            foreach(ItemCount ic in selectedStore.GetLocationStock())
+            foreach(ItemCount ic in selectedStore.GetAllStock())
             {
                 Console.WriteLine($"{ic.ThisItem.name, 20}\t{ic.ThisItem.cost:C}\tWith {ic.Count} in stock.");
             }

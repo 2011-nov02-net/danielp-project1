@@ -31,46 +31,11 @@ namespace MyStore.WebApp.Models.StoreViewModels
         }
 
 
-        [Display(Name = "Number of Orders (NYI)")]
-        public int NumOrders
-        {
-            get
-            {
-                return 0;
-
-                //if(Locoations.HasLocation(this.Name)) -> 
-                //return Store.Orders.Instance.GetOrdersByLocation().Count;
-                //possibly from the DB context????
-            }
-
-            set
-            {
-
-            }
-
-        }
-
-
-        private int _numitemsinstock = 0;
+        [Display(Name = "Number of Orders")]
+        public int NumOrders {get; set;}
 
         [Display(Name = "Items in Stock")]
-        public int NumItemsInStock
-        {
-            get
-            {
-                return _numitemsinstock;
-
-                //if(Locations.hasLocation(this.Name)) -> 
-                //return Store.Locations.Instance.GetLocation().Stocks.Count;
-                //possibly from the DB context????
-            }
-
-            set
-            {
-                _numitemsinstock = value;
-            }
-
-        }
+        public int NumItemsInStock { get; set; }
 
     }
 }

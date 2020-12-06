@@ -85,7 +85,7 @@ namespace MyStore.ConsoleView
 
         private void AddItem()
         {
-            List<ItemCount> stocks = selectedStore.GetLocationStock()
+            List<ItemCount> stocks = selectedStore.GetAllStock()
                 .Where(curritem => curritem.Count > 0)
                 .ToList();
 

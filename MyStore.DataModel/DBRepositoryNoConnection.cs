@@ -158,7 +158,7 @@ namespace MyStore.DataModel
         /*
         public IEnumerable<ItemCount> GetStoreStocks(Store.Location l)
         {
-            IEnumerable<ItemCount> ModdelStock = l.GetLocationStock();
+            IEnumerable<ItemCount> ModdelStock = l.GetAllStock();
             //may have uncommitted changes in an asynchronus enviorment
             //no way to reconsile stock changes, and there shouldn't be any discrepency ...
             //so just returning
