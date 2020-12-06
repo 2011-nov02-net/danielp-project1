@@ -130,6 +130,7 @@ namespace MyStore.DataModel
             Location store = _context.Locations
                     .Where(str => str.LocationName == storeName)
                     .Include(store => store.Invintories)
+                    .ThenInclude(invintory => invintory.ItemNameNavigation)
                     .FirstOrDefault();
 
             if (store != null)
@@ -228,6 +229,11 @@ namespace MyStore.DataModel
         /// <returns>List of orders.</returns>
         public IEnumerable<IOrder> GetOrderHistory(Store.Location l)
         {
+            if(l is null)
+            {
+                throw new ArgumentNullException();
+            }
+
             Location location = _context.Locations
                             .Where(loc => loc.LocationName == l.Where)
                             .Include(cust => cust.Orders)
@@ -258,12 +264,30 @@ namespace MyStore.DataModel
                     ICollection<ItemCount> orderitems = new List<ItemCount>();
                     foreach (OrderItem oi in LocationOrder_DB.OrderItems)
                     {
-                        orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
+                        try
+                        {
+                            orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
+                        } catch (ItemNotFoundException e)
+                        {
+                            StoreCatalogue.Instance.RegisterItem(oi.Item.ItemName, oi.Item.ItemPrice);
+                            // retry 
+                            orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
+                        }
+                        
                     }
-
                     Name customername = Db_StoreMapper.getCustomerName(_context.Customers
-                                            .Where(dbcust => dbcust.Id == LocationOrder_DB.CustomerId).FirstOrDefault()
+                         .Where(dbcust => dbcust.Id == LocationOrder_DB.CustomerId).FirstOrDefault()
                                         );
+
+
+                    /* added like this because customer wasn't found and I didn't want to 
+                     * create them possibly w/o home store in the CreateAndAddPastOrder method
+                     * that comes next.
+                     */
+                    if (!Customers.Instance.HasCustomer(customername))
+                    {
+                        customername = GetCustomerByName(customername).CustomerName;
+                    }
 
                     Store.Orders.Instance.CreateAndAddPastOrder(l.Where,
                             customername,
