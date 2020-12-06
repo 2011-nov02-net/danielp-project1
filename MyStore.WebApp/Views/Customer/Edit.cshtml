@@ -29,7 +29,9 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
 
-            <select class="form-group" id="HomeStore" , name="HomeStore">
+            <!-- TODO Make this work:
+                asp-items="@@ViewData["Stores"]" -->
+            <select asp-for="HomeStore" ,class="form-group" id="HomeStore" , name="HomeStore">
                 <option>None</option>
                 @foreach (string storename in (List<String>)ViewData["Stores"])
                 {
@@ -46,7 +48,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Choose">Back to List</a>
 </div>
 
 @section Scripts {
