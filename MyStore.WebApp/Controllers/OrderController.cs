@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyStore.DataModel;
+using MyStore.Store;
 using MyStore.WebApp.Models.StoreViewModels;
 
 namespace MyStore.WebApp.Controllers
@@ -11,18 +13,68 @@ namespace MyStore.WebApp.Controllers
     public class OrderController : Controller
     {
         // GET: OrderController
-        public ActionResult Index()
+        public ActionResult Index([FromServices] IDbRepository repo, string location, string customer)
         {
-            return View();
+            IEnumerable<IOrder> repoorders = repo.GetOrderHistory(repo.GetLocation("Elsewhere")).ToList();
+            List<OrderViewModel> orders = new List<OrderViewModel>();
+            
+            if(repoorders.Count() > 0)
+            {
+                foreach (var order in repoorders)
+                {
+                    OrderViewModel orderViewModel = new OrderViewModel();
+                    orderViewModel.Name = order.Customer.CustomerName.ToString();
+                    orderViewModel.NumItems = order.Items.Count();
+                    orderViewModel.OrderTotal = order.Cost;
+                    orderViewModel.StoreName = order.OrderLoc.Where;
+
+                    orders.Add(orderViewModel);
+                }
+            }
+
+            return View(orders);
         }
 
         // GET: OrderController/Details/5
-        public ActionResult Details(int id)
+        //TODO: Replace defualt
+        public ActionResult Details([FromServices] IDbRepository repo, string store = "Elsewhere", int id = -1)
         {
-            //TODO: get order items
-            IEnumerable<ReceiptItemViewModel> OrderItems = new List<ReceiptItemViewModel>();
+            //TODO: REPLACE THIS WITH SOMETHING that just takes one query
+            IEnumerable<IOrder> orders = repo.GetOrderHistory( repo.GetLocation(store) );
 
-            return View(OrderItems);
+            /*
+            IOrder Order = orders.Where( order => order.Id == id).FirstOrDefault();
+            */
+
+            IOrder Order = orders.FirstOrDefault();
+
+            if(Order is null || Order.Items is null || Order.Items.Count < 1)
+            {
+                Console.Error.WriteLine("Order not found");
+                return View(nameof(Index));
+            } else
+            {
+
+                //TODO: get order items
+                List<ReceiptItemViewModel> OrderItems = new List<ReceiptItemViewModel>();
+
+                foreach(var item in Order.Items)
+                {
+                    ReceiptItemViewModel receptItemViewModel = new ReceiptItemViewModel();
+                    receptItemViewModel.amount = item.Count;
+                    receptItemViewModel.cost = item.ThisItem.cost * item.Count;
+                    receptItemViewModel.name = item.ThisItem.name;
+
+                    OrderItems.Add(receptItemViewModel);
+                }
+
+                ViewData["TotalCost"] = Order.Cost;
+                ViewData["Customer"] = Order.Customer.CustomerName.ToString();
+                ViewData["Store"] = Order.OrderLoc.Where;
+
+                return View(OrderItems);
+            }
+
         }
 
         // GET: OrderController/Create
