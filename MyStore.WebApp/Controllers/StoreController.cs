@@ -27,19 +27,31 @@ namespace MyStore.WebApp.Controllers
 
         // GET: StoreController/Details/5
         //view a particular store's orders
-        public ActionResult Orders(int id)
+        public ActionResult Orders(string store)
         {
             //TODO: redirect to orders filtered to store
-            return RedirectToAction("Index", "Orders", id);
+            return RedirectToAction("Index", "Order", store);
         }
 
-        public ActionResult Stock(int id)
+        public ActionResult Stock([FromServices] IDbRepository repo, string store)
         {
-            List<StockItemViewModel> stocks = new List<StockItemViewModel>();
+            if (!string.IsNullOrWhiteSpace(store))
+            {
+                Store.Location modelLocation = repo.GetLocation(store);
+                List<StockItemViewModel> stocks = new List<StockItemViewModel>();
 
-            //TODO: get stocks
+                foreach(var item in modelLocation.GetAllStock())
+                {
+                    stocks.Add(StoreToViewMapper.MapStockToStockItem(item));
+                }
 
-            return View(stocks);
+                return View(stocks);
+            } else
+            {
+                //todo: set error
+                return View(nameof(Stores));
+            }
+            
         }    
     }
 }
