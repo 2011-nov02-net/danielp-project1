@@ -197,15 +197,21 @@ namespace MyStore.Store
             }
         }
 
-
+        /// <summary>
+        /// Overrides Equals to compare to the locatin name
+        /// </summary>
+        /// <param name="obj">Another object</param>
+        /// <returns>Bool representation of equality.</returns>
         public override bool Equals(object obj)
         {
-            if( obj is Location)
+            if(typeof(Location).IsAssignableFrom(obj.GetType()))
             {
                 Location other = (Location)obj;
                 return other.Where.Equals(Where);
+            } else
+            {
+                return false;
             }
-            return base.Equals(obj);
         }
 
 

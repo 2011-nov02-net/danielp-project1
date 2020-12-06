@@ -115,7 +115,7 @@ namespace MyStore.Store
             /// <summary>
             /// Used as a hashcode and unique identifier.
             /// </summary>
-            private int ItemId;
+            private readonly int ItemId;
             // disallow negative costs
 
             private decimal _cost;
@@ -152,9 +152,11 @@ namespace MyStore.Store
                 {
                     Item other = (Item)obj;
                     //check if names are equal
-                    this.ItemId = other.ItemId;
+                    return this.ItemId == other.ItemId;
+                } else
+                {
+                    return false;
                 }
-                return base.Equals(obj);
             }
 
             protected internal Item(string itemname, decimal itemprice)

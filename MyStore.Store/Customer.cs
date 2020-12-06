@@ -35,13 +35,13 @@ namespace MyStore.Store
 
         public override bool Equals(object obj)
         {
-            if( obj is Customer)
+            if(typeof(Customer).IsAssignableFrom(obj.GetType()))
             {
                 Customer other = (Customer)obj;
-                return this.CustomerName.Equals(other.CustomerName);
+                return CustomerName.Equals(other.CustomerName);
             } else
             {
-                return base.Equals(obj);
+                return false;
             }           
         }
 
