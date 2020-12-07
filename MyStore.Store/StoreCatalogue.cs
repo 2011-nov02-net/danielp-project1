@@ -148,11 +148,11 @@ namespace MyStore.Store
 
             public override bool Equals(object obj)
             {
-                if (obj is Item)
+                if ( typeof(Item).IsAssignableFrom(obj.GetType()))
                 {
-                    Item other = (Item)obj;
+                    Item other = (Item) obj;
                     //check if names are equal
-                    return this.ItemId == other.ItemId;
+                    return ItemId == other.ItemId;
                 } else
                 {
                     return false;
