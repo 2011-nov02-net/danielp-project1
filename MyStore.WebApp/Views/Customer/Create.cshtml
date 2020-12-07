@@ -33,15 +33,17 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
 
+
             <!--Home Store-->
-            <select class="form-group" id="HomeStore" , name="HomeStore">
-                <option>None</option>
-                @foreach (string storename in (List<String>)ViewData["Stores"])
-                {
-                    <option>
-                        @storename
-                    </option>
-                }
+            @{ 
+                List<string> ListItems = new List<string>();
+                ListItems.Add("None");
+                List<String> storedata = (List<String>) ViewData["Stores"];
+                ListItems.AddRange(storedata);
+                IEnumerable<SelectListItem> items = new SelectList(ListItems) ;
+            }
+
+            <select class="form-group" asp-items="items", asp-for="HomeStore" id="HomeStore" , name="HomeStore">
             </select>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
