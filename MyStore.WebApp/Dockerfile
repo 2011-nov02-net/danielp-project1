@@ -7,13 +7,16 @@ FROM mcr.microsoft.com/dotnet/aspnet:3.1
 #so now we copy in entire directory to get the source code
 
 #copies over proj files to download the dependencies
-COPY ../*/*.csproj ./
+#need to expand this to copy all the projects 
+#COPY ../*/*.csproj ./
 COPY ../*.sln ./
 RUN dotnet restore
 
 COPY ../ /app
 #cache the nuget dependency downloads
 
+#syntax for staging it kinda, so one of these as build with sdk, one as runtime 
+#from package as name
 
 #can be put anywhere, but becuase where the only one here, we'll just choose a short path
 WORKDIR /app/MyStore.WebApp

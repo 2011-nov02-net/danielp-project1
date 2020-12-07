@@ -601,6 +601,11 @@ namespace MyStore.DataModel
                 }              
             }
         }
+
+        IEnumerable<IOrder> IDbRepository.GetAllOrders()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         //stuff

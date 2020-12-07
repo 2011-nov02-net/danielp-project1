@@ -12,6 +12,9 @@ namespace MyStore.Store
         private List<IOrder> AllOrders;
         private static Orders _instance;
 
+        /// <summary>
+        /// Accsess the single instance of the Orders class, responsible for tracking all orders.
+        /// </summary>
         public static Orders Instance
         {
             get
@@ -29,11 +32,21 @@ namespace MyStore.Store
             AllOrders = new List<IOrder>();
         }
 
+        /// <summary>
+        /// Returns a list of orders filtered by customer.
+        /// </summary>
+        /// <param name="c"> The customer who's orders you want.</param>
+        /// <returns>Read only list of orders connected to that customer</returns>
         public IEnumerable<IOrder> GetOrdersByCustomer(Customer c)
         {
             return AllOrders.AsReadOnly().Where(ord => ord.Customer == c); 
         }
 
+        /// <summary>
+        /// Returns a list of orders filtered by location
+        /// </summary>
+        /// <param name="l">The location associated with the desired orders.</param>
+        /// <returns>Read only list of orders.</returns>
         public IEnumerable<IOrder> GetOrdersByLocation(Location l)
         {
             return AllOrders.AsReadOnly().Where(ord => ord.OrderLoc.Where == l.Where);
@@ -60,7 +73,15 @@ namespace MyStore.Store
         {
             AllOrders.Add(new HistoricOrder(locationName, customerName, time, items, cost));
         }
-       
+
+        /// <summary>
+        /// Get all orders the model knows of
+        /// </summary>
+        /// <returns> A read only collection of all orders.</returns>
+        public IEnumerable<IOrder> GetAllOrders()
+        {
+            return AllOrders.AsReadOnly();
+        }
     }
 }
 

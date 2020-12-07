@@ -9,11 +9,13 @@ namespace MyStore.WebApp.Models.StoreViewModels
     public class OrderViewModel
     {
         [Display(Name = "Customer")]
+        [Required]
         public string Name { get; set; }
 
 
         //add a hidden first middle last set by set name maybe?
         [Display(Name = "Store")]
+        [Required]
         public string StoreName { get; set; }
 
         [Display(Name = "Number of Itmes")]
@@ -21,5 +23,8 @@ namespace MyStore.WebApp.Models.StoreViewModels
 
         [Display(Name = "Order Total")]
         public decimal OrderTotal { get; set; }
+
+        [Display(Name = "Order Items")]
+        public List<ReceiptItemViewModel> orderitems { get; set; }
     }
 }

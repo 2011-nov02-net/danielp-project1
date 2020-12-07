@@ -58,7 +58,7 @@ namespace MyStore.DataModel
         /// in the Database.</returns>
         public Store.Customer GetCustomerByName(Name name)
         {
-            Customer DBCustomer = GetDBCustomerByName(_context, name);
+            Customer DBCustomer = GetDBCustomerByName(name);
 
             if(DBCustomer != null)
             {
@@ -178,43 +178,26 @@ namespace MyStore.DataModel
         /// <returns> A list of all IOrders related to the customer.</returns>
         public IEnumerable<IOrder> GetOrderHistory(Store.Customer c)
         {
-            Customer customer = GetDBCustomerByName(_context, c.CustomerName);
+            Customer customer = GetDBCustomerByName(c.CustomerName);
             customer = _context.Customers
                 .Where(cust => cust.Id == customer.Id)
                 .Include(cust => cust.Orders)
                 .ThenInclude(ord => ord.OrderItems)
                 .ThenInclude(ordi => ordi.Item)
+                .Include(cust => cust.StoreLocationNavigation)
                 .FirstOrDefault();
-
-
-            IEnumerable<IOrder> orders = Store.Orders.Instance.GetOrdersByCustomer(c);
 
             foreach (Order CustomerOrder_DB in customer.Orders)
             {
-                bool foundEquiv = false;
-                foreach (Store.IOrder CustomerOrder_MD in orders)
-                {
-                    if (EquivilentOrder(CustomerOrder_MD, CustomerOrder_DB))
-                    {
-                        foundEquiv = true;
-                        break;
-                    }
-                }
+                bool foundEquiv = HasEquivilentOrder(CustomerOrder_DB);
 
                 if (!foundEquiv)
                 {
-
-                    ICollection<ItemCount> orderitems = new List<ItemCount>();
-                    foreach (OrderItem oi in CustomerOrder_DB.OrderItems)
-                    {
-                        orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
-                    }
-                    Store.Orders.Instance.CreateAndAddPastOrder(CustomerOrder_DB.StoreLocation, Db_StoreMapper.getCustomerName(CustomerOrder_DB.Customer), CustomerOrder_DB.OrderTime, orderitems, CustomerOrder_DB.OrderTotal);
+                    Db_StoreMapper.MapAndAddOrderToModel(CustomerOrder_DB);
                 }
             }
 
-            orders = Store.Orders.Instance.GetOrdersByCustomer(c);
-            return orders;
+            return Store.Orders.Instance.GetOrdersByCustomer(c);
         }
 
 
@@ -235,69 +218,52 @@ namespace MyStore.DataModel
 
             Location location = _context.Locations
                             .Where(loc => loc.LocationName == l.Where)
-                            .Include(cust => cust.Orders)
-                            .ThenInclude(cust => cust.Customer)
-                            .Include(cust => cust.Orders)
+                            .Include(loc => loc.Orders)
+                            .ThenInclude(order => order.Customer)
+                            .ThenInclude(customer => customer.StoreLocation)
+                            .Include(Loc => Loc.Orders)
                             .ThenInclude(ord => ord.OrderItems)
                             .ThenInclude(ordi => ordi.Item)
                             .FirstOrDefault();
 
-
-            IEnumerable<IOrder> orders = Store.Orders.Instance.GetOrdersByLocation(l);
-
             foreach (Order LocationOrder_DB in location.Orders)
             {
-                bool foundEquiv = false;
-                foreach (Store.IOrder LocationOrder_MD in orders)
-                {
-                    foundEquiv = foundEquiv || EquivilentOrder(LocationOrder_MD, LocationOrder_DB);
-                    if (foundEquiv)
-                    {
-                        break;
-                    }
-                }
+                bool foundEquiv = HasEquivilentOrder(LocationOrder_DB);
 
                 if (!foundEquiv)
                 {
                     Console.WriteLine("no equiv found, creating order.");
-                    ICollection<ItemCount> orderitems = new List<ItemCount>();
-                    foreach (OrderItem oi in LocationOrder_DB.OrderItems)
-                    {
-                        try
-                        {
-                            orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
-                        } catch (ItemNotFoundException e)
-                        {
-                            StoreCatalogue.Instance.RegisterItem(oi.Item.ItemName, oi.Item.ItemPrice);
-                            // retry 
-                            orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
-                        }
-                        
-                    }
+
                     Name customername = Db_StoreMapper.getCustomerName(_context.Customers
-                         .Where(dbcust => dbcust.Id == LocationOrder_DB.CustomerId).FirstOrDefault()
-                                        );
+                        .Where(dbcust => dbcust.Id == LocationOrder_DB.CustomerId).FirstOrDefault()
+                                );
+
+                    Db_StoreMapper.MapAndAddOrderToModel(LocationOrder_DB);
+                }                    
+            }
+            return Store.Orders.Instance.GetOrdersByLocation(l);
+        }
 
 
-                    /* added like this because customer wasn't found and I didn't want to 
-                     * create them possibly w/o home store in the CreateAndAddPastOrder method
-                     * that comes next.
-                     */
-                    if (!Customers.Instance.HasCustomer(customername))
-                    {
-                        customername = GetCustomerByName(customername).CustomerName;
-                    }
 
-                    Store.Orders.Instance.CreateAndAddPastOrder(l.Where,
-                            customername,
-                            LocationOrder_DB.OrderTime,
-                            orderitems,
-                            LocationOrder_DB.OrderTotal);
+        IEnumerable<IOrder> IDbRepository.GetAllOrders()
+        {
+            IEnumerable<DataModel.Order> orders = _context.Orders
+                    .Include(order => order.Customer)
+                    .ThenInclude(customer => customer.StoreLocation)
+                    .Include(order => order.OrderItems);
+
+            foreach (Order CustomerOrder_DB in orders)
+            {
+                bool foundEquiv = HasEquivilentOrder(CustomerOrder_DB);
+
+                if (!foundEquiv)
+                {
+                    Db_StoreMapper.MapAndAddOrderToModel(CustomerOrder_DB);
                 }
             }
 
-            orders = Store.Orders.Instance.GetOrdersByLocation(l);
-            return orders;
+            return Store.Orders.Instance.GetAllOrders();
         }
 
 
@@ -316,7 +282,7 @@ namespace MyStore.DataModel
             int nextid = (_context.Orders.OrderByDescending(cust => cust.Id).FirstOrDefault()?.Id ?? 0) + 1;
             newOrder.Id = nextid;
             newOrder.StoreLocation = o.OrderLoc.Where;
-            newOrder.Customer = GetDBCustomerByName(_context, o.Customer.CustomerName);
+            newOrder.Customer = GetDBCustomerByName(o.Customer.CustomerName);
             newOrder.OrderTime = o.Time;
 
             decimal total = 0;
@@ -362,14 +328,7 @@ namespace MyStore.DataModel
             //get customers -> model
             foreach (Customer c in _context.Customers)
             {
-                Store.Customer newcust = Store.Customers.Instance.RegisterCustomer(Db_StoreMapper.getCustomerName(c), c.StoreLocation);
-
-                /*
-                if(c.StoreLocation != null)
-                {
-                    newcust.SetDefaultStore(Store.Locations.Instance.GetLocation(c.StoreLocation));
-                }
-                */
+                Store.Customer newcust = Store.Customers.Instance.RegisterCustomer(Db_StoreMapper.getCustomerName(c), c.StoreLocation);         
             }
 
             //get all items -> model
@@ -416,32 +375,54 @@ namespace MyStore.DataModel
         /// <param name="DBContext">current connection</param>
         /// <param name="name">The name of the customer</param>
         /// <returns>DB customer</returns>
-        private Customer GetDBCustomerByName(MyStoreDbContext DBContext, Name name)
+        private Customer GetDBCustomerByName(Name name)
         {
             Customer DBCustomer;
             if (name.MiddleInitial == null)
             {
-                DBCustomer = DBContext.Customers.Where(cust =>
+                DBCustomer = _context.Customers.Where(cust =>
                     name.First.StartsWith(cust.FirstName)
                     && name.Last.StartsWith(cust.LastName)
                     && null == cust.MiddleInitial)
+                    .Include(customer => customer.StoreLocationNavigation)
                     .SingleOrDefault();
             }
             else
             {
-                DBCustomer = DBContext.Customers.Where(cust =>
+                DBCustomer = _context.Customers.Where(cust =>
                     name.First.StartsWith(cust.FirstName)
                     && name.Last.StartsWith(cust.LastName)
                     && name.MiddleInitial.ToString() == cust.MiddleInitial)
-                    .Take(1).SingleOrDefault();
+                    .Include(customer => customer.StoreLocationNavigation)
+                    .SingleOrDefault();
             }
 
             return DBCustomer;
         }
 
+        /// <summary>
+        /// Check if a order has something equivilent in the model allready.
+        /// </summary>
+        /// <param name="modelOrder">The order from the DB.</param>
+        /// <returns>True if there is already an equivilent order in the model.</returns>
+        private bool HasEquivilentOrder(Order modelOrder)
+        {
+            bool hasEquiv = false;
+            //get all orders from the 
 
+            var orders = Orders.Instance.GetAllOrders().Where( order=> order.OrderLoc.Where == modelOrder.StoreLocation);
+            foreach (Store.IOrder CustomerOrder_MD in orders)
+            {
+                if (EquivilentOrder(CustomerOrder_MD, modelOrder))
+                {
+                    hasEquiv = true;
+                    break;
+                }
+            }
 
-       
+            return hasEquiv;
+        }
+
 
         /// <summary>
         /// Check if a store order is equivilent with a model order
@@ -537,8 +518,6 @@ namespace MyStore.DataModel
                 }
             }
         }
-
-        
         #endregion
     }
 }

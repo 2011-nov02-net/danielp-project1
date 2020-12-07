@@ -26,6 +26,8 @@ namespace MyStore.DataModel
 
         //IEnumerable<Store.ItemCount> GetStoreStocks(Store.Location l);
 
+        IEnumerable<Store.IOrder> GetAllOrders();
+
 
         void PlaceOrder(Store.Order o);
 
