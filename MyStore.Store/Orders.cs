@@ -53,6 +53,19 @@ namespace MyStore.Store
         }
 
         /// <summary>
+        /// Gets an order by it's ID
+        /// </summary>
+        /// <param name="id">The ID of the order</param>
+        /// <returns>The order with the matching ID or null.</returns>
+        public IOrder GetOrderByID(int id)
+        {
+            return AllOrders
+                .Where(order => order.ID == id)
+                .FirstOrDefault();
+        }
+
+
+        /// <summary>
         /// Add a new order to the list of orders.
         /// </summary>
         /// <param name="newo"></param>
@@ -82,6 +95,9 @@ namespace MyStore.Store
         {
             return AllOrders.AsReadOnly();
         }
+
+
+        
     }
 }
 

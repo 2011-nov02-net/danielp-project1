@@ -44,25 +44,18 @@ namespace MyStore.WebApp.Controllers
 
         // GET: OrderController/Details/5
         //TODO: Replace defualt store with something taken from link
-        public ActionResult Details([FromServices] IDbRepository repo, string StoreName, int id = -1)
+        public ActionResult Details([FromServices] IDbRepository repo, int ID)
         {
-            //TODO: REPLACE THIS WITH SOMETHING that just takes one query
-            IEnumerable<IOrder> orders = repo.GetOrderHistory( repo.GetLocation(StoreName) );
+            IOrder Order = Orders.Instance.GetOrderByID(ID);
 
-            /*
-            IOrder Order = orders.Where( order => order.Id == id).FirstOrDefault();
-            */
-
-            IOrder Order = orders.FirstOrDefault();
 
             if(Order is null || Order.Items is null || Order.Items.Count < 1)
             {
                 Console.Error.WriteLine("Order not found");
+                //todo: set error text
                 return View(nameof(Index));
             } else
             {
-
-                //TODO: get order items
                 List<ReceiptItemViewModel> OrderItems = new List<ReceiptItemViewModel>();
 
                 foreach(var item in Order.Items)

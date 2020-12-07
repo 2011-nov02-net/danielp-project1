@@ -29,5 +29,9 @@ namespace MyStore.WebApp.Models.StoreViewModels
 
         [Display(Name = "Order Time")]
         public DateTime OrderTime { get; set; }
+
+        
+        [Display()]
+        public int ID { get; set; }
     }
 }
