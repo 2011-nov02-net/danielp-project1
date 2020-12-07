@@ -220,7 +220,7 @@ namespace MyStore.DataModel
                             .Where(loc => loc.LocationName == l.Where)
                             .Include(loc => loc.Orders)
                             .ThenInclude(order => order.Customer)
-                            .ThenInclude(customer => customer.StoreLocation)
+                            .ThenInclude(customer => customer.StoreLocationNavigation)
                             .Include(Loc => Loc.Orders)
                             .ThenInclude(ord => ord.OrderItems)
                             .ThenInclude(ordi => ordi.Item)
@@ -248,10 +248,16 @@ namespace MyStore.DataModel
 
         IEnumerable<IOrder> IDbRepository.GetAllOrders()
         {
+            //yikes, basically passing the entire db to this function now
             IEnumerable<DataModel.Order> orders = _context.Orders
                     .Include(order => order.Customer)
-                    .ThenInclude(customer => customer.StoreLocation)
-                    .Include(order => order.OrderItems);
+                    .ThenInclude(customer => customer.StoreLocationNavigation)
+                    .Include(order => order.OrderItems)
+                    .ThenInclude(oi => oi.Item)
+                    .Include(order => order.StoreLocationNavigation)
+                    .ThenInclude(store => store.Invintories)
+                    .ThenInclude(invitem => invitem.ItemNameNavigation);
+                    
 
             foreach (Order CustomerOrder_DB in orders)
             {

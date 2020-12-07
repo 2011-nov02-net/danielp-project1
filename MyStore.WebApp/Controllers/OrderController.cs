@@ -15,7 +15,7 @@ namespace MyStore.WebApp.Controllers
         // GET: OrderController
         public ActionResult Index([FromServices] IDbRepository repo, string store, string customer)
         {
-            IEnumerable<IOrder> repoorders = repo.GetOrderHistory(repo.GetLocation("Elsewhere")).ToList();
+            IEnumerable<IOrder> repoorders = repo.GetAllOrders().ToList();
             List<OrderViewModel> orders = new List<OrderViewModel>();
 
             //TODO: filter by customer and/or store

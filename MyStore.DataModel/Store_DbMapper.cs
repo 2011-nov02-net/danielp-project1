@@ -120,10 +120,27 @@ namespace MyStore.DataModel
             } catch (CustomerNotFoundException e)
             {
                 Console.WriteLine(e.Message);
+
                 //load the customer to the store
                 Store.Customer storecust = MapCustomerToStore(LocationOrder_DB.Customer);
+                Store.Location loc = MapLocationToStore(LocationOrder_DB.StoreLocationNavigation);
+
                 //try and load the order to the model
-                Store.Orders.Instance.CreateAndAddPastOrder(LocationOrder_DB.StoreLocation,
+                Store.Orders.Instance.CreateAndAddPastOrder(loc.Where,
+                    storecust.CustomerName,
+                    LocationOrder_DB.OrderTime,
+                    orderitems,
+                    LocationOrder_DB.OrderTotal);
+            } catch (LocationNotFoundException e)
+            {
+                Console.WriteLine(e.Message);
+
+                //add missing data to model if not there
+                Store.Location loc = MapLocationToStore(LocationOrder_DB.StoreLocationNavigation);
+                Store.Customer storecust = MapCustomerToStore(LocationOrder_DB.Customer);
+
+                //retry adding the customer
+                Store.Orders.Instance.CreateAndAddPastOrder(loc.Where,
                     storecust.CustomerName,
                     LocationOrder_DB.OrderTime,
                     orderitems,

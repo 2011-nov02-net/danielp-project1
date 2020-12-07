@@ -107,7 +107,7 @@ namespace MyStore.Store
                 return loc;
             } else
             {
-                throw new ArgumentException("Error: location not found.");
+                throw new LocationNotFoundException($"Error: Location, {where} not found.");
             }          
         }
 
