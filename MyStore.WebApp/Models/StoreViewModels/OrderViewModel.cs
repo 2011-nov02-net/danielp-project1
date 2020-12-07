@@ -26,5 +26,8 @@ namespace MyStore.WebApp.Models.StoreViewModels
 
         [Display(Name = "Order Items")]
         public List<ReceiptItemViewModel> orderitems { get; set; }
+
+        [Display(Name = "Order Time")]
+        public DateTime OrderTime { get; set; }
     }
 }

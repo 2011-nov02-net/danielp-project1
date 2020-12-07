@@ -61,6 +61,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
             ovm.NumItems = storeorder.Items.Count();
             ovm.OrderTotal = storeorder.Cost;
             ovm.StoreName = storeorder.OrderLoc.Where;
+            ovm.OrderTime = storeorder.Time;
 
             return ovm;
         }

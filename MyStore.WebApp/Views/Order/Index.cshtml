@@ -35,29 +35,35 @@
                 <th>
                     @Html.DisplayNameFor(model => model.OrderTotal)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OrderTime)
+                </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StoreName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumItems)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OrderTotal)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StoreName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumItems)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderTotal)
+                </td>
+                <th>
+                    @Html.DisplayFor(modelItem => item.OrderTime)
+                </th>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
             }
         </tbody>
     </table>
