@@ -16,6 +16,12 @@ namespace MyStore.WebApp.Models.StoreViewModels
             customerViewModel.Name = StoreCust.CustomerName.ToString();
             customerViewModel.NumOrders = StoreCust.CustomerOrderHistory.Count();
             customerViewModel.HomeStore = StoreCust.DefaultStore?.Where ?? "None";
+            customerViewModel.orders = new List<OrderViewModel>();
+            foreach(var order in StoreCust.CustomerOrderHistory)
+            {
+                customerViewModel.orders.Add(MapOrderToViewModel(order));
+            }
+
             return customerViewModel;
         }
 
