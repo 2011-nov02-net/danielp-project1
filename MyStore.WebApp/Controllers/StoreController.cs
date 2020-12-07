@@ -59,8 +59,18 @@ namespace MyStore.WebApp.Controllers
         {
             if (!string.IsNullOrWhiteSpace(store))
             {
-                var viewModel = StoreToViewMapper.MapLocationToStore(repo.GetLocation(store));
+                var s = repo.GetLocation(store);
+
+                if(s.LocationOrderHistory.Count() == 0)
+                {
+                    repo.GetOrderHistory(s);
+                }
+                //TODO: ensure will get reloaded if new order placed
+
+                var viewModel = StoreToViewMapper.MapLocationToStore(s);
                 
+
+
                 return View(viewModel);
             } else
             {

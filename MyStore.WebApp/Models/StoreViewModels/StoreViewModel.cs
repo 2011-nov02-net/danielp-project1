@@ -37,5 +37,9 @@ namespace MyStore.WebApp.Models.StoreViewModels
         [Display(Name = "Items in Stock")]
         public int NumItemsInStock { get; set; }
 
+
+        [Display(Name = "Orders")]
+        public List<OrderViewModel> Orders { get; set; }
+
     }
 }

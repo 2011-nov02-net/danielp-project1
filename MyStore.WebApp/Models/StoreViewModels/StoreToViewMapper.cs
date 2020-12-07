@@ -52,9 +52,15 @@ namespace MyStore.WebApp.Models.StoreViewModels
             storeViewModel.NumItemsInStock = l.GetAllStock().ToList()
                 .Where(item => 
                     item.Count > 0)
-                .Count(); 
-            storeViewModel.NumOrders = l.LocationOrderHistory.Count();
+                .Count();
 
+            storeViewModel.Orders = new List<OrderViewModel>();
+            foreach (var order in l.LocationOrderHistory)
+            {
+                storeViewModel.Orders.Add(MapOrderToViewModel(order));
+            } 
+
+            storeViewModel.NumOrders = storeViewModel.Orders.Count();
 
             return storeViewModel;
         }
