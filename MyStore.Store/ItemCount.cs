@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MyStore.Store
 {
+    /// <summary>
+    /// A struct to pair items with amounts of that item
+    /// </summary>
     public struct ItemCount
     {
         public int Count { get; }
@@ -15,5 +18,13 @@ namespace MyStore.Store
             Count = count;
             ThisItem = StoreCatalogue.Instance.GetItem(itemName);         
         }
+
+
+        public ItemCount(int count, IItem item)
+        {
+            Count = count;
+            ThisItem = item;
+        }
+
     }
 }
