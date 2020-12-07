@@ -44,10 +44,10 @@ namespace MyStore.WebApp.Controllers
 
         // GET: OrderController/Details/5
         //TODO: Replace defualt store with something taken from link
-        public ActionResult Details([FromServices] IDbRepository repo, string store = "Elsewhere", int id = -1)
+        public ActionResult Details([FromServices] IDbRepository repo, string StoreName, int id = -1)
         {
             //TODO: REPLACE THIS WITH SOMETHING that just takes one query
-            IEnumerable<IOrder> orders = repo.GetOrderHistory( repo.GetLocation(store) );
+            IEnumerable<IOrder> orders = repo.GetOrderHistory( repo.GetLocation(StoreName) );
 
             /*
             IOrder Order = orders.Where( order => order.Id == id).FirstOrDefault();
@@ -81,9 +81,11 @@ namespace MyStore.WebApp.Controllers
         }
 
         // GET: OrderController/Create
-        public ActionResult Create()
+        public ActionResult Create([FromServices] IDbRepository repo)
         {
-            return View();
+            ViewData["Customers"] = GetCustomerNames(repo);
+            ViewData["Stores"] = GetStoreNames(repo);
+            return View(new OrderViewModel());
         }
 
         // POST: OrderController/Create
@@ -103,7 +105,7 @@ namespace MyStore.WebApp.Controllers
 
         //edit the items in the order before placing it.
         // GET: OrderController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string StoreName, string Name)
         {
             return View();
         }
@@ -121,6 +123,45 @@ namespace MyStore.WebApp.Controllers
             {
                 return View();
             }
-        }  
+        }
+
+
+
+        //Coppied from CustomerController
+        /// <summary>
+        /// Get a list of all store names, and convert them to something displayable in a view. 
+        /// </summary>
+        /// <param name="repo">DB Repository.</param>
+        /// <returns>List of strings, representing all existing store names.</returns>
+        private List<String> GetStoreNames(IDbRepository repo)
+        {
+            List<String> stores = new List<string>();
+
+            foreach (var store in repo.GetLocations().ToList())
+            {
+                stores.Add(store.Where);
+            }
+
+            return stores;
+        }
+
+
+
+        /// <summary>
+        /// Get a list of all store names, and convert them to something displayable in a view. 
+        /// </summary>
+        /// <param name="repo">DB Repository.</param>
+        /// <returns>List of strings, representing all existing store names.</returns>
+        private List<String> GetCustomerNames(IDbRepository repo)
+        {
+            List<String> Customers = new List<string>();
+
+            foreach (var cust in repo.GetCustomers().ToList())
+            {
+                Customers.Add(cust.CustomerName.ToString());
+            }
+
+            return Customers;
+        }
     }
 }

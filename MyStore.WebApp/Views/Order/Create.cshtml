@@ -12,16 +12,40 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!--Select customer-->
+            @{
+                List<string> CustListItems = new List<string>();
+                List<String> Custdata = (List<String>)ViewData["Customers"];
+                CustListItems.AddRange(Custdata);
+                IEnumerable<SelectListItem> customers = new SelectList(CustListItems);
+            }
+
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+
+                <select class="form-group" asp-items="customers" , asp-for="StoreName" id="Name" , name="Name">
+                </select>
             </div>
+
+            <!--Store Selection-->
+            @{
+                List<string> ListItems = new List<string>();
+                List<String> storedata = (List<String>)ViewData["Stores"];
+                ListItems.AddRange(storedata);
+                IEnumerable<SelectListItem> stores = new SelectList(ListItems);
+            }
+
             <div class="form-group">
-                <label asp-for="StoreName" class="control-label"></label>
-                <input asp-for="StoreName" class="form-control" />
                 <span asp-validation-for="StoreName" class="text-danger"></span>
+
+                <label asp-for="StoreName" class="control-label"></label>
+
+                <select class="form-group" asp-items="stores" , asp-for="StoreName" id="StoreName" , name="StoreName">
+                </select>
             </div>
+
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
