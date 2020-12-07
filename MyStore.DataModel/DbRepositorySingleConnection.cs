@@ -124,7 +124,7 @@ namespace MyStore.DataModel
         /// </summary>
         /// <param name="storeName"></param>
         /// <returns></returns>
-        Store.Location IDbRepository.GetLocation(string storeName)
+        public Store.Location GetLocation(string storeName)
         {
             Location store = _context.Locations
                     .Where(str => str.LocationName == storeName)
@@ -137,7 +137,7 @@ namespace MyStore.DataModel
                 return Db_StoreMapper.MapLocationToStore(store);
             } else
             {
-                return null;
+                throw new ArgumentException($"No location by the name of {storeName}");
             }
         }
 
@@ -193,7 +193,8 @@ namespace MyStore.DataModel
 
                 if (!foundEquiv)
                 {
-                    Db_StoreMapper.MapAndAddOrderToModel(CustomerOrder_DB);
+                    checkForModelMissingOrderData(CustomerOrder_DB);
+                    Db_StoreMapper.MapAndAddOrderToModel(CustomerOrder_DB);                  
                 }
             }
 
@@ -220,13 +221,13 @@ namespace MyStore.DataModel
                             .Where(loc => loc.LocationName == l.Where)
                             .Include(loc => loc.Orders)
                             .ThenInclude(order => order.Customer)
-                            .ThenInclude(customer => customer.StoreLocationNavigation)
                             .Include(Loc => Loc.Orders)
                             .ThenInclude(ord => ord.OrderItems)
                             .ThenInclude(ordi => ordi.Item)
                             .FirstOrDefault();
 
-            foreach (Order LocationOrder_DB in location.Orders)
+            var orders = location.Orders.ToList();
+            foreach (Order LocationOrder_DB in orders)
             {
                 bool foundEquiv = HasEquivilentOrder(LocationOrder_DB);
 
@@ -234,10 +235,7 @@ namespace MyStore.DataModel
                 {
                     Console.WriteLine("no equiv found, creating order.");
 
-                    Name customername = Db_StoreMapper.getCustomerName(_context.Customers
-                        .Where(dbcust => dbcust.Id == LocationOrder_DB.CustomerId).FirstOrDefault()
-                                );
-
+                    checkForModelMissingOrderData(LocationOrder_DB);
                     Db_StoreMapper.MapAndAddOrderToModel(LocationOrder_DB);
                 }                    
             }
@@ -245,27 +243,29 @@ namespace MyStore.DataModel
         }
 
 
-
-        IEnumerable<IOrder> IDbRepository.GetAllOrders()
+        /// <summary>
+        /// Get a list of all the Orders.
+        /// </summary>
+        /// <returns>A list of all the orders</returns>
+        public IEnumerable<IOrder> GetAllOrders()
         {
-            //yikes, basically passing the entire db to this function now
             IEnumerable<DataModel.Order> orders = _context.Orders
                     .Include(order => order.Customer)
-                    .ThenInclude(customer => customer.StoreLocationNavigation)
                     .Include(order => order.OrderItems)
                     .ThenInclude(oi => oi.Item)
-                    .Include(order => order.StoreLocationNavigation)
-                    .ThenInclude(store => store.Invintories)
-                    .ThenInclude(invitem => invitem.ItemNameNavigation);
+                    //manafest the query here so that more queries can be made ass needed.
+                    .ToList();
                     
 
-            foreach (Order CustomerOrder_DB in orders)
+            foreach (Order Order_DB in orders)
             {
-                bool foundEquiv = HasEquivilentOrder(CustomerOrder_DB);
+                bool foundEquiv = HasEquivilentOrder(Order_DB);
 
                 if (!foundEquiv)
                 {
-                    Db_StoreMapper.MapAndAddOrderToModel(CustomerOrder_DB);
+                    this.checkForModelMissingOrderData(Order_DB);
+
+                    Db_StoreMapper.MapAndAddOrderToModel(Order_DB);                 
                 }
             }
 
@@ -522,6 +522,27 @@ namespace MyStore.DataModel
                 {
                     Store.StoreCatalogue.Instance.RegisterItem(i.ItemName, i.ItemPrice);
                 }
+            }
+        }
+
+
+        /// <summary>
+        /// Takes an order, and checks that the customer and the store are in the model.
+        /// If they are not, then they are loaded into the model.
+        /// </summary>
+        /// <param name="o">The DB Order to be checked.</param>
+        private void checkForModelMissingOrderData(DataModel.Order o)
+        {
+            if (!Locations.Instance.HasLocation(o.StoreLocation))
+            {
+                //load up the location
+                GetLocation(o.StoreLocation);
+            }
+
+            Name custname = Db_StoreMapper.getCustomerName(o.Customer);
+            if (!Customers.Instance.HasCustomer(custname))
+            {
+                GetCustomerByName(custname);
             }
         }
         #endregion

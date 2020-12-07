@@ -108,49 +108,21 @@ namespace MyStore.DataModel
                     orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
                 }
 
-            }           
+            }
 
-            try
-            {
-                Store.Orders.Instance.CreateAndAddPastOrder(LocationOrder_DB.StoreLocation,
+            Store.Orders.Instance.CreateAndAddPastOrder(LocationOrder_DB.StoreLocation,
                     getCustomerName(LocationOrder_DB.Customer),
                     LocationOrder_DB.OrderTime,
                     orderitems,
-                    LocationOrder_DB.OrderTotal);
-            } catch (CustomerNotFoundException e)
-            {
-                Console.WriteLine(e.Message);
-
-                //load the customer to the store
-                Store.Customer storecust = MapCustomerToStore(LocationOrder_DB.Customer);
-                Store.Location loc = MapLocationToStore(LocationOrder_DB.StoreLocationNavigation);
-
-                //try and load the order to the model
-                Store.Orders.Instance.CreateAndAddPastOrder(loc.Where,
-                    storecust.CustomerName,
-                    LocationOrder_DB.OrderTime,
-                    orderitems,
-                    LocationOrder_DB.OrderTotal);
-            } catch (LocationNotFoundException e)
-            {
-                Console.WriteLine(e.Message);
-
-                //add missing data to model if not there
-                Store.Location loc = MapLocationToStore(LocationOrder_DB.StoreLocationNavigation);
-                Store.Customer storecust = MapCustomerToStore(LocationOrder_DB.Customer);
-
-                //retry adding the customer
-                Store.Orders.Instance.CreateAndAddPastOrder(loc.Where,
-                    storecust.CustomerName,
-                    LocationOrder_DB.OrderTime,
-                    orderitems,
-                    LocationOrder_DB.OrderTotal);
-            }
-            
+                    LocationOrder_DB.OrderTotal);           
         }
 
 
-
+        /// <summary>
+        /// Get the Name object for the model based on the DB Customer object.
+        /// </summary>
+        /// <param name="c">A DB customer.</param>
+        /// <returns>A Name struct representing the customer name</returns>
         public static Name getCustomerName(DataModel.Customer c)
         {
             return new Name(c.FirstName, c.LastName, c.MiddleInitial?[0]);
