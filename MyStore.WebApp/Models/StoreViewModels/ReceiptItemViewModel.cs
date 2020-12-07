@@ -16,6 +16,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
 
         //cost for num items
         [Display(Name = "Cost")]
+        [DataType(DataType.Currency)]
         public override decimal cost { get; set; }
 
     }

@@ -22,6 +22,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
         public int NumItems { get; set; }
 
         [Display(Name = "Order Total")]
+        [DataType(DataType.Currency)]
         public decimal OrderTotal { get; set; }
 
         [Display(Name = "Order Items")]
@@ -31,7 +32,6 @@ namespace MyStore.WebApp.Models.StoreViewModels
         public DateTime OrderTime { get; set; }
 
         
-        [Display()]
         public int ID { get; set; }
     }
 }

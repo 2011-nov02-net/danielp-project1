@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyStore.DataModel;
 using MyStore.Store;
+using MyStore.Store.Exceptions;
 using MyStore.WebApp.Models.StoreViewModels;
 
 namespace MyStore.WebApp.Controllers
@@ -84,37 +85,93 @@ namespace MyStore.WebApp.Controllers
         // POST: OrderController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create([FromServices] IDbRepository repo, OrderViewModel order)
         {
+            if (!ModelState.IsValid)
+            {
+                return (View(order));
+            }
+
+            //TODO: check for errors from client side
             try
             {
-                return RedirectToAction(nameof(Edit));
+                order.orderitems = new List<ReceiptItemViewModel>();
+
+                Store.Location where = null;
+                try
+                {
+                     where = repo.GetLocation(order.StoreName);
+                } catch (LocationNotFoundException e)
+                {
+                    Console.Error.WriteLine(e.Message);
+                    //todo: set error message
+
+                    return View(nameof(Create), order);
+                }
+
+                foreach (var item in where.GetAllStock())
+                {
+                    order.orderitems.Add(
+                        StoreToViewMapper.MapOrderEntryToRecieptItem
+                            (
+                                new ItemCount(item.Count, item.ThisItem)
+                            )
+                        );
+                }
+
+                order.NumItems = order.orderitems.Count;
+                return View(nameof(Edit), order);
             }
             catch
             {
-                return View();
+                return View(order);
             }
         }
 
         //edit the items in the order before placing it.
         // GET: OrderController/Edit/5
-        public ActionResult Edit(string StoreName, string Name)
+        public ActionResult Edit(OrderViewModel order)
         {
-            return View();
+            return View(order);
         }
 
         // POST: OrderController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit([FromServices] IDbRepository repo, OrderViewModel order)
         {
+            if (!ModelState.IsValid)
+            {
+                return (View(order));
+            }
+
+
             try
             {
+                List<ItemCount> finalorderitems = new List<ItemCount>();
+
+                foreach(var orderitem in order.orderitems)
+                {
+                    if(orderitem.amount > 0)
+                    {
+                        finalorderitems.Add(new ItemCount(orderitem.amount, orderitem.name));
+                    }
+                }
+
+                Store.Location l = Locations.Instance.GetLocation(order.StoreName);
+                Store.Customer c = Customers.Instance.GetCustomer(new Name(order.Name));
+
+                Store.Order ModelOrder = new Store.Order(l, c, finalorderitems);
+
+                //TODO: GET THE ID OUT OF THERE, maybe an out param?
+                repo.PlaceOrder(ModelOrder);
+                ModelOrder.FinallizeOrder(/*order id*/);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(order);
             }
         }
 

@@ -13,6 +13,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
         public string name { get; set; }
 
         [Display(Name = "Cost")]
+        [DataType(DataType.Currency)]
         public virtual decimal cost { get; set; }
     }
 }

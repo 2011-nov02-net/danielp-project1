@@ -1,28 +1,37 @@
 ﻿@model MyStore.WebApp.Models.StoreViewModels.OrderViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Items";
 }
 
-<!-- TODO: switch this over to a modified version that chooses quantity per item-->
-<h1>Edit</h1>
+<h1>Select Order Items</h1>
 
-<h4>OrderViewModel</h4>
+<label asp-for="Name" class="control-label"></label>
+@Html.DisplayFor(Model => Model.Name)
+
+<label asp-for="StoreName" class="control-label"></label>
+@Html.DisplayFor(Model => Model.StoreName)
+
+<h4>Order Items</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StoreName" class="control-label"></label>
-                <input asp-for="StoreName" class="form-control" />
-                <span asp-validation-for="StoreName" class="text-danger"></span>
-            </div>
+
+            @{
+                for(int i = 0; i < Model.orderitems.Count; i++)
+                {
+                    var current = Model.orderitems[i];
+                    <div class="form-group">
+                        <p>
+                            Item - @current.name
+                        </p>
+                        <input type="number" id="@current.name" name="@current.name" value="0" min="0" max="@current.amount">
+                    </div>
+
+                }
+            }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
