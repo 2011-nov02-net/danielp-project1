@@ -26,6 +26,12 @@ namespace MyStore.WebApp.Controllers
 
             foreach(var c in repo.GetCustomers().ToList())
             {
+                //ensure it's been loaded
+                if(c.CustomerOrderHistory.Count() == 0)
+                {
+                    repo.GetOrderHistory(c);
+                }
+                
                 allCustomers.Add(StoreToViewMapper.MapCustomerToView(c));
             }
 
@@ -58,12 +64,15 @@ namespace MyStore.WebApp.Controllers
                 return RedirectToAction(nameof(Choose));
             } else
             {
-                CustomerViewModel customer =
-                    StoreToViewMapper.MapCustomerToView(
-                        repo.GetCustomerByName(new Name(customerName)
-                        )
-                    );
-
+                
+                Store.Customer c = repo.GetCustomerByName(new Name(customerName));
+                //populate db with order data
+                //ensure it's been loaded
+                if (c.CustomerOrderHistory.Count() == 0)
+                {
+                    repo.GetOrderHistory(c);
+                }
+                CustomerViewModel customer = StoreToViewMapper.MapCustomerToView(c);             
 
                 return View(customer);
             }
