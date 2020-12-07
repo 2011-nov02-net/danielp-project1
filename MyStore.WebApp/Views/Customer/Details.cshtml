@@ -43,56 +43,7 @@
     </dl>
 </div>
 
-@if (Model.orders != null && Model.orders.Count > 0)
-{
-<div>
-    <h4>Orders</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.orders[0].Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.orders[0].StoreName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.orders[0].NumItems)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.orders[0].OrderTotal)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.orders)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StoreName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumItems)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OrderTotal)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-} else
-{
-    <p>No Order Details to Display.</p>
-}
+<partial name="OrdersPartialView" for="orders">
 
 <div>
     @Html.ActionLink("Edit", "Edit", new { customerName = Model.Name }) |

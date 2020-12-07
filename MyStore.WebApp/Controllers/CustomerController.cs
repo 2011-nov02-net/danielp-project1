@@ -72,6 +72,8 @@ namespace MyStore.WebApp.Controllers
                 {
                     repo.GetOrderHistory(c);
                 }
+                //TODO: ensure will get reloaded if new order placed
+
                 CustomerViewModel customer = StoreToViewMapper.MapCustomerToView(c);             
 
                 return View(customer);
