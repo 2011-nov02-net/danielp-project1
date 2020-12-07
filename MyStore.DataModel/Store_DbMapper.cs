@@ -114,7 +114,9 @@ namespace MyStore.DataModel
                     getCustomerName(LocationOrder_DB.Customer),
                     LocationOrder_DB.OrderTime,
                     orderitems,
-                    LocationOrder_DB.OrderTotal);           
+                    LocationOrder_DB.OrderTotal,
+                    LocationOrder_DB.Id
+                    );           
         }
 
 

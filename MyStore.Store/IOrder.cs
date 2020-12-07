@@ -18,22 +18,27 @@ namespace MyStore.Store
         /// The customer who placed the order.
         /// </summary>
         public Customer Customer { get; }
+
         /// <summary>
         /// The time the order was placed.
         /// </summary>
         public DateTime Time { get; }
 
+        /// <summary>
+        /// A unique identifier for orders.
+        /// </summary>
+        public int ID { get; }
+
         //items and amount, optionally any price modifyer too for sales
         //must reject unreasonable number of items.
+        /// <summary>
+        /// The list of items and amount of them in the order.
+        /// </summary>
         public ICollection<ItemCount> Items { get; }
 
-        public decimal Cost { get; }
-
-
         /// <summary>
-        /// Finalizes the order and adds it to the customer and location's order history.
-        /// MAY also adjust the stocks of the store.
+        /// The total cost of an order.
         /// </summary>
-        //public void FinallizeOrder();
+        public decimal Cost { get; }
     }
 }

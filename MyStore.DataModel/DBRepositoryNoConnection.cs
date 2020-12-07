@@ -276,7 +276,7 @@ namespace MyStore.DataModel
                     {
                         orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
                     }
-                    Store.Orders.Instance.CreateAndAddPastOrder(CustomerOrder_DB.StoreLocation, this.getCustomerName(CustomerOrder_DB.Customer), CustomerOrder_DB.OrderTime, orderitems, CustomerOrder_DB.OrderTotal);
+                    Store.Orders.Instance.CreateAndAddPastOrder(CustomerOrder_DB.StoreLocation, this.getCustomerName(CustomerOrder_DB.Customer), CustomerOrder_DB.OrderTime, orderitems, CustomerOrder_DB.OrderTotal, CustomerOrder_DB.Id);
                 }
             }
 
@@ -338,7 +338,8 @@ namespace MyStore.DataModel
                             customername,
                             LocationOrder_DB.OrderTime, 
                             orderitems, 
-                            LocationOrder_DB.OrderTotal);
+                            LocationOrder_DB.OrderTotal,
+                            LocationOrder_DB.Id);
                 }
             }
 
@@ -443,7 +444,8 @@ namespace MyStore.DataModel
                     getCustomerName(o.Customer),
                     o.OrderTime,
                     orderItems,
-                    o.OrderTotal
+                    o.OrderTotal,
+                    o.Id
                     );               
             }
 

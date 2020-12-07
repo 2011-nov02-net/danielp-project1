@@ -359,7 +359,8 @@ namespace MyStore.DataModel
                     Db_StoreMapper.getCustomerName(o.Customer),
                     o.OrderTime,
                     orderItems,
-                    o.OrderTotal
+                    o.OrderTotal,
+                    o.Id
                     );
             }
 

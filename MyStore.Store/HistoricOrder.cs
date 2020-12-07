@@ -16,18 +16,21 @@ namespace MyStore.Store
 
         public decimal Cost { get;  }
 
+        public int ID { get; }
+
         internal void EditOrderAmounts(string itemname, int amount)
         {
             Items.Add(new ItemCount(amount, itemname));
         }
 
-        internal HistoricOrder(string locationName, Name customerName, DateTime time, ICollection<ItemCount> Items, decimal cost)
+        internal HistoricOrder(string locationName, Name customerName, DateTime time, ICollection<ItemCount> Items, decimal cost, int OrderID)
         {
             OrderLoc = Locations.Instance.GetLocation(locationName);
             Customer = Customers.Instance.GetCustomer(customerName);
             this.Time = time;
             this.Items = Items;
             this.Cost = cost;
+            this.ID = OrderID;
         }
     }
 }

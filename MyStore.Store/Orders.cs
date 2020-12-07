@@ -69,9 +69,9 @@ namespace MyStore.Store
         /// <param name="customerName"></param>
         /// <param name="time"></param>
         /// <param name="items"></param>
-        public void CreateAndAddPastOrder(string locationName, Name customerName, DateTime time, ICollection<ItemCount> items, decimal cost )
+        public void CreateAndAddPastOrder(string locationName, Name customerName, DateTime time, ICollection<ItemCount> items, decimal cost, int ID )
         {
-            AllOrders.Add(new HistoricOrder(locationName, customerName, time, items, cost));
+            AllOrders.Add(new HistoricOrder(locationName, customerName, time, items, cost, ID));
         }
 
         /// <summary>

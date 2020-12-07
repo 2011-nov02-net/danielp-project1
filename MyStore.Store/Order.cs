@@ -7,12 +7,6 @@ namespace MyStore.Store
 {
     public class Order: IOrder 
     {
-        /*
-         * what should happen if a customer decides to change the order location?
-         *      should probably maintian items, 
-         *      not allow change to another store with not enough stock.
-         *      or remove items that aren't in stock there
-         */
         /// <summary>
         /// The location an order was placed at
         /// </summary>
@@ -69,7 +63,18 @@ namespace MyStore.Store
            
         }
 
-       
+        private int _Id;
+
+        public int ID
+        {
+            get
+            {
+                return _Id;
+            }
+            
+        }
+
+
 
 
         /// <summary>
@@ -87,6 +92,7 @@ namespace MyStore.Store
             Customer = c;
             OrderLoc = l;
             _items = items.ToList<ItemCount>();
+            //Id assigned in FinalizeOrder
 
             if (!this.EnoughStockForAllItems())
             {
@@ -107,6 +113,7 @@ namespace MyStore.Store
             OrderLoc = l;
             List<ItemCount> _items = new List<ItemCount>();
             _items.Add(item);
+            //Id assigned in FinalizeOrder
         }
 
         //must check stocks, and if item is already in order.
@@ -195,7 +202,11 @@ namespace MyStore.Store
             }
         }
 
-
+        /// <summary>
+        /// Add an item to the order by name
+        /// </summary>
+        /// <param name="itemname">Adds the item to the order</param>
+        /// <param name="amount">Adds this much of the item to the order</param>
         public void AddItem(string itemname, int amount)
         {
             AddItem(StoreCatalogue.Instance.GetItem(itemname), amount);
@@ -211,7 +222,7 @@ namespace MyStore.Store
         /// MUST be called to place the order and add it to the customer and location's 
         /// order history, and update the location's stocks.
         /// </summary>
-        public void FinallizeOrder()
+        public void FinallizeOrder(int finalID = -999)
         {
             this.Time = DateTime.UtcNow;
             _orderCost = this.Cost;
@@ -226,6 +237,16 @@ namespace MyStore.Store
                 {
                     OrderLoc.RemovePurchasedStock(ic);
                 }
+
+                //assign final ID
+                if(finalID == -999)
+                {
+                    _Id = Orders.Instance.GetAllOrders().Max(order => order.ID) + 1;
+                } else
+                {
+                    _Id = finalID;
+                }                
+
                 Orders.Instance.AddOrders(this);
 
             } else
@@ -238,7 +259,7 @@ namespace MyStore.Store
         /// <summary>
         /// Check if theres enough stock at the location for all items in the order.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if there's enough stock for the items in the order at the location.</returns>
         private bool EnoughStockForAllItems()
         {
             //CHECK LOCATION STOCKS
