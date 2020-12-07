@@ -29,8 +29,8 @@ namespace MyStore.WebApp.Controllers
         //view a particular store's orders
         public ActionResult Orders(string store)
         {
-            //TODO: redirect to orders filtered to store
-            return RedirectToAction("Index", "Order", store);
+            //redirect to orders filtered to store
+            return RedirectToAction("Index", "Order", new { store = store});
         }
 
         public ActionResult Stock([FromServices] IDbRepository repo, string store)
@@ -52,6 +52,20 @@ namespace MyStore.WebApp.Controllers
                 return View(nameof(Stores));
             }
             
-        }    
+        }
+
+        //GET: Store/Details?&store=store
+        public ActionResult Details([FromServices] IDbRepository repo, string store)
+        {
+            if (!string.IsNullOrWhiteSpace(store))
+            {
+                var viewModel = StoreToViewMapper.MapLocationToStore(repo.GetLocation(store));
+                
+                return View(viewModel);
+            } else
+            {
+                return RedirectToAction("Stores");
+            }
+        }            
     }
 }

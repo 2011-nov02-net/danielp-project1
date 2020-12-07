@@ -34,7 +34,7 @@
             </td>
             <td>
                 @Html.ActionLink("Stock", "Stock", new { store = item.Name }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Details", "Details", new { store = item.Name })
             </td>
         </tr>
 }
