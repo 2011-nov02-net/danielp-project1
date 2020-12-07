@@ -17,9 +17,8 @@ namespace MyStore.WebApp.Controllers
         {
             IEnumerable<IOrder> repoorders = repo.GetAllOrders().ToList();
             List<OrderViewModel> orders = new List<OrderViewModel>();
-
-            //TODO: filter by customer and/or store
             
+            //convert to view model
             if(repoorders.Count() > 0)
             {
                 foreach (var order in repoorders)
@@ -28,6 +27,18 @@ namespace MyStore.WebApp.Controllers
                     orders.Add(orderViewModel);
                 }
             }
+
+            //filter by customer and/or store
+            if (!string.IsNullOrWhiteSpace(store))
+            {
+                orders = orders.Where(order => order.StoreName.Contains(store)).ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(customer))
+            {
+                orders = orders.Where(order => order.Name.Contains(customer)).ToList();
+            }
+
             return View(orders);
         }
 
