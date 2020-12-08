@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MyStore.Store;
 using MyStore.Store.Exceptions;
 
@@ -19,13 +20,16 @@ namespace MyStore.DataModel
         /// </summary>
         private readonly MyStoreDbContext _context;
 
+        private readonly ILogger<DbRepositorySingleConnection> _logger;
+
         /// <summary>
         /// Creates a new Repository.
         /// </summary>
         /// <param name="context">The DB Context used to accsess the database</param>
-        public DbRepositorySingleConnection(MyStoreDbContext context)
+        public DbRepositorySingleConnection(MyStoreDbContext context, ILogger<DbRepositorySingleConnection> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         #region Customers
@@ -74,7 +78,7 @@ namespace MyStore.DataModel
                 return Db_StoreMapper.MapCustomerToStore(DBCustomer);
             } else
             {
-                Console.WriteLine($"Customer, {name}, is not in the DB.");
+                _logger.LogError($"Customer, {name}, is not in the DB.");
                 return null;
             }
         }
@@ -146,6 +150,7 @@ namespace MyStore.DataModel
                 return Db_StoreMapper.MapLocationToStore(store);
             } else
             {
+                _logger.LogError($"No location by the name of {storeName}");
                 throw new ArgumentException($"No location by the name of {storeName}");
             }
         }
@@ -166,6 +171,7 @@ namespace MyStore.DataModel
                     }
                     catch (ItemNotFoundException e)
                     {
+                        _logger.LogWarning($"Item - {inv.ItemName} not found in order, adding and retrying");
                         addMissingItems(_context);
                         selectedStore.SetItemStock(inv.ItemName, inv.Quantity);
                     }
@@ -223,6 +229,7 @@ namespace MyStore.DataModel
         {
             if(l is null)
             {
+                _logger.LogError("Null argument to GetOrderHistory - store");
                 throw new ArgumentNullException();
             }
 

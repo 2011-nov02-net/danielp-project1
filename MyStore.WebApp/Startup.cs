@@ -1,11 +1,14 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MyStore.DataModel;
+using Serilog.Extensions.Logging;
 
 namespace MyStore.WebApp
 {
@@ -22,10 +25,9 @@ namespace MyStore.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
 
+            
             services.AddDbContext<MyStoreDbContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("SqlServer"))
-                  .LogTo(Console.WriteLine)
-               );
+              options.UseSqlServer(Configuration.GetConnectionString("SqlServer")));
 
             services.AddTransient<IDbRepository, DbRepositorySingleConnection>();
       
@@ -33,8 +35,14 @@ namespace MyStore.WebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            // from https://www.c-sharpcorner.com/article/add-file-logging-to-an-asp-net-core-mvc-application/
+            // which is based off https://nblumhardt.com/2016/10/aspnet-core-file-logger/
+            // Takes advantage of dependency injection to do easy file logging
+            var path = Directory.GetCurrentDirectory();
+            loggerFactory.AddFile($"{path}\\Logs\\Log.txt");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
