@@ -16,6 +16,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
 
 
         [Display(Name="First Name")]
+        [StringLength(20, ErrorMessage = "The First Name cannot exceed 20 characters. ")]
         [Required]
         public string FirstName { get; set; }
 
@@ -24,6 +25,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
 
 
         [Display(Name = "Last Name")]
+        [StringLength(20, ErrorMessage = "The Last Name cannot exceed 20 characters. ")]
         [Required]
         public string LastName { get; set; }
 
