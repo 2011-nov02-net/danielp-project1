@@ -1,0 +1,29 @@
+﻿body {
+    background-color: #FFFBBD;
+    color: #ca3c25;
+}
+
+
+a.navbar-brand {
+    background-color: #7FB069;
+    padding: 5px;
+    border-style: solid;
+}
+
+
+
+.btn-primary {
+    color: #FFFBBD;
+    background-color: #1D1A05;
+    border-color: #1D1A05;
+}
+
+.navbar{
+    background-color: darkseagreen;
+    color: black; 
+
+    border-style:double;
+    border-color: black;
+
+    font-weight:bold;
+}
