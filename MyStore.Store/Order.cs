@@ -283,7 +283,6 @@ namespace MyStore.Store
             bool EnoughStock = true;
 
             //Required Functionality
-            //TODO: stop unreasonabley large orders.
             foreach (ItemCount ic in Items)
             {
                 EnoughStock = EnoughStock && OrderLoc.CheckIfEnoughStock(ic.ThisItem.name, ic.Count);
