@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MyStore.DataModel;
 using MyStore.Store;
 using MyStore.WebApp.Models.StoreViewModels;
@@ -12,6 +13,15 @@ namespace MyStore.WebApp.Controllers
 {
     public class CustomerController : Controller
     {
+
+        private readonly ILogger<CustomerController> _logger;
+
+        public CustomerController(ILogger<CustomerController> logger)
+        {
+            _logger = logger;
+        }
+
+
         //GET  /Customer/Choose
         /// <summary>
         /// Display a list of all customers that you can search by name
@@ -66,6 +76,7 @@ namespace MyStore.WebApp.Controllers
             {
                 //todo: set error thing to display on the view, could not find customer
                 ModelState.TryAddModelError("customerName", "Invalid name given, it's null, or just space");
+                _logger.Log(LogLevel.Error, "Invalid name given, it's null, or just space");
                 return RedirectToAction(nameof(Choose));
             } else
             {               
@@ -92,6 +103,7 @@ namespace MyStore.WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Invalid model state for Create");
                 ViewData["Stores"] = GetStoreNames(repo);
                 return View(nameof(Create), customer);
             }
@@ -108,6 +120,7 @@ namespace MyStore.WebApp.Controllers
                 {
                     Console.Error.WriteLine(e.Message);
                     ModelState.AddModelError("HomeStore", "Location does not exist.");
+                    _logger.LogError($"Location, {customer.HomeStore} does not exist in model.");
                     return View(nameof(Create), customer);
                 }
 
@@ -123,6 +136,8 @@ namespace MyStore.WebApp.Controllers
                 ModelState.AddModelError("LastName", "Name Already Exists.");
                 ModelState.AddModelError("MiddleInitial", "Name Already Exists.");
 
+                _logger.LogError($"Customer, {custname}, Already Exists.");
+                
                 ViewData["Stores"] = GetStoreNames(repo);
 
                 return View(nameof(Create), customer);
@@ -139,6 +154,7 @@ namespace MyStore.WebApp.Controllers
                     Console.Error.WriteLine(e.Message);
 
                     ModelState.AddModelError("FirstName", "Error creating customer.");
+                    _logger.LogError($"Error creating customer w/ DB, {custname}.");
 
                     ViewData["Stores"] = GetStoreNames(repo);
                     return View(nameof(Create), customer);
@@ -154,7 +170,7 @@ namespace MyStore.WebApp.Controllers
             CustomerViewModel customerViewModel = null;
             if (string.IsNullOrWhiteSpace(customerName))
             {
-                Console.Error.WriteLine("Bad Customer Name given.");
+                _logger.LogError("Bad Customer Name given.");
                 return View(nameof(Choose));
             } else
             {

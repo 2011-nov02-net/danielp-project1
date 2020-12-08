@@ -4,13 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MyStore.DataModel;
 using MyStore.WebApp.Models.StoreViewModels;
 
 namespace MyStore.WebApp.Controllers
 {
+
+
+
     public class StoreController : Controller
     {
+
+        private readonly ILogger<StoreController> _logger;
+
+        public StoreController(ILogger<StoreController> logger)
+        {
+            _logger = logger;
+        }
+
         // GET: Store/Stores
         //view list of stores
         public ActionResult Stores([FromServices] IDbRepository repo )
@@ -44,6 +56,7 @@ namespace MyStore.WebApp.Controllers
                 return View(stocks);
             } else
             {
+                _logger.LogError("Error: bad store name given.");
                 ModelState.TryAddModelError("BadStore", "Error: bad store name given.");
                 return View(nameof(Stores), LoadandRetrieveStoreData(repo));
             }

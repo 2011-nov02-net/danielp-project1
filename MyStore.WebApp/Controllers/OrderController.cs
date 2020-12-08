@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MyStore.DataModel;
 using MyStore.Store;
 using MyStore.Store.Exceptions;
@@ -13,6 +14,15 @@ namespace MyStore.WebApp.Controllers
 {
     public class OrderController : Controller
     {
+
+        private readonly ILogger<OrderController> _logger;
+
+        public OrderController(ILogger<OrderController> logger)
+        {
+            _logger = logger;
+        }
+
+
         // GET: OrderController
         public ActionResult Index([FromServices] IDbRepository repo, string store, string customer)
         {
@@ -32,12 +42,14 @@ namespace MyStore.WebApp.Controllers
             //filter by customer and/or store
             if (!string.IsNullOrWhiteSpace(store))
             {
-                orders = orders.Where(order => order.StoreName.Contains(store)).ToList();
+                _logger.LogInformation($"Loading orders for {store}");
+                orders = orders.Where(order => order.StoreName.Contains(store)).ToList();                
             }
 
             if (!string.IsNullOrWhiteSpace(customer))
             {
-                orders = orders.Where(order => order.Name.Contains(customer)).ToList();
+                _logger.LogInformation($"Loading orders for {store}");
+                orders = orders.Where(order => order.Name.Contains(customer)).ToList();                
             }
 
             return View(orders);
@@ -51,7 +63,7 @@ namespace MyStore.WebApp.Controllers
 
             if(Order is null || Order.Items is null || Order.Items.Count < 1)
             {
-                Console.Error.WriteLine("Order not found");
+                _logger.LogError($"Order not found");
                 //todo: set error text
                 ModelState.TryAddModelError("NotFound", "Couldn't find the given order");
                 return View(nameof(Index));
@@ -89,6 +101,7 @@ namespace MyStore.WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Warning: invalid model state for create order");
                 return (View(order));
             }
 
@@ -102,7 +115,7 @@ namespace MyStore.WebApp.Controllers
                      where = repo.GetLocation(order.StoreName);
                 } catch (LocationNotFoundException e)
                 {
-                    Console.Error.WriteLine(e.Message);
+                    _logger.LogError(e.Message);
                     //set error message
                     ModelState.TryAddModelError("NotFound", "Error: Location not found.");
 
@@ -122,8 +135,9 @@ namespace MyStore.WebApp.Controllers
                 order.NumItems = order.orderitems.Count;
                 return View(nameof(Edit), order);
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return View(order);
             }
         }
@@ -142,6 +156,7 @@ namespace MyStore.WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Warning: invalid model state for create order");
                 //reload store's items into the model, b/c otherwise max will
                 //be the amount the cusomter had entered.
                 return (View(order));
@@ -171,8 +186,9 @@ namespace MyStore.WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return View(order);
             }
         }
