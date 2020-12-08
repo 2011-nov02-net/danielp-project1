@@ -11,6 +11,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
         private string _name;
 
         [Display(Name="Location Name")]
+        [StringLength(50, ErrorMessage = "The Last Name cannot exceed 50 characters.")]
         [Required]
         public string Name {
             get
