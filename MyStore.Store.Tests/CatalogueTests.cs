@@ -37,9 +37,7 @@ namespace MyStore.Store.Tests
 
             //act
             //assert
-
-            //todo make this more specific
-            Assert.ThrowsAny<Exception>(()=>StoreCatalogue.Instance.RegisterItem(itemname, 0));
+            Assert.Throws<ArgumentException>(()=>StoreCatalogue.Instance.RegisterItem(itemname, 0));
         }
 
 

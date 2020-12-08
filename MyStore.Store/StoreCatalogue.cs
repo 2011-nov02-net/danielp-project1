@@ -72,6 +72,9 @@ namespace MyStore.Store
         /// <summary>
         /// Addes an item to the store's catalohue of items.
         /// </summary>
+        /// <exception cref="ArgumentException">
+        /// Will be thrown if the item is already been registered.
+        /// </exception>
         /// <param name="itemName">The human readable name of an item</param>
         /// <param name="itemPrice">The price of the item</param>
         /// <returns>The newly created item.</returns>
@@ -86,7 +89,7 @@ namespace MyStore.Store
             } else
             {
                 //possibly create a exception for that.
-                throw new ArgumentException();
+                throw new ArgumentException($"Item, {itemName} already exists.");
             }
         }
 
