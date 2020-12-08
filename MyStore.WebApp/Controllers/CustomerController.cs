@@ -104,8 +104,8 @@ namespace MyStore.WebApp.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Invalid model state for Create");
-                ViewData["Stores"] = GetStoreNames(repo);
-                return View(nameof(Create), customer);
+                //ViewData["Stores"] = GetStoreNames(repo);
+                //return View(nameof(Create), customer);
             }
 
             Store.Location homestore = null;
