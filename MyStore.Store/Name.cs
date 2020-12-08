@@ -42,13 +42,6 @@ namespace MyStore.Store
                 }
             }
 
-            /*
-            for (int i = 0; i < nameparts.Count; i++)
-            {
-                nameparts[i].Trim();
-            }
-            */
-
             //default value
             MiddleInitial = null;
 
@@ -115,9 +108,9 @@ namespace MyStore.Store
         /// <summary>
         /// Compares two names to eachother
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
+        /// <param name="x">Name 1</param>
+        /// <param name="y">Name 2</param>
+        /// <returns>A value based on which comes first alphabetically.</returns>
         public int Compare(Name x, Name y)
         {
             if(x.First == y.First)

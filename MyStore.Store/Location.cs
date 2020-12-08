@@ -15,7 +15,7 @@ namespace MyStore.Store
         /// Where the store is located. Can also be though of it's name. This is the
         /// primary key when referencing stores.
         /// </summary>
-        public String Where { get; }
+        public String LocationName { get; }
         //Invintory
         /// <summary>
         /// The amount of various items in stock currently.
@@ -34,10 +34,13 @@ namespace MyStore.Store
             }
         }
 
-
+        /// <summary>
+        /// Creates a new location
+        /// </summary>
+        /// <param name="where">The name of the Location</param>
         internal Location(string where)
         {
-            this.Where = where;
+            this.LocationName = where;
             Stocks = new Dictionary<string, ItemCount>();
         }
 
@@ -207,7 +210,7 @@ namespace MyStore.Store
             if(typeof(Location).IsAssignableFrom(obj.GetType()))
             {
                 Location other = (Location)obj;
-                return other.Where.Equals(Where);
+                return other.LocationName.Equals(LocationName);
             } else
             {
                 return false;

@@ -8,8 +8,8 @@ namespace MyStore.Store
     /// singleton
     /// </summary>
     public class Orders
-    {
-        private List<IOrder> AllOrders;
+    {       
+        #region Singleton
         private static Orders _instance;
 
         /// <summary>
@@ -27,10 +27,19 @@ namespace MyStore.Store
             }
         }
 
+        /// <summary>
+        /// singleton constructor
+        /// </summary>
         private Orders()
         {
             AllOrders = new List<IOrder>();
         }
+        #endregion
+
+        /// <summary>
+        /// The list of all orders.
+        /// </summary>
+        private List<IOrder> AllOrders;
 
         /// <summary>
         /// Returns a list of orders filtered by customer.
@@ -49,7 +58,7 @@ namespace MyStore.Store
         /// <returns>Read only list of orders.</returns>
         public IEnumerable<IOrder> GetOrdersByLocation(Location l)
         {
-            return AllOrders.AsReadOnly().Where(ord => ord.OrderLoc.Where == l.Where);
+            return AllOrders.AsReadOnly().Where(ord => ord.OrderLoc.LocationName == l.LocationName);
         }
 
         /// <summary>
@@ -68,20 +77,21 @@ namespace MyStore.Store
         /// <summary>
         /// Add a new order to the list of orders.
         /// </summary>
-        /// <param name="newo"></param>
+        /// <param name="newo">The new order to be added to the list.</param>
         public void AddOrders(IOrder newo)
         {
             AllOrders.Add(newo);
         }
 
         /// <summary>
-        /// Create and adds a new historic order representing a completed and validated order.
+        /// Create and adds a new historic order representing a completed and validated order
+        /// that has been made before the model was loaded.
         /// NOTE: this bypassis validity checks, and should only be used for past orders.
         /// </summary>
-        /// <param name="locationName"></param>
-        /// <param name="customerName"></param>
-        /// <param name="time"></param>
-        /// <param name="items"></param>
+        /// <param name="locationName">The name of the location</param>
+        /// <param name="customerName">The name of the customer</param>
+        /// <param name="time">Time the order was Placed</param>
+        /// <param name="items">Items in the order</param>
         public void CreateAndAddPastOrder(string locationName, Name customerName, DateTime time, ICollection<ItemCount> items, decimal cost, int ID )
         {
             AllOrders.Add(new HistoricOrder(locationName, customerName, time, items, cost, ID));
@@ -94,10 +104,7 @@ namespace MyStore.Store
         public IEnumerable<IOrder> GetAllOrders()
         {
             return AllOrders.AsReadOnly();
-        }
-
-
-        
+        }    
     }
 }
 

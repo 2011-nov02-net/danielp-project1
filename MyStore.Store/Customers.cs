@@ -14,11 +14,12 @@ namespace MyStore.Store
     /// </remarks>
     public class Customers
     {
+        #region singleton
         private static Customers _instance;
 
-        private 
-            HashSet<Customer> AllCustomers;
-
+        /// <summary>
+        /// Accsess to the singleton instance of the list of customers.
+        /// </summary>
         public static Customers Instance
         {
             get
@@ -32,10 +33,19 @@ namespace MyStore.Store
             }
         }
 
+        /// <summary>
+        /// constructor for a new Instance if there is none set already
+        /// </summary>
         private Customers()
         {
             this.AllCustomers = new HashSet<Customer>();
         }
+        #endregion
+
+        /// <summary>
+        /// A hashset of all the customers.
+        /// </summary>
+        private HashSet<Customer> AllCustomers;
 
         //Required Functionality
         //question: what do if shared name?

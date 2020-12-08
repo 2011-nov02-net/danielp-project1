@@ -5,6 +5,9 @@ using MyStore.Store.Exceptions;
 
 namespace MyStore.Store
 {
+    /// <summary>
+    /// An order that a customer is working on making, or that has been placed.
+    /// </summary>
     public class Order: IOrder 
     {
         /// <summary>
@@ -22,8 +25,19 @@ namespace MyStore.Store
         /// </summary>
         public DateTime Time { get; private set; }
        
+        /// <summary>
+        /// The items in the order
+        /// </summary>
         private List<ItemCount> _items = new List<ItemCount>();
 
+        /// <summary>
+        /// The total cost of the order. 
+        /// </summary>
+        /// <remarks>
+        /// while this is equal to -1, the value is calculated dynamically,
+        /// after the order is finalized, this get's replaced with the total
+        /// at time of purchase incase prices change.
+        /// </remarks>
         private decimal _orderCost = -1m;
 
         /// <summary>
@@ -65,6 +79,9 @@ namespace MyStore.Store
 
         private int _Id;
 
+        /// <summary>
+        /// The ID that uniquely identifies this order
+        /// </summary>
         public int ID
         {
             get
@@ -172,12 +189,12 @@ namespace MyStore.Store
         /// <summary>
         /// Remove an item from the order
         /// </summary>
-        /// <param name="v"></param>
-        public void RemoveItem(string v)
+        /// <param name="itemName">The name of the item to remove.</param>
+        public void RemoveItem(string itemName)
         {
             foreach(ItemCount ic in _items)
             {
-                if(ic.ThisItem.name == v)
+                if(ic.ThisItem.name == itemName)
                 {
                     _items.Remove(ic);
                     break;
@@ -190,8 +207,8 @@ namespace MyStore.Store
         /// Add an item to the order.
         /// </summary>
         /// <exception cref="NotEnoughStockException">If there's not enough stock</exception>
-        /// <param name="item"></param>
-        /// <param name="amount"></param>
+        /// <param name="item">The item to be added</param>
+        /// <param name="amount">The amount of the item to be added</param>
         public void AddItem(IItem item, int amount)
         {
             if(OrderLoc.CheckIfEnoughStock(item.name, amount)){

@@ -5,10 +5,19 @@ using System.Text;
 namespace MyStore.Store
 {
     //singleton
+    /// <summary>
+    /// This is a contianer to accsess any location in the model
+    /// </summary>
+    /// <remarks>
+    /// This is a singleton class
+    /// </remarks>
     public class Locations
     {
         private Dictionary<string, Location> _stores;
 
+        /// <summary>
+        /// All the stores currently in the model.
+        /// </summary>
         public IReadOnlyCollection<Location> Stores 
         {
             get
@@ -17,8 +26,8 @@ namespace MyStore.Store
             }
         }
 
-        private static Locations _instance;
 
+        #region Singleton
         /// <summary>
         /// Accsess the Locations list.
         /// </summary>
@@ -37,12 +46,17 @@ namespace MyStore.Store
             }
         }
 
+        private static Locations _instance;
+
+        /// <summary>
+        /// create a new instance of the Locations object
+        /// </summary>
         private Locations()
         {
             _stores = new Dictionary<string, Location>();
             _instance = this;
         }
-
+        #endregion
 
 
         /// <summary>
@@ -81,12 +95,12 @@ namespace MyStore.Store
         /// </remarks>
         public Location RegisterLocation(Location newLocation)
         {
-            if(_stores.ContainsKey(newLocation.Where))
+            if(_stores.ContainsKey(newLocation.LocationName))
             {
                 throw new ArgumentException("Location Already Registered");
             } else
             {
-                _stores.Add(newLocation.Where, newLocation);
+                _stores.Add(newLocation.LocationName, newLocation);
             }
 
             return newLocation;
@@ -129,6 +143,11 @@ namespace MyStore.Store
             }
         }
 
+        /// <summary>
+        /// Checks if the location is known to the model.
+        /// </summary>
+        /// <param name="storeName">The name of the location</param>
+        /// <returns>True if that location is in the model currently.</returns>
         public bool HasLocation(string storeName)
         {
             return _stores.ContainsKey(storeName);
