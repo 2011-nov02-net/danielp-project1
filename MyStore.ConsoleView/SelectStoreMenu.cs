@@ -103,7 +103,7 @@ namespace MyStore.ConsoleView
             
             foreach(Location l in locations)
             {
-                Console.Out.WriteLine(l.Where);
+                Console.Out.WriteLine(l.LocationName);
             }
         }
     }

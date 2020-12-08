@@ -106,7 +106,7 @@ namespace MyStore.ConsoleView
            
 
             //would you like to see what's in stock? y/n
-            Console.WriteLine($"Would you like to see a list of all items in stock at {selectedStore.Where}? y/n");
+            Console.WriteLine($"Would you like to see a list of all items in stock at {selectedStore.LocationName}? y/n");
             int choice = Program.ValidYesNoOption();
 
             if (choice == 0) //yes
@@ -169,7 +169,7 @@ namespace MyStore.ConsoleView
         public void ViewSomeStock(List<ItemCount> stockItmes)
         {
 
-            Console.WriteLine($"{selectedStore.Where} has the following currently in stock and not already in the order:");
+            Console.WriteLine($"{selectedStore.LocationName} has the following currently in stock and not already in the order:");
             foreach (ItemCount ic in stockItmes)
             {
                 Console.WriteLine($"{ic.ThisItem.name,20}\t{ic.ThisItem.cost:C}\tWith {ic.Count} in stock.");

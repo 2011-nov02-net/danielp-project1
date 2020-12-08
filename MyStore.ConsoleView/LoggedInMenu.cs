@@ -79,7 +79,7 @@ namespace MyStore.ConsoleView
 
             foreach(IOrder o in orders)
             {
-                Console.WriteLine($"On {o.Time}, from {o.OrderLoc.Where}");
+                Console.WriteLine($"On {o.Time}, from {o.OrderLoc.LocationName}");
 
                 foreach( ItemCount ic in o.Items)
                 {

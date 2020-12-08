@@ -25,14 +25,14 @@ namespace MyStore.ConsoleView
 
             if(stocks.Count() <= 0)
             {
-                Console.WriteLine($"I'm sorry, {selectedStore.Where} has nothing in stock to buy.");
+                Console.WriteLine($"I'm sorry, {selectedStore.LocationName} has nothing in stock to buy.");
                 Console.WriteLine(" . . . returning to previous menu.");
                 return new ViewStoreMenu(Repo, currentCustomer, selectedStore);
             }
 
 
             //would you like to see what's in stock? y/n
-            Console.WriteLine($"Would you like to see a list of all items in stock at {selectedStore.Where}? y/n");
+            Console.WriteLine($"Would you like to see a list of all items in stock at {selectedStore.LocationName}? y/n");
             int choice = Program.ValidYesNoOption();
 
             if (choice == 0) //yes
@@ -84,7 +84,7 @@ namespace MyStore.ConsoleView
                 return;
             }
 
-            Console.WriteLine($"{thisSelectedStore.Where} has the following currently in stock:");
+            Console.WriteLine($"{thisSelectedStore.LocationName} has the following currently in stock:");
             foreach (ItemCount ic in thisSelectedStore.GetAllStock())
             {
                 Console.WriteLine($"{ic.ThisItem.name,20}\t{ic.ThisItem.cost:C}\tWith {ic.Count} in stock.");

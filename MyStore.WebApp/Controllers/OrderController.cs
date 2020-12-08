@@ -67,7 +67,7 @@ namespace MyStore.WebApp.Controllers
 
                 ViewData["TotalCost"] = Order.Cost;
                 ViewData["Customer"] = Order.Customer.CustomerName.ToString();
-                ViewData["Store"] = Order.OrderLoc.Where;
+                ViewData["Store"] = Order.OrderLoc.LocationName;
 
                 return View(OrderItems);
             }
@@ -191,7 +191,7 @@ namespace MyStore.WebApp.Controllers
 
             foreach (var store in repo.GetLocations().ToList())
             {
-                stores.Add(store.Where);
+                stores.Add(store.LocationName);
             }
 
             return stores;

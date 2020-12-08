@@ -20,7 +20,7 @@ namespace MyStore.Store.Tests
             Location newloc = Locations.Instance.RegisterLocation(newlocname);
             //Assert
             Assert.NotNull(newloc);
-            Assert.Equal(newlocname, newloc.Where);
+            Assert.Equal(newlocname, newloc.LocationName);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace MyStore.Store.Tests
             Boolean doesnotexist = true;
             foreach (Location loc in Locations.Instance.Stores)
             {
-                if (loc.Where == locname)
+                if (loc.LocationName == locname)
                 {
                     doesnotexist = false;
                 }

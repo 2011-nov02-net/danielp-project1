@@ -8,12 +8,21 @@ using MyStore.Store.Exceptions;
 
 namespace MyStore.DataModel
 {
+    /// <summary>
+    /// A repository for accsessing stuff from the model, and keeping the model
+    /// consistant with the DB.
+    /// </summary>
     public class DbRepositorySingleConnection : IDbRepository
     {
-
+        /// <summary>
+        /// The DB Context used to accsess the database
+        /// </summary>
         private readonly MyStoreDbContext _context;
 
-
+        /// <summary>
+        /// Creates a new Repository.
+        /// </summary>
+        /// <param name="context">The DB Context used to accsess the database</param>
         public DbRepositorySingleConnection(MyStoreDbContext context)
         {
             _context = context;
@@ -42,7 +51,7 @@ namespace MyStore.DataModel
 
             if (customer.DefaultStore != null)
             {
-                newcustomer.StoreLocation = customer.DefaultStore.Where;
+                newcustomer.StoreLocation = customer.DefaultStore.LocationName;
             }
 
             _context.Customers.Add(newcustomer);
@@ -144,10 +153,10 @@ namespace MyStore.DataModel
         /// <summary>
         /// Intended to be used to set a store's stock equal to current stocks in DB
         /// </summary>
-        /// <param name="selectedStore"></param>
+        /// <param name="selectedStore">The store who's orders you want.</param>
         void IDbRepository.UpdateAndOverwriteStoreStocks(Store.Location selectedStore)
         {
-            foreach (Invintory inv in _context.Invintories.Where(x => x.StoreLocation == selectedStore.Where))
+            foreach (Invintory inv in _context.Invintories.Where(x => x.StoreLocation == selectedStore.LocationName))
             {
                 if (inv.Quantity != selectedStore.CheckStock(inv.ItemName))
                 {
@@ -218,7 +227,7 @@ namespace MyStore.DataModel
             }
 
             Location location = _context.Locations
-                            .Where(loc => loc.LocationName == l.Where)
+                            .Where(loc => loc.LocationName == l.LocationName)
                             .Include(loc => loc.Orders)
                             .ThenInclude(order => order.Customer)
                             .Include(Loc => Loc.Orders)
@@ -287,7 +296,7 @@ namespace MyStore.DataModel
             //default is null.
             int nextid = (_context.Orders.OrderByDescending(cust => cust.Id).FirstOrDefault()?.Id ?? 0) + 1;
             newOrder.Id = nextid;
-            newOrder.StoreLocation = o.OrderLoc.Where;
+            newOrder.StoreLocation = o.OrderLoc.LocationName;
             newOrder.Customer = GetDBCustomerByName(o.Customer.CustomerName);
             newOrder.OrderTime = o.Time;
 
@@ -303,13 +312,14 @@ namespace MyStore.DataModel
                 newOrder.OrderItems.Add(orderItem);
 
                 //change store stocks, Assumes there's already an invintory entry, otherwise throws exception.
-                Invintory iv = _context.Invintories.Find(o.OrderLoc.Where, item.ThisItem.name);
+                Invintory iv = _context.Invintories.Find(o.OrderLoc.LocationName, item.ThisItem.name);
                 iv.Quantity -= item.Count;
             }
             newOrder.OrderTotal = total;
 
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
+            //o.ID = newOrder.Id;
         }
 
         #endregion
@@ -417,7 +427,7 @@ namespace MyStore.DataModel
             bool hasEquiv = false;
             //get all orders from the 
 
-            var orders = Orders.Instance.GetAllOrders().Where( order=> order.OrderLoc.Where == modelOrder.StoreLocation);
+            var orders = Orders.Instance.GetAllOrders().Where( order=> order.OrderLoc.LocationName == modelOrder.StoreLocation);
             foreach (Store.IOrder CustomerOrder_MD in orders)
             {
                 if (EquivilentOrder(CustomerOrder_MD, modelOrder))
@@ -442,7 +452,7 @@ namespace MyStore.DataModel
             bool result = true;
 
             //compare store
-            if (storder.OrderLoc.Where != modelOrder.StoreLocation)
+            if (storder.OrderLoc.LocationName != modelOrder.StoreLocation)
             {
                 result = false;
 

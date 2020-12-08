@@ -90,7 +90,7 @@ namespace MyStore.ConsoleView
                 return;
             }
 
-            Console.WriteLine($"{selectedStore.Where} has the following currently in stock:");
+            Console.WriteLine($"{selectedStore.LocationName} has the following currently in stock:");
             foreach(ItemCount ic in selectedStore.GetAllStock())
             {
                 Console.WriteLine($"{ic.ThisItem.name, 20}\t{ic.ThisItem.cost:C}\tWith {ic.Count} in stock.");
@@ -113,7 +113,7 @@ namespace MyStore.ConsoleView
 
             foreach (IOrder o in orders)
             {
-                Console.WriteLine($"On {o.Time}, from {o.OrderLoc.Where} by {o.Customer.CustomerName}");
+                Console.WriteLine($"On {o.Time}, from {o.OrderLoc.LocationName} by {o.Customer.CustomerName}");
 
                 foreach (ItemCount ic in o.Items)
                 {

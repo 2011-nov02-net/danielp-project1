@@ -15,7 +15,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
             customerViewModel.LastName = StoreCust.CustomerName.Last;
             customerViewModel.Name = StoreCust.CustomerName.ToString();
             customerViewModel.NumOrders = StoreCust.CustomerOrderHistory.Count();
-            customerViewModel.HomeStore = StoreCust.DefaultStore?.Where ?? "None";
+            customerViewModel.HomeStore = StoreCust.DefaultStore?.LocationName ?? "None";
             customerViewModel.orders = new List<OrderViewModel>();
             foreach(var order in StoreCust.CustomerOrderHistory)
             {
@@ -48,7 +48,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
         {
             StoreViewModel storeViewModel = new StoreViewModel();
 
-            storeViewModel.Name = l.Where;
+            storeViewModel.Name = l.LocationName;
             storeViewModel.NumItemsInStock = l.GetAllStock().ToList()
                 .Where(item => 
                     item.Count > 0)
@@ -72,7 +72,7 @@ namespace MyStore.WebApp.Models.StoreViewModels
             ovm.Name = storeorder.Customer.CustomerName.ToString();
             ovm.NumItems = storeorder.Items.Count();
             ovm.OrderTotal = storeorder.Cost;
-            ovm.StoreName = storeorder.OrderLoc.Where;
+            ovm.StoreName = storeorder.OrderLoc.LocationName;
             ovm.OrderTime = storeorder.Time;
             ovm.ID = storeorder.ID;
 

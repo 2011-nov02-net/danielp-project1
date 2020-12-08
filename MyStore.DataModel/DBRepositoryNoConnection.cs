@@ -47,7 +47,7 @@ namespace MyStore.DataModel
             
             if(customer.DefaultStore != null)
             {
-                newcustomer.StoreLocation = customer.DefaultStore.Where;
+                newcustomer.StoreLocation = customer.DefaultStore.LocationName;
             }
 
             DBContext.Customers.Add(newcustomer);
@@ -212,7 +212,7 @@ namespace MyStore.DataModel
         {
             using MyStoreDbContext context = this.ConnectToDB();
 
-            foreach(Invintory inv in context.Invintories.Where(x => x.StoreLocation == selectedStore.Where))
+            foreach(Invintory inv in context.Invintories.Where(x => x.StoreLocation == selectedStore.LocationName))
             {
                 if (inv.Quantity != selectedStore.CheckStock(inv.ItemName))
                 {
@@ -298,7 +298,7 @@ namespace MyStore.DataModel
             MyStoreDbContext dBContext = this.ConnectToDB();  
 
             Location location = dBContext.Locations
-                            .Where(loc => loc.LocationName == l.Where)
+                            .Where(loc => loc.LocationName == l.LocationName)
                             .Include(cust => cust.Orders)
                             .ThenInclude(cust => cust.Customer)
                             .Include(cust => cust.Orders)
@@ -334,7 +334,7 @@ namespace MyStore.DataModel
                                             .Where(dbcust => dbcust.Id  == LocationOrder_DB.CustomerId).FirstOrDefault()
                                         );
 
-                    Store.Orders.Instance.CreateAndAddPastOrder(l.Where,
+                    Store.Orders.Instance.CreateAndAddPastOrder(l.LocationName,
                             customername,
                             LocationOrder_DB.OrderTime, 
                             orderitems, 
@@ -364,7 +364,7 @@ namespace MyStore.DataModel
             //default is null.
             int nextid = (DBContext.Orders.OrderByDescending(cust => cust.Id).FirstOrDefault()?.Id ?? 0 ) + 1;
             newOrder.Id = nextid;
-            newOrder.StoreLocation = o.OrderLoc.Where;
+            newOrder.StoreLocation = o.OrderLoc.LocationName;
             newOrder.Customer = GetDBCustomerByName(DBContext, o.Customer.CustomerName);
             newOrder.OrderTime = o.Time;
 
@@ -380,7 +380,7 @@ namespace MyStore.DataModel
                 newOrder.OrderItems.Add(orderItem);
 
                 //change store stocks, Assumes there's already an invintory entry, otherwise throws exception.
-                Invintory iv = DBContext.Invintories.Find(o.OrderLoc.Where, item.ThisItem.name) ;
+                Invintory iv = DBContext.Invintories.Find(o.OrderLoc.LocationName, item.ThisItem.name) ;
                 iv.Quantity -= item.Count;
             }
             newOrder.OrderTotal = total;
@@ -520,7 +520,7 @@ namespace MyStore.DataModel
             bool result = true;
 
             //compare store
-            if(storder.OrderLoc.Where != modelOrder.StoreLocation)
+            if(storder.OrderLoc.LocationName != modelOrder.StoreLocation)
             {
                 result = false;
 
