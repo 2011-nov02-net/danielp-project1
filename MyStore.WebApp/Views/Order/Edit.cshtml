@@ -5,12 +5,11 @@
 }
 
 <h1>Select Order Items</h1>
-
-<label asp-for="Name" class="control-label"></label>
-@Html.DisplayFor(Model => Model.Name)
-
-<label asp-for="StoreName" class="control-label"></label>
+<b>Store: </b>
 @Html.DisplayFor(Model => Model.StoreName)
+<br />
+<b>Customer: </b>
+@Html.DisplayFor(Model => Model.Name)
 
 <h4>Order Items</h4>
 <hr />
@@ -20,22 +19,50 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             @{
-                for(int i = 0; i < Model.orderitems.Count; i++)
+                for (int i = 0; i < Model.orderitems.Count; i++)
                 {
-                    var current = Model.orderitems[i];
                     <div class="form-group">
-                        <p>
-                            Item - @current.name
-                        </p>
-                        <input type="number" id="@current.name" name="@current.name" value="0" min="0" max="@current.amount">
+                        <label asp-for="@Model.orderitems[i].name"></label>
+                        <input asp-for="@Model.orderitems[i].name" type="hidden">
+                        <label asp-for="@Model.orderitems[i].amount"></label>
+                        <input asp-for="@Model.orderitems[i].amount" type="number" class="form-control" value="0" min="0" max="@Model.orderitems[i].amount" />
+                        <span asp-validation-for="orderitems" class="text-danger"></span>
                     </div>
-
                 }
             }
+
+
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                @Html.DisplayFor(Model => Model.Name)
+                <input asp-for="Name" type="hidden">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StoreName" class="control-label"></label>
+                <input asp-for="StoreName" type="hidden">
+                <span asp-validation-for="StoreName" class="text-danger"></span>
+            </div>
+            <!--
+    <div class="form-group">
+        <label asp-for="OrderTime" class="control-label"></label>
+        <input asp-for="OrderTime" class="form-control" />
+        <span asp-validation-for="OrderTime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ID" class="control-label"></label>
+        <input asp-for="ID" class="form-control" />
+        <span asp-validation-for="ID" class="text-danger"></span>
+    </div>
+    -->
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+
     </div>
 </div>
 

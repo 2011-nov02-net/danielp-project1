@@ -142,6 +142,8 @@ namespace MyStore.WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                //reload store's items into the model, b/c otherwise max will
+                //be the amount the cusomter had entered.
                 return (View(order));
             }
 
