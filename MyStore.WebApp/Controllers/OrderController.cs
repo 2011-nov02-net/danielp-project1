@@ -44,7 +44,6 @@ namespace MyStore.WebApp.Controllers
         }
 
         // GET: OrderController/Details/5
-        //TODO: Replace defualt store with something taken from link
         public ActionResult Details([FromServices] IDbRepository repo, int ID)
         {
             IOrder Order = Orders.Instance.GetOrderByID(ID);
@@ -54,6 +53,7 @@ namespace MyStore.WebApp.Controllers
             {
                 Console.Error.WriteLine("Order not found");
                 //todo: set error text
+                ModelState.TryAddModelError("NotFound", "Couldn't find the given order");
                 return View(nameof(Index));
             } else
             {
@@ -92,7 +92,6 @@ namespace MyStore.WebApp.Controllers
                 return (View(order));
             }
 
-            //TODO: check for errors from client side
             try
             {
                 order.orderitems = new List<ReceiptItemViewModel>();
@@ -104,7 +103,8 @@ namespace MyStore.WebApp.Controllers
                 } catch (LocationNotFoundException e)
                 {
                     Console.Error.WriteLine(e.Message);
-                    //todo: set error message
+                    //set error message
+                    ModelState.TryAddModelError("NotFound", "Error: Location not found.");
 
                     return View(nameof(Create), order);
                 }

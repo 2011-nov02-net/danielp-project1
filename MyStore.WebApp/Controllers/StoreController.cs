@@ -15,15 +15,11 @@ namespace MyStore.WebApp.Controllers
         //view list of stores
         public ActionResult Stores([FromServices] IDbRepository repo )
         {
-            List<StoreViewModel> stores = new List<StoreViewModel>();
-
-            foreach (var x in repo.GetLocations().ToList())
-            {
-                stores.Add(StoreToViewMapper.MapLocationToStore(x));
-            }
-            
+            List<StoreViewModel> stores = LoadandRetrieveStoreData(repo);
             return View(stores);
         }
+
+       
 
         // GET: StoreController/Details/5
         //view a particular store's orders
@@ -48,8 +44,8 @@ namespace MyStore.WebApp.Controllers
                 return View(stocks);
             } else
             {
-                //todo: set error
-                return View(nameof(Stores));
+                ModelState.TryAddModelError("BadStore", "Error: bad store name given.");
+                return View(nameof(Stores), LoadandRetrieveStoreData(repo));
             }
             
         }
@@ -65,17 +61,34 @@ namespace MyStore.WebApp.Controllers
                 {
                     repo.GetOrderHistory(s);
                 }
-                //TODO: ensure will get reloaded if new order placed
 
                 var viewModel = StoreToViewMapper.MapLocationToStore(s);
-                
-
 
                 return View(viewModel);
             } else
             {
+                ModelState.AddModelError("BadName", "Bad store name given");
                 return RedirectToAction("Stores");
             }
-        }            
+        }
+
+        /// <summary>
+        /// Get's the data needed by the Stores action.
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <returns>List of all stores</returns>
+        private static List<StoreViewModel> LoadandRetrieveStoreData(IDbRepository repo)
+        {
+            List<StoreViewModel> stores = new List<StoreViewModel>();
+
+            foreach (var x in repo.GetLocations().ToList())
+            {
+                repo.GetOrderHistory(x);
+
+                stores.Add(StoreToViewMapper.MapLocationToStore(x));
+            }
+
+            return stores;
+        }
     }
 }

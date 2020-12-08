@@ -158,10 +158,6 @@ namespace MyStore.WebApp.Controllers
                 return View(nameof(Choose));
             } else
             {
-                //todo: fix so that this will work, either split up first/middle/last or do something else, or just 
-                //accept that space will be converted to +
-                //customerName = HttpUtility.UrlDecode(customerName);
-
                 customerViewModel = StoreToViewMapper.MapCustomerToView(
                     repo.GetCustomerByName(new Name(customerName))
                     );
