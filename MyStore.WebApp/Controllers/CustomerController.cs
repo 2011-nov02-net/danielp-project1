@@ -47,10 +47,15 @@ namespace MyStore.WebApp.Controllers
 
         // GET: Customer/Create
         // create a customer
-        public ActionResult Create([FromServices] IDbRepository repo)
+        public ActionResult Create([FromServices] IDbRepository repo, CustomerViewModel customer = null)
         {       
+            if(customer == null)
+            {
+                customer = new CustomerViewModel();
+            }
+
             ViewData["Stores"] = GetStoreNames(repo);
-            return View();
+            return View(customer);
         }
 
         // GET: Customer/Details/5
@@ -60,19 +65,17 @@ namespace MyStore.WebApp.Controllers
             if (string.IsNullOrWhiteSpace(customerName))
             {
                 //todo: set error thing to display on the view, could not find customer
-
+                ModelState.TryAddModelError("customerName", "Invalid name given, it's null, or just space");
                 return RedirectToAction(nameof(Choose));
             } else
-            {
-                
+            {               
                 Store.Customer c = repo.GetCustomerByName(new Name(customerName));
-                //populate db with order data
-                //ensure it's been loaded
-                if (c.CustomerOrderHistory.Count() == 0)
-                {
-                    repo.GetOrderHistory(c);
-                }
-                //TODO: ensure will get reloaded if new order placed
+
+                /* get the order history from the repo into the model
+                 * incase a new one has been placed since the model was loaded.
+                 * Utilized in the mapper to fill in the object.
+                 */
+                repo.GetOrderHistory(c);
 
                 CustomerViewModel customer = StoreToViewMapper.MapCustomerToView(c);             
 
@@ -85,49 +88,63 @@ namespace MyStore.WebApp.Controllers
         // POST: Customer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([FromServices] IDbRepository repo, IFormCollection collection)
+        public ActionResult Create([FromServices] IDbRepository repo, CustomerViewModel customer, object nothing = null)
         {
-            //TODO: check the form status for errors.
-
-            try
+            if (!ModelState.IsValid)
             {
+                ViewData["Stores"] = GetStoreNames(repo);
+                return View(nameof(Create), customer);
+            }
 
-
-                Store.Location homestore = null;
-                if (collection["HomeStore"] != "None")
+            Store.Location homestore = null;
+            if (customer.HomeStore != "None")
+            {
+                Console.WriteLine(customer.HomeStore);
+                try
                 {
-                    Console.WriteLine(collection["HomeStore"]);
-                    homestore = repo.GetLocation(collection["HomeStore"]);
+                    homestore = repo.GetLocation(customer.HomeStore);
+                }
+                catch (LocationNotFoundException e)
+                {
+                    Console.Error.WriteLine(e.Message);
+                    ModelState.AddModelError("HomeStore", "Location does not exist.");
+                    return View(nameof(Create), customer);
                 }
 
-                String middlinit = collection["MiddleInitial"];
-                char? middle = null;
-                if(middlinit != null && middlinit.Length > 0)
-                {
-                    middle = middlinit[0];
-                }
+            }
 
-                Name custname = new Name(collection["FirstName"], collection["LastName"], middle);
-                Console.WriteLine(custname.ToString());
+            Name custname = new Name(customer.FirstName, customer.LastName, customer.MiddleInitial);
+            Console.WriteLine(custname.ToString());
 
-                if (Customers.Instance.HasCustomer(custname))
-                {
-                    // Invalid name, go back
+            if (Customers.Instance.HasCustomer(custname))
+            {
+                // Invalid name, go back
+                ModelState.AddModelError("FirstName", "Name Already Exists.");
+                ModelState.AddModelError("LastName", "Name Already Exists.");
+                ModelState.AddModelError("MiddleInitial", "Name Already Exists.");
 
-                    return View();
+                ViewData["Stores"] = GetStoreNames(repo);
 
-                } else
+                return View(nameof(Create), customer);
+
+            }
+            else
+            {
+                try
                 {
                     Store.Customer newcustomer = Customers.Instance.RegisterCustomer(custname, homestore);
                     repo.CreateCustomer(newcustomer);
+                } catch(Exception e)
+                {
+                    Console.Error.WriteLine(e.Message);
 
+                    ModelState.AddModelError("FirstName", "Error creating customer.");
 
-                    return RedirectToAction("Choose");
-                }                
-            }
-            catch
-            {
-                return View();
+                    ViewData["Stores"] = GetStoreNames(repo);
+                    return View(nameof(Create), customer);
+                }
+
+                return RedirectToAction("Choose");
             }
         }
 
