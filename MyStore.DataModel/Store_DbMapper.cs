@@ -103,7 +103,11 @@ namespace MyStore.DataModel
                 {
                     Console.WriteLine(e.Message);
 
-                    StoreCatalogue.Instance.RegisterItem(oi.Item.ItemName, oi.Item.ItemPrice);
+                    if (!StoreCatalogue.Instance.ItemExists(oi.Item.ItemName))
+                    {
+                        StoreCatalogue.Instance.RegisterItem(oi.Item.ItemName, oi.Item.ItemPrice);
+                    }
+                    
                     // retry 
                     orderitems.Add(new ItemCount(oi.Quantity, oi.Item.ItemName));
                 }
