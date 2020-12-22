@@ -25,7 +25,7 @@ To-do list:
 ## Getting Started
  
  ### Online Version
- Simply go to [< right here>](<http://noelwiz.azurewebsites.net/>.
+ Simply go to [right here](http://noelwiz.azurewebsites.net/).
  
  ### Running Locally
  1. Git clone
@@ -61,5 +61,5 @@ To-do list:
 
 ## License
 
-This project uses the following license: [< Apache License 2.0>](<https://github.com/2011-nov02-net/danielp-project1/blob/master/LICENSE>).
+This project uses the following license: [Apache License 2.0](https://github.com/2011-nov02-net/danielp-project1/blob/master/LICENSE).
 
