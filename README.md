@@ -20,9 +20,9 @@ List of features ready and TODOs for future development
 * Create new customer accounts.
 
 To-do list:
-[ ] Improve navigation and links between pages
-[ ] Take a second pass on styling the pages
-[ ] Add even more tests.
+- [ ] Improve navigation and links between pages
+- [ ] Take a second pass on styling the pages
+- [ ] Add even more tests.
 
 ## Getting Started
  
