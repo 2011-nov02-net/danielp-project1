@@ -13,8 +13,6 @@ Every Store is a multi-chain online ordering service application for grocery sto
 
 
 ## Features
-
-List of features ready and TODOs for future development
 * Orders update store stock.
 * View order history.
 * Create new customer accounts.
