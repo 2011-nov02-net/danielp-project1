@@ -85,6 +85,35 @@ After the order has been placed, you can then view the store's order history, or
 ![Checking that the order was placed](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/console_vieworders.png)
 
 ### Web App
+When you navigate to the web app, or run it locally, you should see this screen. 
+
+![Web welcome screen](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_welcome.png)
+
+From here you can navigate to any of the options in the nav bar at the top to interact with the app. For example, clicking on "Stores" will bring you to a list of all stores in the DB.
+
+![List of several stores](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_storeslist.png)
+
+The store list has a link to view the store stocks, and the store's details which include it's order history.
+
+![List of several items in stock at a store](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_storestocks.png)
+![Details of a store](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_storedetails.png)
+
+
+You can also go to the customers section to see a list of customers.
+
+![List of customers](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_customerlist.png)
+
+The list is searchable.
+![Searching the list for a name](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_searchcustomers.png)
+
+You can also view the details of a customer.
+
+![Customer's Details](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_customerdetails.png)
+
+Finally, you can place an order at any store. First you select the store and who's making the order, then you place the order.
+
+![choosing the customer and store from a drop down](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_placeorderpt1.png)
+![text input for choosing items to order](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/web_placeorder.png)
 
 ## License
 
