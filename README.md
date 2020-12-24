@@ -17,7 +17,7 @@ Every Store is a multi-chain online ordering service application for grocery sto
 * View order history.
 * Create new customer accounts.
 
-To-do list:
+#### To-do list:
 - [ ] Improve navigation and links between pages
 - [ ] Take a second pass on styling the pages
 - [ ] Add even more tests.
@@ -66,7 +66,25 @@ To-do list:
 
 ## Usage
 
-> Here, you instruct other people on how to use your project after they’ve installed it. This would also be a good place to include screenshots of your project in action.
+### Console
+When you first start the console app, you should get something that looks like this.
+In general, all commands are case insensitive, although names are case sensitive. You can type either the letter in { } or the whole word to select an option. 
+
+![console page startup menu](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/console_startup.png)
+
+When you have the console app running, you then have to choose a customer, or create a new one. Bellow is an example of logging in as a customer, which is done by typing their name, however you can also create a new customer and you will be automatically logged in as that customer.
+
+![Login to a console](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/console_login.png)
+
+Once logged in, you can choose a store, and place an order for some items in stock there. It will ask you if you want to see what items are in stock so you don't have to remember the names of anything. You can also remove itmes you've added from the order and re-add them to change the quantity.
+
+![Placing an order for some field guides](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/console_placeorder.png)
+
+After the order has been placed, you can then view the store's order history, or your own order history and see that the new order appears in it.
+
+![Checking that the order was placed](https://github.com/2011-nov02-net/danielp-project1/blob/master/images/console_vieworders.png)
+
+### Web App
 
 ## License
 
